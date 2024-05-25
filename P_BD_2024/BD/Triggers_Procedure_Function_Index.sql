@@ -11,6 +11,9 @@ triggers e índices del sistema.
 --------------------------------------------------------------------------------------------------------
 --                                           INDEX                                                    --
 --------------------------------------------------------------------------------------------------------
+--Proceso Catalogo
+CREATE INDEX PIE_MOLDE ON PIEZA(uid_molde);
+
 --Proceso Empleado
 CREATE INDEX EMP_SUPERVISOR ON EMPLEADO (supervisor);
 CREATE INDEX EMP_DEP ON EMPLEADO(trabaja);
@@ -20,7 +23,7 @@ CREATE INDEX DEP_PADRE ON DEPARTAMENTO(uid_dep_padre);
 CREATE INDEX CLI_PAIS ON CLIENTE(uid_pais);
 CREATE INDEX FAC_PEDIDO ON FACTURA (uid_cliente);
 CREATE INDEX DET_PED_PIE_JUEGO ON DETALLE_PEDIDO_PIEZA(uid_juego);
-CREATE INDEX DET_PED_PIE_PIEZA ON DETALLE_PEDIDO_PIEZA(uid_pieza, uid_coleccion, uid_molde);
+CREATE INDEX DET_PED_PIE_PIEZA ON DETALLE_PEDIDO_PIEZA(uid_pieza, uid_coleccion);
 
 
 

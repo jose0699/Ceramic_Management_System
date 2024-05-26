@@ -12,10 +12,11 @@ app.use(bodyParser.json());
 app.use(require('./routes/index.routes'));
 
 // Rutas de archivos estáticos
-app.use('/controllers', express.static(path.join(__dirname,'public', 'controllers')));
-app.use('/views', express.static(path.join(__dirname,'public', 'views')));
-app.use('/styles', express.static(path.join(__dirname,'public', 'styles')));
-app.use('/images', express.static(path.join(__dirname,'public', 'images')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use('/controllers', express.static(path.join(__dirname,'..', 'public', 'controllers')));
+app.use('/views', express.static(path.join(__dirname,'..', 'public', 'views')));
+app.use('/styles', express.static(path.join(__dirname,'..', 'public', 'styles'), { strict: false }));
+app.use('/images', express.static(path.join(__dirname, '..', 'public', 'images')));
 
 // Iniciar el servidor
 app.listen(port, () => {

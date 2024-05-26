@@ -1,0 +1,77 @@
+header{
+  z-index: 100;
+  height: 55px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  padding-left: 30px;
+  padding-right: 50px;
+  background-color: white;
+
+}
+
+.left-section{
+  display: flex;
+  align-items: center;
+  margin-top: 40px;
+  margin-left: 14px;
+  padding: 15px;
+}
+
+.right-section{
+  width: 400px;
+  margin-top: 20px;
+  margin-right: 100px;
+  padding: 12px;
+}
+
+.right-menu{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.menu-decoration-line{
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.option-button{
+  border: none;
+  background-color: white;
+  font-size: 20px;
+  font-weight: 500;
+  color: rgb(59, 70, 31);
+  cursor: pointer;
+}
+
+.company-name{
+  color: rgb(119,140,67);
+  font-weight: 500;
+  font-size: 40px;
+}
+
+.company-logo{
+  height: 75px;
+}
+
+.diamond-shape{
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  transform: rotate(45deg);
+  background-color: rgb(119,140,67);
+}
+
+.menu-line{
+  flex: 0 0 100%;
+  border: 1px solid rgb(119,140,67);
+}

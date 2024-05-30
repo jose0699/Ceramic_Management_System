@@ -33,7 +33,6 @@ CREATE TABLE DEPARTAMENTO (
 	descripcion varchar(60),
 	uid_dep_padre numeric(2),
 	CONSTRAINT tipo_departamento CHECK (tipo IN ('GE', 'SE', 'DE', 'AL')),
-	CONSTRAINT nivel_departamento CHECK (nivel BETWEEN 1 AND 4),
 	CONSTRAINT fk_departamento FOREIGN KEY (uid_dep_padre) REFERENCES DEPARTAMENTO (uid_departamento), -- Referencia a Departamento
 	CONSTRAINT pk_departamento PRIMARY KEY (uid_departamento)
 );
@@ -55,7 +54,6 @@ CREATE TABLE EMPLEADO(
 	segundo_nombre varchar(30),
 	segundo_apellido varchar(30),
 	supervisor numeric(4),
-	CONSTRAINT sueldo_empleado CHECK (sueldo >= 0),
 	CONSTRAINT check_genero CHECK (genero in ('M', 'F')),
 	CONSTRAINT cargo_empleado CHECK (cargo in ('se', 'ge', 'me', 'in', 'og', 'el')),
 	CONSTRAINT check_tipo_sangre CHECK(tipo_sangre in ('A+', 'O+', 'B+', 'AB+', 'A-','O-', 'B-', 'AB-')),
@@ -88,7 +86,6 @@ CREATE TABLE HORARIO(
 	num_expediente numeric(4) not null,
 	mesano date not null,
 	turno numeric(1) not null,
-	CONSTRAINT check_turno CHECK (turno between 1 and 3),
 	CONSTRAINT fk_empleado_horario FOREIGN KEY (num_expediente) REFERENCES EMPLEADO(num_expediente),
 	CONSTRAINT pk_horario PRIMARY KEY (num_expediente, mesano)
 );
@@ -102,9 +99,6 @@ CREATE TABLE DET_EXP(
 	retraso numeric(3),
 	total_hora_extra numeric(3,2),
 	descripcion varchar (126),
-	CONSTRAINT monto_bono_det_exp CHECK (monto_bono > 0),
-	CONSTRAINT retraso_det_exp CHECK (retraso > 0),
-	CONSTRAINT total_hora_det_exp CHECK (total_hora_extra > 0),
 	CONSTRAINT motivo_det_exp CHECK (motivo in ('in', 'bm', 'ba', 'am', 'lt', 'he')),
 	CONSTRAINT fk_empleado_det_exp FOREIGN KEY (num_exp) REFERENCES EMPLEADO(num_expediente),
 	CONSTRAINT pk_det_exp PRIMARY KEY (num_exp, uid)
@@ -155,8 +149,6 @@ CREATE TABLE MOLDE(
 	cant_persona numeric(1),
 	tipo_plato varchar(2),
 	tipo_taza varchar(2),
-	CONSTRAINT volumen_molde CHECK(volumen > 0),
-	CONSTRAINT cant_persona_molde CHECK (cant_persona > 0),
 	CONSTRAINT tipo_molde CHECK (tipo in ('JA', 'TT', 'LE', 'AZ', 'CA', 'BD', 'PL', 'TA', 'EN')),
 	CONSTRAINT plato_molde CHECK (tipo_plato in ('HO', 'LL', 'PO', 'PA', 'PR', 'TT', 'TC')),
 	CONSTRAINT taza_molde CHECK (tipo_taza in ('CS', 'CC', 'CT', 'TC', 'MC', 'MS')),
@@ -168,19 +160,17 @@ CREATE TABLE VAJILLA (
 	nombre varchar(60) not null, 
 	capacidad numeric(1) not null,
 	descripcion varchar(256),
-	CONSTRAINT check_capacidad_vajilla CHECK (capacidad = 2 or capacidad = 4 or capacidad = 6),
 	CONSTRAINT pk_vajilla PRIMARY KEY (uid_juego)
 );
 
 --Tablas Intermedias
 
 CREATE TABLE PIEZA (
-	uid_pieza numeric(3) not null,
 	uid_coleccion numeric(2) not null,
+	uid_pieza numeric(3) not null,
 	descripcion varchar(128),
 	precio numeric(8,2),
 	uid_molde numeric(2) not null,
-	CONSTRAINT precio_pieza CHECK(precio >= 0),
 	CONSTRAINT fk_coleccion_pieza FOREIGN KEY (uid_coleccion) REFERENCES COLECCION(uid_coleccion),
 	CONSTRAINT fk_molde_pieza FOREIGN KEY (uid_molde) REFERENCES MOLDE(uid_molde),
 	CONSTRAINT pk_pieza PRIMARY KEY (uid_pieza, uid_coleccion)
@@ -192,9 +182,7 @@ CREATE TABLE FAMILIAR_HISTORICO_PRECIO(
 	fecha_inicio timestamp not null,
 	precio numeric(8,2) not null,
 	fecha_fin timestamp,
-	CONSTRAINT no_negativo_historico_precio CHECK (precio >= 0),
-	CONSTRAINT fecha_historico_precio CHECK (fecha_inicio < fecha_fin),
-	CONSTRAINT fk_pieza_historico FOREIGN KEY (uid_pieza, uid_coleccion) REFERENCES PIEZA (uid_pieza, uid_coleccion),
+	CONSTRAINT fk_pieza_historico FOREIGN KEY (uid_pieza, uid_coleccion) REFERENCES PIEZA (uid_coleccion, uid_pieza),
 	CONSTRAINT pk_historico_precio PRIMARY KEY (uid_pieza, uid_coleccion, fecha_inicio)
 	
 );
@@ -204,9 +192,8 @@ CREATE TABLE DETALLE_PIEZA_VAJILLA (
 	uid_pieza numeric(3) not null,
 	uid_coleccion numeric(2) not null,
 	cantidad numeric(2) not null,
-	CONSTRAINT no_negativo_pieza CHECK(cantidad > 0),
 	CONSTRAINT fk_juego_detalle FOREIGN KEY (uid_juego) REFERENCES VAJILLA (uid_juego),
-	CONSTRAINT fk_pieza_detalle FOREIGN KEY (uid_pieza, uid_coleccion) REFERENCES PIEZA (uid_pieza, uid_coleccion),
+	CONSTRAINT fk_pieza_detalle FOREIGN KEY (uid_pieza, uid_coleccion) REFERENCES PIEZA (uid_coleccion, uid_pieza),
 	CONSTRAINT pk_detalle PRIMARY KEY (uid_juego, uid_pieza, uid_coleccion )
 );
 
@@ -232,8 +219,6 @@ CREATE TABLE CONTRATO(
 	porcentaje_descuento numeric(3) not null,
 	fecha_hora_emision timestamp not null,
 	fecha_hora_fin timestamp,
-	CONSTRAINT check_porcentaje_contrato CHECK(porcentaje_descuento between 1 and 100),
-	CONSTRAINT check_fecha_contrato CHECK(fecha_hora_emision < fecha_hora_fin),
 	CONSTRAINT fk_cliente_contrato FOREIGN KEY(uid_cliente) REFERENCES CLIENTE(uid_cliente),
 	CONSTRAINT pk_contrato PRIMARY KEY ( uid_cliente, num_contrato)
 );
@@ -248,7 +233,6 @@ CREATE TABLE PEDIDO(
 	tipo_pedido varchar(1) not null,
 	CONSTRAINT check_estado_pedido CHECK(estado in ('A', 'C', 'E')),
 	CONSTRAINT tipo_pedido CHECK (tipo_pedido in ('F', 'I')),
-	CONSTRAINT check_fecha_pedido CHECK(fecha_emision < fecha_entrega_deseada AND fecha_emision < fecha_entrega),
 	CONSTRAINT fk_cliente_pedido FOREIGN KEY( uid_cliente) REFERENCES CLIENTE( uid_cliente),
 	CONSTRAINT pk_pedido PRIMARY KEY( uid_cliente, uid_pedido)
 );
@@ -260,7 +244,6 @@ CREATE TABLE FACTURA (
     numero_factura numeric(6) not null,
     fecha_emision timestamp not null,
     monto_total numeric(8,2) not null,
-    CONSTRAINT check_monto_factura CHECK (monto_total >= 0),
     CONSTRAINT fk_pedido FOREIGN KEY ( uid_cliente, uid_pedido) REFERENCES PEDIDO ( uid_cliente, uid_pedido),
     CONSTRAINT pk_factura PRIMARY KEY ( uid_cliente, uid_pedido, numero_factura)
 );
@@ -273,9 +256,6 @@ CREATE TABLE DETALLE_PEDIDO_PIEZA (
     uid_juego numeric(3),
     uid_pieza numeric(3),
     uid_coleccion numeric(3),
-    CONSTRAINT check_cantidad_detalle_pedido CHECK (cantidad > 0),
-    CONSTRAINT check_exclusive_arcs CHECK ((uid_juego IS NOT NULL AND uid_pieza IS NULL AND uid_coleccion IS NULL)
-                                        OR (uid_juego IS NULL AND uid_pieza IS NOT NULL AND uid_coleccion IS NOT NULL)),
 	CONSTRAINT fk_juego_detalle_pedido FOREIGN KEY(uid_juego) REFERENCES VAJILLA(uid_juego),
     CONSTRAINT fk_pieza_detalle_pedido FOREIGN KEY (uid_pieza, uid_coleccion) REFERENCES PIEZA(uid_pieza, uid_coleccion),
     CONSTRAINT fk_pedido_detalle_pedido FOREIGN KEY (uid_cliente, uid_pedido) REFERENCES PEDIDO (uid_cliente, uid_pedido),
@@ -298,7 +278,6 @@ CREATE TABLE DETALLE_PEDIDO_PIEZA (
 	CREATE SEQUENCE contrato_uid_seq START 1 INCREMENT BY 1;
 	CREATE SEQUENCE pedido_uid_seq START 1 INCREMENT BY 1;
 	CREATE SEQUENCE factura_uid_seq START 1 INCREMENT BY 1;
-	CREATE SEQUENCE detalle_pedido_uid_seq START 1 INCREMENT BY 1;
 	CREATE SEQUENCE pieza_uid_seq START 1 INCREMENT BY 1;
 
 --------------------------------------------------------------------------------------------------------
@@ -319,4 +298,3 @@ CREATE TABLE DETALLE_PEDIDO_PIEZA (
 	UPDATE CONTRATO SET num_contrato = nextval('contrato_uid_seq');
 	UPDATE PEDIDO SET uid_pedido = nextval('pedido_uid_seq');
 	UPDATE FACTURA SET numero_factura = nextval('factura_uid_seq');
-	UPDATE DETALLE_PEDIDO_PIEZA SET uid_detalle = nextval('detalle_pedido_uid_seq');

@@ -4,6 +4,9 @@ const path = require('path');
 
 module.exports = router;
 
+//Controladores
+    const select = require('../controllersbd/select');
+
 router.get('/Ceramica_Real', (req, res) => {
     const adminPath = path.join(__dirname, '../../public/views/principal.html');
     res.sendFile(adminPath);
@@ -16,7 +19,18 @@ router.get('/Ceramica_Real/Pieza', (req, res) => {
     const adminPath = path.join(__dirname, '../../public/views/pieza.html');
     res.sendFile(adminPath);
 });
+router.post('/Ceramica_Real/Pieza', (req, res) => {
+    const datos = req.body;
+  switch (parseInt(datos.pet)){
+    case 1:
 
+    ;
+
+    case 2:
+
+    ;
+  }
+});
 
 /*------------------------------------------------------------------------------------------------------------*/
 /*                                        Rutas de Vajilla                                                    */ 
@@ -24,4 +38,7 @@ router.get('/Ceramica_Real/Pieza', (req, res) => {
 router.get('/Ceramica_Real/Vajilla', (req, res) => {
     const adminPath = path.join(__dirname, '../../public/views/vajilla.html');
     res.sendFile(adminPath);
+});
+router.post('/Ceramica_Real/Vajilla', (req, res) => {
+
 });

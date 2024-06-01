@@ -23,21 +23,12 @@ router.post('/Ceramica_Real/Pieza', (req, res) => {
     const datos = req.body;
   switch (parseInt(datos.pet)){
     case 1:
-<<<<<<< HEAD
         select.COLECCION(req, res);
     break;
 
     case 2:
 
     break;
-=======
-
-    ;
-
-    case 2:
-
-    ;
->>>>>>> bc679b980ea7bc90acbb9429c012b8053c54bd57
   }
 });
 

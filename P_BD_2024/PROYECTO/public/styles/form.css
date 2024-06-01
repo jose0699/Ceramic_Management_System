@@ -1,9 +1,13 @@
+/*CSS comun entre ambos formularios*/
+
 .main-grid{
-  margin-top: 15px;
+  margin-top: 10px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 20px;
+  column-gap: 30px;
 }
+
+/*Lado Derecho e izquierdo del formulario*/
 
 .form-left-side,
 .form-right-side{
@@ -11,13 +15,15 @@
   flex-direction: column;
 }
 
-.form-right-side{
+.form-right-side-pieza{
+  display: flex;
+  flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
 }
 
 .form-section{
-  margin: 20px;
+  margin: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -27,7 +33,11 @@
   color: rgb(83, 131, 64);
   font-size: 26px;
   font-weight: 500;
+  margin-top: 20px;
 }
+
+/*CSS de Inputs, selects y buttons*/
+
 
 .input-title{
   color: rgb(90,90,90);
@@ -41,7 +51,8 @@
   border-width: thin;
   border-radius:10px;
   border-style: solid;
-  padding: 8px 12px 8px 12px;
+  width: 200px;
+  padding: 4px 8px 4px 8px;
 }
 
 .form-select{
@@ -49,13 +60,13 @@
   border-width: thin;
   border-radius:10px;
   border-style: solid;
-  padding: 4px;
-  width: 200px;
+  padding: 4px 8px;
+  width: 220px;
 }
 
 .description-input{
-  width: 470px;
-  height: 80px;
+  width: 300px;
+  height: 60px;
 }
 
 .form-input:focus,
@@ -65,9 +76,6 @@
   outline-style: solid;
 }
 
-.form-image{
-  width: 100%;
-}
 
 .fetch-button{
   color: white;
@@ -90,3 +98,90 @@
 .fetch-button:active{
   opacity: 0.4;
 }
+
+
+/*CSS exclusivo de pieza*/
+
+.form-image{
+  width: 70%;
+}
+
+/*CSS exclusivo de vajilla*/
+
+.piece-list{
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.scrollmenu{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  background-color: white;
+  overflow-y: scroll;
+
+  border: rgb(143, 201, 97);
+  border-width: 50;
+  border-radius:6px;
+  border-style: solid;
+
+
+  height: 120px;
+}
+
+.pieza-container{
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: rgb(83, 114, 58);
+  border-bottom-style: solid;
+  border-bottom-width: thin;
+  padding: 8px;
+}
+
+.add-button,
+.minus-button{
+  color: white;
+  font-weight: bold;
+  border-radius: 40px;
+  padding: 2px 8px;
+  margin-right: 12px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s,
+              opacity 0.15s;
+}
+
+.add-button{
+  background-color: rgb(88, 199, 88);
+}
+
+.minus-button{
+  background-color: rgb(43, 121, 43);
+}
+
+.add-button:hover{
+  background-color: rgb(40, 94, 40);
+}
+
+.minus-button:hover{
+  background-color: rgb(23, 63, 23);
+}
+
+.add-button:active,
+.minus-button:active{
+  opacity: 0.4;
+}
+
+
+/*
+  rgb(50,175,215)
+  rgb(215,50,50)
+*/

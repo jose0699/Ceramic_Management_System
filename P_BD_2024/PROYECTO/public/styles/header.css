@@ -1,6 +1,6 @@
 header{
   z-index: 100;
-  height: 55px;
+  height: 100px;
 
   display: flex;
   flex-direction: row;
@@ -20,14 +20,14 @@ header{
 .left-section{
   display: flex;
   align-items: center;
-  margin-top: 40px;
+  margin-top: 20px;
   margin-left: 14px;
   padding: 15px;
 }
 
 .right-section{
   width: 400px;
-  margin-top: 20px;
+  margin-top: 30px;
   margin-right: 100px;
   padding: 12px;
 }
@@ -51,7 +51,19 @@ header{
   font-weight: 500;
   color: rgb(92, 114, 36);
   cursor: pointer;
+  transition: text-decoration 0.15s, 
+              color 0.15s;
 }
+
+.option-button:hover{
+  text-decoration: underline;
+}
+
+.option-button:active{
+  color:rgb(158, 196, 63);
+}
+
+
 
 .company-name{
   color: rgb(119,140,67);

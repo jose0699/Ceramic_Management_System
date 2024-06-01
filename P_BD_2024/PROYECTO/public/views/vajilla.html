@@ -1,12 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="shortcut icon" href="/images/logo_emp.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h5>vajilla</h5>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="shortcut icon" href="/images/logo_emp.png">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!--Obtener fonts de google fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+        <!--obtener hojas de estilo-->
+        <link rel="stylesheet" type="text/css" href="/styles/general.css">
+        <link rel="stylesheet" type="text/css" href="/styles/header.css">  
+        <link rel="stylesheet" type="text/css" href="/styles/form.css"> 
+        
+        <!--Pestaña-->
+        <link rel="icon" href="/images/logo_emp.png" type="image/x-icon">
+
+        <title>Agregar Vajilla</title>
+    </head>
+    <body>
+        <header>
+            <div class="left-section"> 
+                <p class = "company-name">CERÁMICA REAL</p>
+                <img class = "company-logo" src="/images/logo_emp.png">
+            </div>
+
+            <div class = "right-section">
+                <div class ="right-menu">
+                    <a class="option-button" href="/Ceramica_Real/Pieza">
+                        Pieza
+                    </a>
+                    <a class="option-button" href="/Ceramica_Real/Vajilla">
+                        Vajilla
+                    </a>
+                </div>
+
+                <div class = "menu-decoration-line">
+                    <div class="diamond-shape"></div>
+                    <hr class = "menu-line">
+                </div>
+            </div>
+        </header>
+        <div>
+            
+        </div>
+
+        <main>
+            <p class = "section-title">Agregar Vajilla</p>
+            <div class = "main-grid">
+                <div class = "form-left-side">
+
+                    <div class = "form-section">
+
+                      <div>
+                        <p class = "input-title">Colección</p>
+                        <select class = "form-select">
+                            <option value="Amazonia Brasileira"> Amazonia Brasileira</option>
+                        </select>
+                      </div>
+
+                    </div>
+
+                    <div class = "form-section">
+                        <div>
+                            <p class = "input-title">Nombre</p>
+                            <input class = "form-input" type = "text">
+                        </div>
+                        
+                    </div>
+
+                    <div class = "form-section">
+                        <div>
+                            <p class = "input-title">Capacidad</p>
+                            <input class = "form-input" type = "text" placeholder="Número de Personas">
+                        </div>
+                    </div>
+
+                    <div class = "form-section">
+                        <div>
+                            <p class = "input-title">Descripción</p>
+                            <textarea class = "description-input" rows="5"></textarea>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+                <div class = "form-right-side">
+
+                    <div class = "form-section">
+                        <div class = "piece-list">
+                             <p class = "input-title">Piezas de la Colección</p>
+                             <div class="scrollmenu js-coleccion-scrollmenu">
+                             </div>
+                        </div>
+                     </div>
+
+                    <div class= "form-section">
+                        <div class = "piece-list">
+                            <p class = "input-title">Piezas de la Vajilla</p>
+                            <div class="scrollmenu js-vajilla-scrollmenu">
+                            </div>
+                       </div>
+                    </div>
+
+
+                    <div class = "form-section">
+                        <div>
+                            <button id='agregar' class = "fetch-button">Agregar</button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </main>
+
+        <script src="/controllers/vajilla.js"></script>
+    </body>
 </html>

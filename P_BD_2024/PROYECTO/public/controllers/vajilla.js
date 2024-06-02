@@ -61,6 +61,15 @@ function renderListaColeccion(){
 
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+  var input = document.getElementById('capacidad');
+
+  input.addEventListener('input', function() {
+    var numero = input.value.replace(/\D/g, ''); // Eliminar caracteres no numéricos
+    input.value = numero;
+  });
+});
+
 //renderiza la lista de la vajilla
 function renderListaVajilla(){
   let resumenVajillaHTML = '';

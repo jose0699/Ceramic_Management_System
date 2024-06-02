@@ -33,7 +33,7 @@ CREATE TABLE DEPARTAMENTO (
 	descripcion varchar(60),
 	uid_dep_padre numeric(2),
 	CONSTRAINT tipo_departamento CHECK (tipo IN ('GE', 'SE', 'DE', 'AL')),
-	CONSTRAINT fk_departamento FOREIGN KEY (uid_dep_padre) REFERENCES DEPARTAMENTO (uid_departamento), -- Referencia a Departamento
+	CONSTRAINT fk_departamento FOREIGN KEY (uid_dep_padre) REFERENCES DEPARTAMENTO (uid_departamento), 
 	CONSTRAINT pk_departamento PRIMARY KEY (uid_departamento)
 );
 
@@ -160,6 +160,7 @@ CREATE TABLE VAJILLA (
 	nombre varchar(60) not null, 
 	capacidad numeric(1) not null,
 	descripcion varchar(256),
+	CONSTRAINT capacidad_vajilla CHECK (capacidad in (2,4,6)),
 	CONSTRAINT pk_vajilla PRIMARY KEY (uid_juego)
 );
 
@@ -173,7 +174,7 @@ CREATE TABLE PIEZA (
 	uid_molde numeric(2) not null,
 	CONSTRAINT fk_coleccion_pieza FOREIGN KEY (uid_coleccion) REFERENCES COLECCION(uid_coleccion),
 	CONSTRAINT fk_molde_pieza FOREIGN KEY (uid_molde) REFERENCES MOLDE(uid_molde),
-	CONSTRAINT pk_pieza PRIMARY KEY (uid_pieza, uid_coleccion)
+	CONSTRAINT pk_pieza PRIMARY KEY (uid_coleccion, uid_pieza)
 );
 
 CREATE TABLE FAMILIAR_HISTORICO_PRECIO(
@@ -182,8 +183,8 @@ CREATE TABLE FAMILIAR_HISTORICO_PRECIO(
 	fecha_inicio timestamp not null,
 	precio numeric(8,2) not null,
 	fecha_fin timestamp,
-	CONSTRAINT fk_pieza_historico FOREIGN KEY (uid_pieza, uid_coleccion) REFERENCES PIEZA (uid_coleccion, uid_pieza),
-	CONSTRAINT pk_historico_precio PRIMARY KEY (uid_pieza, uid_coleccion, fecha_inicio)
+	CONSTRAINT fk_pieza_historico FOREIGN KEY (uid_coleccion ,uid_pieza) REFERENCES PIEZA (uid_coleccion, uid_pieza),
+	CONSTRAINT pk_historico_precio PRIMARY KEY (uid_coleccion, uid_pieza, fecha_inicio)
 	
 );
 
@@ -193,8 +194,8 @@ CREATE TABLE DETALLE_PIEZA_VAJILLA (
 	uid_coleccion numeric(2) not null,
 	cantidad numeric(2) not null,
 	CONSTRAINT fk_juego_detalle FOREIGN KEY (uid_juego) REFERENCES VAJILLA (uid_juego),
-	CONSTRAINT fk_pieza_detalle FOREIGN KEY (uid_pieza, uid_coleccion) REFERENCES PIEZA (uid_coleccion, uid_pieza),
-	CONSTRAINT pk_detalle PRIMARY KEY (uid_juego, uid_pieza, uid_coleccion )
+	CONSTRAINT fk_pieza_detalle FOREIGN KEY (uid_coleccion, uid_pieza) REFERENCES PIEZA (uid_coleccion, uid_pieza),
+	CONSTRAINT pk_detalle PRIMARY KEY (uid_coleccion, uid_juego, uid_pieza )
 );
 
 --------------------------------------------------------------------------------------------------------
@@ -254,10 +255,10 @@ CREATE TABLE DETALLE_PEDIDO_PIEZA (
     uid_detalle numeric(8) NOT NULL,
     cantidad numeric(4) NOT NULL,
     uid_juego numeric(3),
-    uid_pieza numeric(3),
     uid_coleccion numeric(3),
+    uid_pieza numeric(3),
 	CONSTRAINT fk_juego_detalle_pedido FOREIGN KEY(uid_juego) REFERENCES VAJILLA(uid_juego),
-    CONSTRAINT fk_pieza_detalle_pedido FOREIGN KEY (uid_pieza, uid_coleccion) REFERENCES PIEZA(uid_pieza, uid_coleccion),
+    CONSTRAINT fk_pieza_detalle_pedido FOREIGN KEY (uid_coleccion, uid_pieza) REFERENCES PIEZA(uid_coleccion, uid_pieza),
     CONSTRAINT fk_pedido_detalle_pedido FOREIGN KEY (uid_cliente, uid_pedido) REFERENCES PEDIDO (uid_cliente, uid_pedido),
     CONSTRAINT pk_detalle_pedido PRIMARY KEY (uid_cliente, uid_pedido, uid_detalle)
 );
@@ -283,7 +284,6 @@ CREATE TABLE DETALLE_PEDIDO_PIEZA (
 --------------------------------------------------------------------------------------------------------
 --                                     Update                                                         --
 --------------------------------------------------------------------------------------------------------
-
 	UPDATE PAIS SET uid_pais = nextval('pais_uid_seq');
 	UPDATE ESTADO_SALUD SET uid_salud = nextval('estado_salud_uid_seq');
 	UPDATE DEPARTAMENTO SET uid_departamento = nextval('departamento_uid_seq');
@@ -298,3 +298,4 @@ CREATE TABLE DETALLE_PEDIDO_PIEZA (
 	UPDATE CONTRATO SET num_contrato = nextval('contrato_uid_seq');
 	UPDATE PEDIDO SET uid_pedido = nextval('pedido_uid_seq');
 	UPDATE FACTURA SET numero_factura = nextval('factura_uid_seq');
+	

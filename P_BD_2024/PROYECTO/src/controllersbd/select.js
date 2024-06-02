@@ -9,7 +9,7 @@ const pool = new Pool({
 });
 
 const COLECCION = (req, res, datos) => {
-  const consulta = 'SELECT uid_coleccion, nombre FROM COLECCION;';
+  const consulta = 'SELECT c.uid_coleccion, c.nombre FROM coleccion c;';
   pool.query(consulta, (error, resultado) => {
     if (error) {
       console.error('Error al ejecutar la consulta:', error);
@@ -22,7 +22,7 @@ const COLECCION = (req, res, datos) => {
 
 const MOLDE = (req, res, datos) => {
   const {  } = datos;
-  const consulta = '';
+  const consulta = 'SELECT * FROM MOLDE;';
   const valores = [];
   pool.query(consulta, valores, (error, resultado) => {
     if (error) {
@@ -35,5 +35,6 @@ const MOLDE = (req, res, datos) => {
 };
 
   module.exports = {
-
+    COLECCION,
+    MOLDE
   };

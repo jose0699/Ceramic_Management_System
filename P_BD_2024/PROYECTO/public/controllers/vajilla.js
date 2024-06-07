@@ -148,3 +148,4 @@ function getPieza(id){
 
   return piezaBuscada;
 }
+

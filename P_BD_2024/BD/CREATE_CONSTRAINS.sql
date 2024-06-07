@@ -86,6 +86,7 @@ CREATE TABLE HORARIO(
 	num_expediente numeric(4) not null,
 	mesano date not null,
 	turno numeric(1) not null,
+	CONSTRAINT ck_turno_horario CHECK (turno in (1,2,3)),
 	CONSTRAINT fk_empleado_horario FOREIGN KEY (num_expediente) REFERENCES EMPLEADO(num_expediente),
 	CONSTRAINT pk_horario PRIMARY KEY (num_expediente, mesano)
 );
@@ -135,7 +136,7 @@ CREATE TABLE COLECCION(
 	fecha_lanzamiento date not null, 
 	linea varchar(1) not null,
 	categoria varchar(3) not null,
-	descripcion_mot_color varchar (256) not null,
+	descripcion_mot_color varchar (512) not null,
 	CONSTRAINT check_linea_coleccion CHECK(linea in ('I', 'F')),
 	CONSTRAINT check_categoria_coleccion CHECK(categoria in ('cla', 'cou', 'mod')),
 	CONSTRAINT pk_coleccion PRIMARY KEY(uid_coleccion)
@@ -145,7 +146,7 @@ CREATE TABLE MOLDE(
 	uid_molde numeric(2) not null,
 	tipo varchar (2) not null,
 	tamaño varchar(10) not null,
-	volumen numeric(3,2) not null,
+	volumen numeric(3,2),
 	cant_persona numeric(1),
 	tipo_plato varchar(2),
 	tipo_taza varchar(2),
@@ -178,8 +179,8 @@ CREATE TABLE PIEZA (
 );
 
 CREATE TABLE FAMILIAR_HISTORICO_PRECIO(
-	uid_pieza numeric(3) not null,
 	uid_coleccion numeric(2) not null,
+	uid_pieza numeric(3) not null,
 	fecha_inicio timestamp not null,
 	precio numeric(8,2) not null,
 	fecha_fin timestamp,
@@ -193,6 +194,8 @@ CREATE TABLE DETALLE_PIEZA_VAJILLA (
 	uid_pieza numeric(3) not null,
 	uid_coleccion numeric(2) not null,
 	cantidad numeric(2) not null,
+    CONSTRAINT check_exclusive_arcs CHECK ((uid_juego IS NOT NULL AND uid_pieza IS NULL AND uid_coleccion IS NULL)
+                                        OR (uid_juego IS NULL AND uid_pieza IS NOT NULL AND uid_coleccion IS NOT NULL)),
 	CONSTRAINT fk_juego_detalle FOREIGN KEY (uid_juego) REFERENCES VAJILLA (uid_juego),
 	CONSTRAINT fk_pieza_detalle FOREIGN KEY (uid_coleccion, uid_pieza) REFERENCES PIEZA (uid_coleccion, uid_pieza),
 	CONSTRAINT pk_detalle PRIMARY KEY (uid_coleccion, uid_juego, uid_pieza )

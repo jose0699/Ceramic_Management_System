@@ -6,6 +6,7 @@ module.exports = router;
 
 //Controladores
     const select = require('../controllersbd/select');
+    const insert = require('../controllersbd/insert');
 
 router.get('/Ceramica_Real', (req, res) => {
     const adminPath = path.join(__dirname, '../../public/views/principal.html');
@@ -27,7 +28,15 @@ router.post('/Ceramica_Real/Pieza', (req, res) => {
     break;
 
     case 2:
+        select.MOLDE(req, res);
+    break;
 
+    case 3:
+    insert.PIEZA(req, res, datos);
+    break;
+
+    case 4:
+        insert.FAMILIAR_HISTORICO_PRECIO(req, res, datos);
     break;
   }
 });

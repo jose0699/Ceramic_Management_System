@@ -32,6 +32,7 @@ CREATE TABLE DEPARTAMENTO (
 	tipo varchar(2) NOT NULL,
 	descripcion varchar(60),
 	uid_dep_padre numeric(2),
+	CONSTRAINT cK_nivel_departamento CHECK (nivel BETWEEN 1 AND 4),
 	CONSTRAINT tipo_departamento CHECK (tipo IN ('GE', 'SE', 'DE', 'AL')),
 	CONSTRAINT fk_departamento FOREIGN KEY (uid_dep_padre) REFERENCES DEPARTAMENTO (uid_departamento), 
 	CONSTRAINT pk_departamento PRIMARY KEY (uid_departamento)
@@ -86,7 +87,7 @@ CREATE TABLE HORARIO(
 	num_expediente numeric(4) not null,
 	mesano date not null,
 	turno numeric(1) not null,
-	CONSTRAINT ck_turno_horario CHECK (turno in (1,2,3)),
+	CONSTRAINT ck_turno_horario CHECK (turno BETWEEN 1 AND 4),
 	CONSTRAINT fk_empleado_horario FOREIGN KEY (num_expediente) REFERENCES EMPLEADO(num_expediente),
 	CONSTRAINT pk_horario PRIMARY KEY (num_expediente, mesano)
 );

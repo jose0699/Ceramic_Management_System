@@ -1,4 +1,4 @@
-  let select_coleccion = false;
+let select_coleccion = false;
   let select_molde = false;
   let numero_actual = '';
   let numero_anterior = '';
@@ -145,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
   input.addEventListener('input', function() {
     let aux2 = ['0','1','2','3','4','5','6','7','8','9'];    
     var numero_ingresado = input.value;
-
     if(aux2.includes(numero_ingresado[numero_ingresado.length - 1])){
       // Eliminar caracteres no numéricos
       numero_ingresado = input.value.replace(/\D/g, '');
@@ -172,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
             case 3:
               input.value = '';
               numero_actual = '';
+              aux = 0;
             break;  
           }
         } else {
@@ -198,9 +198,11 @@ document.addEventListener('DOMContentLoaded', function() {
           input.value = numero_anterior;
         }
       }
+      console.log(numero_actual + ' '+ numero_actual.length)
+
     } else {
       aux++;
-      if( aux == 1 && numero_actual.length == 0){
+      if( aux == 1 || numero_actual.length == 0){
         input.value = '';
       } else if( aux == 2 ||numero_actual.length >= 1){
         input.value = numero_anterior;

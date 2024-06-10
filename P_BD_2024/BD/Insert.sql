@@ -146,16 +146,10 @@ insert into reconocimiento values (8,nextval('reconocimiento_uid_seq'),'2024-06-
 insert into reconocimiento values (9,nextval('reconocimiento_uid_seq'),'2024-06-04','por ser un empleado ejemplar');
 
 /*    horario */
-insert into HIST_TURNO values (5,'2024-08-24',1);
-insert into HIST_TURNO values (4,'2024-06-04',1);
-insert into HIST_TURNO values (2,'2024-05-03',2);
-insert into HIST_TURNO values (3,'2024-07-04',3);
-insert into HIST_TURNO values (5,'2024-09-24',1);
-insert into HIST_TURNO values (5,'2024-10-24',1);
-insert into HIST_TURNO values (2,'2024-06-24',1);
-insert into HIST_TURNO values (2,'2024-07-24',1);
-insert into HIST_TURNO values (3,'2024-08-24',1);
-insert into HIST_TURNO values (2,'2024-09-24',1);
+insert into HIST_TURNO values (5,'2024-05-01',1);
+insert into HIST_TURNO values (4,'2024-05-01',1);
+insert into HIST_TURNO values (2,'2024-05-01',2);
+insert into HIST_TURNO values (3,'2024-05-01',3);
 
 
 --------------------------------------------------------------------------------------------------------

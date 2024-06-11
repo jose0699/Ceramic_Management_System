@@ -149,13 +149,16 @@ CREATE TABLE MOLDE(
 	tamaño varchar(10) not null,
 	volumen numeric(3,2),
 	cant_persona numeric(1),
+  forma varchar(3),
 	tipo_plato varchar(2),
 	tipo_taza varchar(2),
 	CONSTRAINT tipo_molde CHECK (tipo in ('JA', 'TT', 'LE', 'AZ', 'CA', 'BD', 'PL', 'TA', 'EN')),
-	CONSTRAINT plato_molde CHECK (tipo_plato in ('HO', 'LL', 'PO', 'PA', 'PR', 'TT', 'TC')),
-	CONSTRAINT taza_molde CHECK (tipo_taza in ('CS', 'CC', 'CT', 'TC', 'MC', 'MS')),
+	CONSTRAINT plato_molde CHECK (tipo_plato in ('HO', 'LL', 'PO', 'PA', 'PR', 'TT', 'TC','TM')),
+	CONSTRAINT taza_molde CHECK (tipo_taza in ('CS', 'CC', 'TS', 'TC', 'MC', 'MS')),
+  CONSTRAINT forma_molde CHECK (forma in ('red','rec','cua','ova')),
 	CONSTRAINT pk_molde PRIMARY KEY (uid_molde)
 );
+
 
 CREATE TABLE VAJILLA (
 	uid_juego numeric(3) not null,

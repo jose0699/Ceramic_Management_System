@@ -165,33 +165,48 @@ insert into coleccion values(nextval ('coleccion_uid_seq ') ,'Era Moderna','2024
 --insert into coleccion values(nextval ('coleccion_uid_seq ') ,'Coleccion Ondas Suaves','2024-06-04','I','mod','La Colección Ondas Suaves te transporta a la tranquilidad del mar con su diseño ondulado y minimalista. Sus líneas suaves y colores relajantes crean un ambiente sereno y armonioso en tu mesa, perfecto para disfrutar de momentos especiales con tus seres queridos.');
 
 --MOLDE
-insert into molde values(nextval ('molde_uid_seq'),'JA','100x190mm',1.5);
+insert into molde values(nextval ('molde_uid_seq'),'JA','10x19cm',1.5);
 insert into molde values(nextval ('molde_uid_seq'),'JA','12x17cm',1);
-insert into molde values(nextval ('molde_uid_seq'),'TT','10x18cm',6);
-insert into molde values(nextval ('molde_uid_seq'),'TT','12x20cm',2);
-insert into molde values(nextval ('molde_uid_seq'),'LE','18x11cm',6);
-insert into molde values(nextval ('molde_uid_seq'),'LE','19x12cm',2);
-insert into molde values(nextval ('molde_uid_seq'),'AZ',20,2.5,9);
+insert into molde values(nextval ('molde_uid_seq'),'TT','10x18cm',null,6);
+insert into molde values(nextval ('molde_uid_seq'),'TT','12x20cm',null,2);
+insert into molde values(nextval ('molde_uid_seq'),'LE','18x11cm',null,6);
+insert into molde values(nextval ('molde_uid_seq'),'LE','19x12cm',null,2);
+insert into molde values(nextval ('molde_uid_seq'),'AZ','9x10cm',null,9);
+
 insert into molde values(nextval ('molde_uid_seq'),'CA','19x12cm');
 insert into molde values(nextval ('molde_uid_seq'),'CA','7x6cm');
 insert into molde values(nextval ('molde_uid_seq'),'CA','26x20cm');
 insert into molde values(nextval ('molde_uid_seq'),'CA','47x38cm');
 insert into molde values(nextval ('molde_uid_seq'),'CA','28x5cm');
-insert into molde values(nextval ('molde_uid_seq'),'BD','44x22cm');
-insert into molde values(nextval ('molde_uid_seq'),'BD','44x22cm');
-insert into molde values(nextval ('molde_uid_seq'),'BD','35x18cm');
-insert into molde values(nextval ('molde_uid_seq'),'BD','35x18cm');
-insert into molde values(nextval ('molde_uid_seq'),'PL','24cm');
-insert into molde values(nextval ('molde_uid_seq'),'PL','27x27cm');
-insert into molde values(nextval ('molde_uid_seq'),'PL','14x11cm');
-insert into molde values(nextval ('molde_uid_seq'),'PL','23x23cm');
-insert into molde values(nextval ('molde_uid_seq'),'PL','35x35cm');
-insert into molde values(nextval ('molde_uid_seq'),'PL','28x28cm');
-insert into molde values(nextval ('molde_uid_seq'),'PL','35x18cm');
-insert into molde values(nextval ('molde_uid_seq'),'TA','3x7cm');
-insert into molde values(nextval ('molde_uid_seq'),'TA','4x10cm');
-insert into molde values(nextval ('molde_uid_seq'),'TA','3x8cm');
-insert into molde values(nextval ('molde_uid_seq'),'TA','4x6cm');
+
+insert into molde values(nextval ('molde_uid_seq'),'BD','44x22cm',null,null,'ova');
+insert into molde values(nextval ('molde_uid_seq'),'BD','44x22cm',null,null,'rec');
+insert into molde values(nextval ('molde_uid_seq'),'BD','35x18cm',null,null,'ova');
+insert into molde values(nextval ('molde_uid_seq'),'BD','35x18cm',null,null,'rec');
+
+insert into molde values(nextval ('molde_uid_seq'),'PL','24cm',null,null,'red','HO');
+insert into molde values(nextval ('molde_uid_seq'),'PL','24cm',null,null,'cua','HO');
+insert into molde values(nextval ('molde_uid_seq'),'PL','27x27cm',null,null,'red','LL');
+insert into molde values(nextval ('molde_uid_seq'),'PL','27x27cm',null,null,'cua','LL');
+insert into molde values(nextval ('molde_uid_seq'),'PL','27x27cm',null,null,'rec','LL');
+insert into molde values(nextval ('molde_uid_seq'),'PL','14x11cm',null,null,null,'TT');
+insert into molde values(nextval ('molde_uid_seq'),'PL','14x11cm',null,null,null,'TC');
+insert into molde values(nextval ('molde_uid_seq'),'PL','14x11cm',null,null,null,'TM');
+insert into molde values(nextval ('molde_uid_seq'),'PL','23x23cm',null,null,'red','PO');
+insert into molde values(nextval ('molde_uid_seq'),'PL','23x23cm',null,null,'cua','PO');
+insert into molde values(nextval ('molde_uid_seq'),'PL','23x23cm',null,null,'rec','PO');
+insert into molde values(nextval ('molde_uid_seq'),'PL','35x35cm',null,null,'red','PR');
+insert into molde values(nextval ('molde_uid_seq'),'PL','35x35cm',null,null,'cua','PR');
+insert into molde values(nextval ('molde_uid_seq'),'PL','35x35cm',null,null,'rec','PR');
+insert into molde values(nextval ('molde_uid_seq'),'PL','28x28cm',null,null,null,'PA');
+
+insert into molde values(nextval ('molde_uid_seq'),'TA','3x7cm',null,null,null,null,'CS');
+insert into molde values(nextval ('molde_uid_seq'),'TA','4x10cm',null,null,null,null,'CC');
+insert into molde values(nextval ('molde_uid_seq'),'TA','3x8cm',null,null,null,null,'TS');
+insert into molde values(nextval ('molde_uid_seq'),'TA','4x6cm',null,null,null,null,'TC');
+insert into molde values(nextval ('molde_uid_seq'),'TA','3x8cm',null,null,null,null,'MS');
+insert into molde values(nextval ('molde_uid_seq'),'TA','4x6cm',null,null,null,null,'MC');
+
 insert into molde values(nextval ('molde_uid_seq'),'EN','38x22cm');
 insert into molde values(nextval ('molde_uid_seq'),'EN','30x18cm');
 

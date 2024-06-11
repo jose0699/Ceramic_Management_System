@@ -42,33 +42,33 @@ insert into departamento values (nextval('departamento_uid_seq'),'Gerencia de Pl
 insert into departamento values(nextval('departamento_uid_seq'),'Secretaria',2,'GE','Departamento de secretaria',2); --3
 insert into departamento values(nextval('departamento_uid_seq'),'Gerencia Tecnica',2,'GE','Gerencia Tecnica de la planta',2);--4
 insert into departamento values(nextval('departamento_uid_seq'),'Almacen de Insumos',3,'AL','Almacen de materiales de la empresa',2);--5
-insert into departamento values(nextval('departamento_uid_seq'),'Seccion de Control de Calidad',3,'AL','Departamento para el control de la calidad de los productos',4);--6
-insert into departamento values(nextval('departamento_uid_seq'),'Seccion de Mantenimiento',3,'AL','Departamento para el mantenimiento de las maquinas de la fabrica',4);--7
+insert into departamento values(nextval('departamento_uid_seq'),'Seccion de Control de Calidad',3,'SE','Departamento para el control de la calidad de los productos',4);--6
+insert into departamento values(nextval('departamento_uid_seq'),'Seccion de Mantenimiento',3,'SE','Departamento para el mantenimiento de las maquinas de la fabrica',4);--7
 insert into departamento values(nextval('departamento_uid_seq'),'Almacen Producto Terminado',3,'AL','Almacen de todas las piezas terminadas',2);--8
-insert into departamento values(nextval('departamento_uid_seq'),'Departamento de Seleccion','4','DE','Departamento que empaca los productos',4);--9
-insert into departamento values(nextval('departamento_uid_seq'),'Departamento de Esmaltacion y Decoracion','4','DE','Departamento que decora las piezas seleccionadas',4);--10
+insert into departamento values(nextval('departamento_uid_seq'),'Seleccion','4','DE','Departamento que empaca los productos',4);--9
+insert into departamento values(nextval('departamento_uid_seq'),'Esmaltacion y Decoracion','4','DE','Departamento que decora las piezas seleccionadas',4);--10
 insert into departamento values(nextval('departamento_uid_seq'),'Departamento de Colado y Refinado','4','DE','Departamento que cuela la mezcla y refina las piezas',4);--11
-insert into departamento values (nextval('departamento_uid_seq'),'Departamento de Yeseria','4','DE','Departamento que provee de los moldes para las piezas',4);--12
-insert into departamento values(nextval('departamento_uid_seq'),'Departamento de Rotomoldeo','4','DE','Departamento que provee la pieza',4);--13
-insert into departamento values(nextval('departamento_uid_seq'),'Departamento de Preparacion Pasta','4','DE','Departamento que elabora los churros para las piezas',4);--14
+insert into departamento values (nextval('departamento_uid_seq'),'Yeseria','4','DE','Departamento que provee de los moldes para las piezas',4);--12
+insert into departamento values(nextval('departamento_uid_seq'),'Rotomoldeo','4','DE','Departamento que provee la pieza',4);--13
+insert into departamento values(nextval('departamento_uid_seq'),'Preparacion Pasta','4','DE','Departamento que elabora los churros para las piezas',4);--14
 insert into departamento values(nextval('departamento_uid_seq'),'Hornos','3','DE','Departamento de Hornos',4);--15
 
 /* Gerentes */
-insert into empleado values(nextval('empleado_exp_seq'),27474659,'2011-07-21','B-','F','Calle principal de la candelaria','ba','ge',3500,04149116300,1,'María','González','Pérez');-- General  1
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 28934567, '2001-10-24', 'A-', 'F', 'Calle El Triunfo, Res. Las Palmeras', 'ba','ge', 3500, 04167891234, 2, 'Ana', 'Romero', 'Vargas',null, 1);-- Planta  2
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 29876543, '2004-04-25', 'B+', 'M', 'Avenida Bolívar, Urb. La Colina', 'ba','ge', 3500, 04243215678, 4, 'Daniel', 'Guerrero', 'Mendoza',null, 2);-- Tecnica   3
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 30765432, '2010-05-30', 'O-', 'F', 'Calle Sucre, Barrio El Carmen', 'ba','ge', 3500, 04129876543, 1, 'Isabel', 'Álvarez', 'Ramírez');-- General   4
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 31654321, '2004-07-06', 'AB+', 'M', 'Avenida Miranda, Urb. Los Chorros', 'ba','ge', 3500, 04284563210, 1, 'Carlos', 'Flores', 'López');-- General   5
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 32543210, '1993-09-03', 'A-', 'F', 'Calle Vargas, Res. La Pradera', 'ba','ge', 3500, 04146543219, 2, 'Patricia', 'Sánchez', 'García',null, 2);-- Planta   6
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 33432109, '1992-10-07', 'B+', 'M', 'Avenida Libertador, Urb. Las Mercedes', 'ba','ge', 3500, 04263215432, 1, 'Luis', 'Muñoz', 'Pérez');-- General   7
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 34321098, '1990-11-04', 'O-', 'F', 'Calle Falcón, Res. Los Cedros', 'ba','ge', 3500, 04127654321, 4, 'Carmen', 'Blanco', 'Martínez',null, 3); -- Tecnica   8
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 35210987, '1997-12-08', 'AB+', 'M', 'Avenida Baralt, Urb. El Rosal', 'ba','ge', 3500, 04285674321, 4, 'Francisco', 'Gómez', 'Rodríguez',null, 3);-- Tecnica   9
+insert into empleado values(nextval('empleado_exp_seq'),21474659,'1975-07-21','B-','F','Calle principal de la candelaria','ba','ge',3500,04149116300,1,'María','González','Pérez');-- General  1
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 18934567, '1970-10-24', 'A-', 'F', 'Calle El Triunfo, Res. Las Palmeras', 'ba','ge', 3500, 04167891234, 2, 'Ana', 'Romero', 'Vargas',null, 1);-- Planta  2
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 20876543, '1964-04-25', 'B+', 'M', 'Avenida Bolívar, Urb. La Colina', 'ba','ge', 3500, 04243215678, 4, 'Daniel', 'Guerrero', 'Mendoza',null, 2);-- Tecnica   3
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 21765432, '1960-05-30', 'O-', 'F', 'Calle Sucre, Barrio El Carmen', 'ba','ge', 3500, 04129876543, 1, 'Isabel', 'Álvarez', 'Ramírez');-- General   4
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 19654321, '1974-07-06', 'AB+', 'M', 'Avenida Miranda, Urb. Los Chorros', 'ba','ge', 3500, 04284563210, 1, 'Carlos', 'Flores', 'López');-- General   5
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 22543210, '1963-09-03', 'A-', 'F', 'Calle Vargas, Res. La Pradera', 'ba','ge', 3500, 04146543219, 2, 'Patricia', 'Sánchez', 'García',null, 2);-- Planta   6
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 23432109, '1962-10-07', 'B+', 'M', 'Avenida Libertador, Urb. Las Mercedes', 'ba','ge', 3500, 04263215432, 1, 'Luis', 'Muñoz', 'Pérez');-- General   7
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 20321098, '1970-11-04', 'O-', 'F', 'Calle Falcón, Res. Los Cedros', 'ba','ge', 3500, 04127654321, 4, 'Carmen', 'Blanco', 'Martínez',null, 3); -- Tecnica   8
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 21210987, '1967-12-08', 'AB+', 'M', 'Avenida Baralt, Urb. El Rosal', 'ba','ge', 3500, 04285674321, 4, 'Francisco', 'Gómez', 'Rodríguez',null, 3);-- Tecnica   9
 
 /* Supervisores */
 insert into empleado values(nextval('empleado_exp_seq'),27748963,'2001-10-03','A+','M','Avenida Este cero','ind','el',1500,04149116305,10,'Carlos','Torres','Ramírez');--1  --10 --esmalte
 insert into empleado values(nextval('empleado_exp_seq'),27474666,'2002-01-03','O-','M','Avenida Morat','ind','me',1500,04149116307,12,'Luis','Blanco','Fernández');--2  --11	--Yeseria
-insert into empleado values(nextval('empleado_exp_seq'),27474665,'2009-02-03','B-','F','Calle Felicidad','ind','me',1500,04149116306,11,'Carolina','Sánchez','Martínez');--3  --12  --Colado
-INSERT INTO empleado VALUES (nextval('empleado_exp_seq'), 27474667, '2024-06-03', 'O-', 'M', 'Avenida Morat', 'ind', 'me', 1500, 04149116307, 14, 'María', 'González', 'López');--4  --13  --Pasta
+insert into empleado values(nextval('empleado_exp_seq'),27474665,'1990-02-03','B-','F','Calle Felicidad','ind','me',1500,04149116306,11,'Carolina','Sánchez','Martínez');--3  --12  --Colado
+INSERT INTO empleado VALUES (nextval('empleado_exp_seq'), 27474667, '1984-06-03', 'O-', 'M', 'Avenida Morat', 'ind', 'me', 1500, 04149116307, 14, 'María', 'González', 'López');--4  --13  --Pasta
 INSERT INTO empleado VALUES (nextval('empleado_exp_seq'), 27441986, '1994-05-20', 'O-', 'M', 'Avenida Trusk', 'ind', 'me', 1500, 04149116307, 9, 'Luis', 'Blanco', 'Rotos');--5  --14	--seleccion
 INSERT INTO empleado VALUES (nextval('empleado_exp_seq'), 27365666, '1995-08-03', 'A-', 'M', 'Avenida Del Moratorio', 'ind', 'me', 1500, 04149116307, 15, 'Carlos', 'Blanco', 'Fernández');--6  --15	--hornos
 INSERT INTO empleado VALUES (nextval('empleado_exp_seq'), 27364666, '1996-07-03', 'AB-', 'F', 'Avenida Morat', 'ind', 'me', 1500, 04149116307, 8, 'María', 'González', 'López');--7  --16		--terminado
@@ -79,47 +79,47 @@ INSERT INTO empleado VALUES (nextval('empleado_exp_seq'), 27454666, '2002-05-20'
 INSERT INTO empleado VALUES (nextval('empleado_exp_seq'), 27000666, '2003-04-20', 'B-', 'F', 'Calle Encorium', 'ind', 'me', 1500, 04149116307, 4, 'María', 'Lorena', 'Lóongaza');--12   --21	--secretaria
 
 /*  Secretaria  */
-insert into empleado values(nextval('empleado_exp_seq'),27474658,'1991-12-03','A+','M','Avenida siempre viva','qui','se',2100,04149116299,3,'Marcello','Servitad','Jesus','Santos',12);--21
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 37485673, '1990-05-09', 'B-', 'F', 'Avenida Boulevard', 'qui','se', 2100, 04147896543, 3, 'Valentina', 'Harrison', 'Pérez',null,12 );--22
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 46321549, '1993-07-08', 'O+', 'M', 'Calle Principal', 'qui','se', 2100, 04265473210, 3, 'Alejandro', 'Guzmán', 'López',null,12 );--23
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 55210987, '2000-10-07', 'AB-', 'F', 'Avenida La Paz', 'qui','se', 2100, 04128765432, 3, 'Sandra', 'Mendoza', 'Martínez', null,12);--24
+insert into empleado values(nextval('empleado_exp_seq'),25474658,'1991-12-03','A+','M','Avenida siempre viva','qui','se',2100,04149116299,3,'Marcello','Servitad','Jesus','Santos',12);--21
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24485673, '1990-05-09', 'B-', 'F', 'Avenida Boulevard', 'qui','se', 2100, 04147896543, 3, 'Valentina', 'Harrison', 'Pérez',null,12 );--22
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 26321549, '1993-07-08', 'O+', 'M', 'Calle Principal', 'qui','se', 2100, 04265473210, 3, 'Alejandro', 'Guzmán', 'López',null,12 );--23
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24210987, '2000-10-07', 'AB-', 'F', 'Avenida La Paz', 'qui','se', 2100, 04128765432, 3, 'Sandra', 'Mendoza', 'Martínez', null,12);--24
 
 /* Seccion de control  */--6
 insert into empleado values(nextval('empleado_exp_seq'),27403661,'1997-11-03','A+','F','Calle Esperanza de la cruz','pro','in',1400,04149116302,6,'Ana','Romero','Flores',null,19);--25
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 36254321, '2010-03-05', 'B-', 'M', 'Avenida Universidad', 'pro','in', 1400, 04241234567, 6, 'Pedro', 'González', 'López', null,19);--26
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 23254321, '2000-03-05', 'B-', 'M', 'Avenida Universidad', 'pro','in', 1400, 04241234567, 6, 'Pedro', 'González', 'López', null,19);--26
 
 /* Seccion de mantenimiento*/--7
-insert into empleado values(nextval('empleado_exp_seq'),20360661,'2010-06-03','A+','F','Calle Esperanza de la cruz','pro','el',850,04149116302,7,'Ana','Romero','Flores',null,17);--27
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 35147362, '1994-06-07', 'O+', 'M', 'Avenida Libertador', 'pro','me', 850, 04162345678, 7, 'Luis', 'Muñoz', 'García', null,17);--28
+insert into empleado values(nextval('empleado_exp_seq'),24360661,'2001-06-03','A+','F','Calle Esperanza de la cruz','pro','el',850,04149116302,7,'Ana','Romero','Flores',null,17);--27
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 25147362, '1994-06-07', 'O+', 'M', 'Avenida Libertador', 'pro','me', 850, 04162345678, 7, 'Luis', 'Muñoz', 'García', null,17);--28
 
 /*  Almacen de insumos */--5
-insert into empleado values(nextval('empleado_exp_seq'),27474661,'2006-06-03','A+','F','Calle Esperanza de la cruz','pro','og',2000,04149116302,5,'Ana','Romero','Flores',null,18);--29
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 48372615, '2007-08-09', 'AB+', 'M', 'Avenida Morán','pro','og', 2000, 04283654721, 5, 'Carlos', 'Blanco', 'Méndez',null, 18);--30
+insert into empleado values(nextval('empleado_exp_seq'),27474661,'1994-06-03','A+','F','Calle Esperanza de la cruz','pro','og',2000,04149116302,5,'Ana','Romero','Flores',null,18);--29
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 23372615, '1987-08-09', 'AB+', 'M', 'Avenida Morán','pro','og', 2000, 04283654721, 5, 'Carlos', 'Blanco', 'Méndez',null, 18);--30
 
 
 /*Almacen de producto terminado */--8
-insert into empleado values(nextval('empleado_exp_seq'),29568661,'2009-06-03','A+','F','Calle Esperanza de la cruz','pro','og',2900,04149116302,8,'Ana','Romero','Flores',null,16);--31
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 57261548, '2010-06-06', 'B-', 'F', 'Avenida Las Américas','pro','og', 2900, 04125432109, 8, 'María', 'Gómez', 'Pérez',null, 16);--32
+insert into empleado values(nextval('empleado_exp_seq'),28568661,'2001-06-03','A+','F','Calle Esperanza de la cruz','pro','og',2900,04149116302,8,'Ana','Romero','Flores',null,16);--31
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 28261548, '2002-06-06', 'B-', 'F', 'Avenida Las Américas','pro','og', 2900, 04125432109, 8, 'María', 'Gómez', 'Pérez',null, 16);--32
 
 /*  Operarios */
-insert into empleado values(nextval('empleado_exp_seq'),27474660,'2002-04-03','O-','M','Avenida Libertad Solarium','ind','og',2600,04149116301,10,'Pedro','López','García',null,10);--33
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 34251432, '2001-06-09', 'A+', 'F', 'Calle Principal', 'ind','og', 2600, 04267345123, 10, 'Gabriela', 'Martínez', 'Silva',null,10 );--34
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 12548736, '2010-07-08', 'B-', 'M', 'Avenida Bolívar', 'ind','og', 2600, 04143256789, 11, 'Luis', 'Ramírez', 'Blanco',null,11 );--35
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 45721369, '2011-03-07', 'AB+', 'F', 'Calle Miranda', 'ind','og', 2600, 04281234567, 11, 'Andrea', 'Guerrero', 'Pérez', null,11);--36
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 56832147, '2005-11-06', 'O-', 'M', 'Avenida Sucre', 'ind','og', 2600, 04165432109, 8, 'Carlos', 'Suárez', 'López', null,16);--37
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 67943258, '2006-06-05', 'A+', 'F', 'Calle Vargas', 'ind','og', 2600, 04242345678, 8, 'Isabel', 'Muñoz', 'García', null,16);--38
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 78054369, '2005-03-24', 'B-', 'M', 'Avenida Páez', 'ind','og', 2600, 04187654321, 13, 'Daniel', 'Romero', 'Flores', null,11);--39
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 89165470, '2004-01-03', 'AB+', 'F', 'Calle Cedeño', 'ind','og', 2600, 04224321098, 13, 'Jennifer', 'Gómez', 'Pérez', null,11);--40
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 10276581, '2001-07-02', 'O-', 'M', 'Avenida Falcón', 'ind','og', 2600, 04145678901, 14, 'José', 'López', 'García', null,13);--41
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 11387692, '1990-05-01', 'A+', 'F', 'Calle Carabobo','ind','og', 2600, 04263456789, 14, 'María', 'Ramírez', 'Blanco', null,13);--42
-insert into empleado values(nextval('empleado_exp_seq'),27474669,'2003-06-03','B-', 'M','Avenida  Solarium','ind','og',2600,04149116301,9,'Paco','Gutierrez','García',null,14);--43
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 20509814, '2002-05-30', 'AB+', 'F', 'Calle Boyacá','ind','og', 2600, 04247654321, 9, 'Ana', 'Suárez', 'López',null,14 );--44
+insert into empleado values(nextval('empleado_exp_seq'),28474660,'2002-04-03','O-','M','Avenida Libertad Solarium','ind','og',2600,04149116301,10,'Pedro','López','García',null,10);--33
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 28251432, '2001-06-09', 'A+', 'F', 'Calle Principal', 'ind','og', 2600, 04267345123, 10, 'Gabriela', 'Martínez', 'Silva',null,10 );--34
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 22548736, '1987-07-08', 'B-', 'M', 'Avenida Bolívar', 'ind','og', 2600, 04143256789, 11, 'Luis', 'Ramírez', 'Blanco',null,11 );--35
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24721369, '1991-03-07', 'AB+', 'F', 'Calle Miranda', 'ind','og', 2600, 04281234567, 11, 'Andrea', 'Guerrero', 'Pérez', null,11);--36
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 23832147, '2000-11-06', 'O-', 'M', 'Avenida Sucre', 'ind','og', 2600, 04165432109, 8, 'Carlos', 'Suárez', 'López', null,16);--37
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24943258, '2002-06-05', 'A+', 'F', 'Calle Vargas', 'ind','og', 2600, 04242345678, 8, 'Isabel', 'Muñoz', 'García', null,16);--38
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24054369, '2003-03-24', 'B-', 'M', 'Avenida Páez', 'ind','og', 2600, 04187654321, 13, 'Daniel', 'Romero', 'Flores', null,11);--39
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24165470, '1995-01-03', 'AB+', 'F', 'Calle Cedeño', 'ind','og', 2600, 04224321098, 13, 'Jennifer', 'Gómez', 'Pérez', null,11);--40
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24276581, '2001-07-02', 'O-', 'M', 'Avenida Falcón', 'ind','og', 2600, 04145678901, 14, 'José', 'López', 'García', null,13);--41
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24387692, '1990-05-01', 'A+', 'F', 'Calle Carabobo','ind','og', 2600, 04263456789, 14, 'María', 'Ramírez', 'Blanco', null,13);--42
+insert into empleado values(nextval('empleado_exp_seq'),24474669,'2003-06-03','B-', 'M','Avenida  Solarium','ind','og',2600,04149116301,9,'Paco','Gutierrez','García',null,14);--43
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24509814, '2002-05-30', 'AB+', 'F', 'Calle Boyacá','ind','og', 2600, 04247654321, 9, 'Ana', 'Suárez', 'López',null,14 );--44
 
 /* Horneros  */
-insert into empleado values(nextval('empleado_exp_seq'),27474662,'2000-06-03','B-','M','Avenida Progreso movimiento','geo','ho',1900,0414911703,15,'Juan','Muñoz','Vega',null,15);--45
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 48362514, '1997-04-09', 'A+', 'F', 'Calle Libertad','geo','ho', 1900, 04283654721, 15, 'Gabriela', 'Pérez', 'García',null, 15);--46
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 59273645, '1999-06-08', 'B-', 'M', 'Avenida Morán','geo','ho', 1900, 04162345678, 15, 'Luis', 'Gómez', 'López',null,15 );--47
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 60184756, '1998-06-07', 'AB+', 'F', 'Calle Miranda', 'geo','ho', 1900, 04241234567, 15, 'Andrea', 'Blanco', 'Méndez',null,15 );--48
+insert into empleado values(nextval('empleado_exp_seq'),27474662,'2000-06-03','B-','M','Avenida Progreso movimiento','geo','og',1900,0414911703,15,'Juan','Muñoz','Vega',null,15);--45
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 26362514, '1997-04-09', 'A+', 'F', 'Calle Libertad','geo','og', 1900, 04283654721, 15, 'Gabriela', 'Pérez', 'García',null, 15);--46
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 27273645, '1999-06-08', 'B-', 'M', 'Avenida Morán','geo','og', 1900, 04162345678, 15, 'Luis', 'Gómez', 'López',null,15 );--47
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24184756, '1998-06-07', 'AB+', 'F', 'Calle Miranda', 'geo','og', 1900, 04241234567, 15, 'Andrea', 'Blanco', 'Méndez',null,15 );--48
 
 
 /* resumen reunion */

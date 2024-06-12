@@ -24,8 +24,8 @@ triggers e índices del sistema.
 		
 
 		-- Calcular la diferencia en años
-		IF (EXTRACT(DAY FROM NOW() - NEW.fecha_nacimiento) / 365) <= 35 THEN
-			RAISE EXCEPTION 'Error: Para ocupar el cargo de "Gerencia" debe ser mayor de 35 años.';
+		IF (NEW.cargo = 'ge') AND (EXTRACT(DAY FROM NOW() - NEW.fecha_nacimiento) / 365) <= 35 THEN
+			RAISE EXCEPTION 'Error: Para ocupar el cargo de "Gerencia" debe ser mayor o igual de 35 años.';
 		END IF;
 
 		RETURN NEW;
@@ -42,7 +42,7 @@ triggers e índices del sistema.
 		
 		IF	(( tipo_departamento = 'GE') AND (NEW.cargo = 'ge') OR ((nombre_departamento = 'Secretaria') AND (NEW.cargo = 'se'))) OR 
 			(( tipo_departamento = 'SE') AND (nombre_departamento = 'Mantenimiento') AND ((NEW.cargo = 'me') or (NEW.cargo = 'el'))) OR
-			( tipo_departamento = 'SE') AND (nombre_departamento = 'Control de Calidad') AND (NEW.cargo = 'in') OR
+			(( tipo_departamento = 'SE') AND (nombre_departamento = 'Control de Calidad') AND (NEW.cargo = 'in')) OR
 			((tipo_departamento = 'DE' OR tipo_departamento = 'AL') AND (NEW.cargo = 'og')) THEN
 			RETURN NEW;
 		END IF;
@@ -51,22 +51,55 @@ triggers e índices del sistema.
 	$$ LANGUAGE plpgsql;	
 
 	--Numero 3
-	/*CREATE OR REPLACE FUNCTION SUPERVISOR_EMPLEADO () RETURNS TRIGGERS AS $$ 
+	CREATE OR REPLACE FUNCTION SUPERVISOR_DEPARTAMENTO() RETURNS TRIGGER AS $$ 
 	DECLARE
 		supervisor numeric(4);
-		cargo_jefe varchar(2);
 	BEGIN
-		SELECT e.supervisor, e.cargo FROM EMPLEADO e where e.num_expediente = NEW.supervisor INTO supervisor, cargo_jefe;
-		
-		IF () OR ((expediente = NEW.trabaja) AND (cargo_jefe = 'og'))   THEN
+		IF (NEW.cargo <> 'og') OR (new.cargo = 'og') AND (NEW.supervisor IS NULL) THEN 
 			RETURN NEW;
 		END IF;
-		RAISE EXCEPTION 'Error: supervisor no pertenece al mismo departamento.';
-	END;
-	$$ LANGUAGE plpgsql;*/
 		
-	--RESUMEN_REUNION
+		SELECT count(*) INTO supervisor FROM empleado e WHERE num_expediente = NEW.supervisor AND e.trabaja = NEW.trabaja;
+		IF supervisor > 0 THEN
+			RETURN NEW;
+		END IF;
+		RAISE EXCEPTION 'Error: El supervisor y el Operario General, pertenecen a distintos departamentos.';		
+	END;
+	$$ LANGUAGE plpgsql;
+	
+	--Numero 4
+	CREATE OR REPLACE FUNCTION NO_SUPERVISION() RETURNS TRIGGER AS $$ 
+	Declare 
+		cant_supervisados numeric (2);
+	BEGIN
+		IF (cargo <> 'og' and supervisor is null) THEN
+			RETURN NEW;
+		END IF;
+		
+		SELECT COUNT(*) INTO cant_supervisados FROM empleado e WHERE e.supervisor = NEW.supervisor; 
+		IF ((cargo = 'og') AND  ((cant_supervisados = 0)) OR 
+			((cant_supervisados > 0) AND (NEW.supervisor is NULL)))) THEN
+			RETURN NEW;		
+		END IF;		 
+		RAISE EXCEPTION 'Error: El empleado no puede tener supervisor.';
+	END;
+	$$ LANGUAGE plpgsql;
+	
 	--Numero 5
+	CREATE OR REPLACE FUNCTION MAX_SUPERVISION() RETURNS TRIGGER AS $$ 
+	Declare 
+		cant_supervisados numeric (2);
+	BEGIN
+		SELECT COUNT(*) INTO cant_supervisados FROM empleado e WHERE e.supervisor = NEW.supervisor; 
+		IF cant_supervisados > 10 THEN
+			RAISE EXCEPTION 'Error: El supervisor alcanzo la cantidad maxima de empleado supervisados.';			
+		END IF;	
+		RETURN NEW;
+	END;
+	$$ LANGUAGE plpgsql;
+	
+	--RESUMEN_REUNION
+	--Numero 6
 	CREATE OR REPLACE FUNCTION REUNION_SUPERVISOR() RETURNS TRIGGER AS $$ 
 	DECLARE
 		supervisor numeric(4);
@@ -81,6 +114,51 @@ triggers e índices del sistema.
 	END;
 	$$ LANGUAGE plpgsql;
 	
+	--INASISTENCIA 
+	--Numero 7
+	CREATE OR REPLACE FUNCTION SUPERVISION_CONGRUENTE() RETURNS TRIGGER AS $$
+	DECLARE
+		cantidad numeric(1);
+	BEGIN
+		SELECT count(*) INTO cantidad FROM empleado e WHERE e.num_expediente = NEW.num_expediente AND e.supervisor = NEW.num_expediente_supervisor;
+		
+		IF cantidad = 0 THEN 
+			RAISE EXCEPTION 'Error: El empleado no está bajo la supervisión de este supervisor.';
+		END IF;
+		RETURN NEW;
+	END;
+	$$ LANGUAGE plpgsql;
+	
+	--DET_EXP
+	--Numero 9
+	CREATE OR REPLACE FUNCTION DET_INASISTENCIA_AMONESTACION() RETURNS TRIGGER AS $$
+		DECLARE
+		  num_inasistencias numeric(1);
+		BEGIN
+		  -- Contar el número de inasistencias del empleado en el último mes
+		  SELECT COUNT(*) INTO num_inasistencias
+		  FROM DET_EXP
+		  WHERE num_exp= NEW.num_expediente
+			AND fecha BETWEEN NEW.fecha - INTERVAL '3 month' AND NEW.fecha;
+
+		  -- Si es la tercera inasistencia en el último mes, generar la amonestación
+		  IF num_inasistencias = 3 THEN
+			INSERT INTO DET_EXP VALUES
+			(NEW.num_expediente,  nextval('det_exp_uid_seq'), CURRENT_DATE, 'am', null, null, null, 'Amonestación por 3 inasistencias en el último mes');
+		  END IF;
+
+		  RETURN NEW;
+		END;
+	$$ LANGUAGE plpgsql;
+
+	--HIST_TURNO
+	--Numero 10
+	/*CREATE OR REPLACE FUNCTION HORNERO_CARGO() RETURNS TRIGGER AS $$
+	DECLARE
+	BEGIN
+	
+	END;
+	$$ LANGUAGE plpgsql;*/
 --------------------------------------------------------------------------------------------------------
 --                                           Trigger                                                  --
 --------------------------------------------------------------------------------------------------------
@@ -88,11 +166,24 @@ triggers e índices del sistema.
 --Proceso Venta
 
 	--EMPLEADO
-	CREATE OR REPLACE TRIGGER GERENTE_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION GERENCIA_EMPLEADO();
-	CREATE OR REPLACE TRIGGER DEPARTAMENTO_CARGO_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION DEPARTAMENTO_EMPLEADO(); 
+	CREATE OR REPLACE TRIGGER GERENTE_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION GERENCIA_EMPLEADO(); --1
+	CREATE OR REPLACE TRIGGER DEPARTAMENTO_CARGO_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION DEPARTAMENTO_EMPLEADO(); --2 
+	CREATE OR REPLACE TRIGGER SUPERVISOR_DEPARTAMENTO_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION SUPERVISOR_DEPARTAMENTO(); --3
+	CREATE OR REPLACE TRIGGER NO_SUPERVISION_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION NO_SUPERVISION(); --4
+	CREATE OR REPLACE TRIGGER MAX_SUPERVISION_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION MAX_SUPERVISION(); --5
+	
 	
 	--RESUMEN_REUNION
-	CREATE OR REPLACE TRIGGER REUNION_SUPERVISOR BEFORE INSERT OR UPDATE ON RESUMEN_REUNION FOR EACH ROW EXECUTE FUNCTION REUNION_SUPERVISOR();
+	CREATE OR REPLACE TRIGGER REUNION_SUPERVISOR BEFORE INSERT OR UPDATE ON REUNION FOR EACH ROW EXECUTE FUNCTION REUNION_SUPERVISOR(); --6
+	
+	--INASISTENCIA 
+	CREATE OR REPLACE TRIGGER SUPERVISION_CONGRUENTE_INASISTENCIA BEFORE INSERT OR UPDATE ON REUNION FOR EACH ROW EXECUTE FUNCTION REUNION_SUPERVISOR(); --7
+	
+	--DET_EXP
+	CREATE OR REPLACE TRIGGER trigger_inasistencias AFTER INSERT ON inasistencia FOR EACH ROW EXECUTE FUNCTION DET_INASISTENCIA_AMONESTACION(); --9
+	
+	--HIST_TURNO
+	
 --------------------------------------------------------------------------------------------------------
 --                                           INDEX                                                    --
 --------------------------------------------------------------------------------------------------------
@@ -110,5 +201,61 @@ CREATE INDEX FAC_PEDIDO ON FACTURA (uid_cliente);
 CREATE INDEX DET_PED_PIE_JUEGO ON DETALLE_PEDIDO_PIEZA(uid_juego);
 CREATE INDEX DET_PED_PIE_PIEZA ON DETALLE_PEDIDO_PIEZA(uid_pieza, uid_coleccion);
 
+--------------------------------------------------------------------------------------------------------
+--                                           VIEW                                                     --
+--------------------------------------------------------------------------------------------------------
 
+CREATE OR REPLACE VIEW nombres_moldes AS
+
+	SELECT m.uid_molde, 
+		CASE WHEN m.tipo = 'JA' THEN 'Jarra'
+			WHEN m.tipo = 'TT' THEN 'Tetera'
+			WHEN m.tipo = 'LE' THEN 'Lechera'
+			WHEN m.tipo = 'AZ' THEN 'Azucarero'
+			WHEN m.tipo = 'CA' THEN 'Cazuela'
+			WHEN m.tipo = 'BD' THEN 'Bandeja'
+			WHEN m.tipo = 'PL' THEN 'Plato'
+			WHEN m.tipo = 'TA' THEN 'Taza'
+			WHEN m.tipo = 'EN' THEN 'Ensaladera'
+		END 
+
+		||''||
+
+		CASE WHEN m.tipo_plato = 'HO' THEN ' Hondo'
+			WHEN m.tipo_plato = 'LL' THEN ' llano'
+			WHEN m.tipo_plato = 'TT' THEN ' taza té'
+			WHEN m.tipo_plato = 'TC' THEN ' taza café'
+			WHEN m.tipo_plato = 'TM' THEN ' taza moka'
+			WHEN m.tipo_plato = 'PO' THEN ' postre'
+			WHEN m.tipo_plato = 'PR' THEN ' presentación'
+			WHEN m.tipo_plato = 'PA' THEN ' pasta'
+			ELSE ''
+		END
+
+		||''||
+
+		CASE WHEN m.tipo_taza = 'CS' THEN ' café sin plato'
+			WHEN m.tipo_taza = 'CC' THEN ' café con plato'
+			WHEN m.tipo_taza = 'TS' THEN ' té sin plato'
+			WHEN m.tipo_taza = 'TC' THEN ' té con plato'
+			WHEN m.tipo_taza = 'MS' THEN ' moka sin plato'
+			WHEN m.tipo_taza = 'MC' THEN ' moka sin plato'
+			ELSE ''
+		END
+
+		||''||
+
+		CASE WHEN m.forma = 'ova' THEN ' ovalado'
+			 WHEN m.forma = 'rec' THEN ' rectangular'
+			 WHEN m.forma = 'cua' THEN ' cuadrado'
+			 WHEN m.forma = 'red' THEN ' redondo'
+			 ELSE ''
+		END
+
+		||' '|| m.tamaño
+		||''|| COALESCE(to_char(m.volumen,'9.9') || 'lts','')
+		||''|| COALESCE(to_char(m.cant_persona,'9') || 'pers','')
+
+		AS molde
+	FROM molde m;  
 

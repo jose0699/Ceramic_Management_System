@@ -78,7 +78,7 @@ triggers e índices del sistema.
 		
 		SELECT COUNT(*) INTO cant_supervisados FROM empleado e WHERE e.supervisor = NEW.supervisor; 
 		IF ((cargo = 'og') AND  ((cant_supervisados = 0)) OR 
-			((cant_supervisados > 0) AND (NEW.supervisor is NULL)))) THEN
+			((cant_supervisados > 0) AND (NEW.supervisor is NULL))) THEN
 			RETURN NEW;		
 		END IF;		 
 		RAISE EXCEPTION 'Error: El empleado no puede tener supervisor.';
@@ -129,6 +129,21 @@ triggers e índices del sistema.
 	END;
 	$$ LANGUAGE plpgsql;
 	
+	--MOLDE
+	--Numero 8
+	CREATE OR REPLACE FUNCTION DET_EXP_CAMPOS() RETURNS  TRIGGER AS $$
+	DECLARE
+	BEGIN
+		IF  ((NEW.motivo = 'in' OR NEW.motivo = 'am') AND (NEW.monto_bono IS NULL) AND(NEW.retraso IS NULL) AND (NEW.total_hora_extra IS NULL)) OR 
+			((NEW.motivo = 'bm' OR NEW.motivo = 'ba') AND (NEW.monto_bono IS NOT NULL) AND(NEW.retraso IS NULL) AND (NEW.total_hora_extra IS NULL)) OR 
+			((NEW.motivo = 'lt') AND (NEW.monto_bono IS NULL) AND(NEW.retraso IS NOT NULL) AND (NEW.total_hora_extra IS NULL)) OR 
+			((NEW.motivo = 'he')  AND (NEW.monto_bono IS NULL) AND(NEW.retraso IS NULL) AND (NEW.total_hora_extra IS NOT NULL)) OR THEN
+			RETURN NEW;
+		END IF;
+		RAISE EXCEPTION 'Error: Está ingresando información en un campo que no corresponde al motivo..';
+	END;
+	$$ LANGUAGE plpgsql;
+
 	--DET_EXP
 	--Numero 9
 	CREATE OR REPLACE FUNCTION DET_INASISTENCIA_AMONESTACION() RETURNS TRIGGER AS $$
@@ -151,14 +166,40 @@ triggers e índices del sistema.
 		END;
 	$$ LANGUAGE plpgsql;
 
-	--HIST_TURNO
 	--Numero 10
-	/*CREATE OR REPLACE FUNCTION HORNERO_CARGO() RETURNS TRIGGER AS $$
+	CREATE OR REPLACE FUNCTION LH_TARDE_EXTRA() RETURNS TRIGGER AS $$
+		DECLARE
+		existe numeric(1);
+		BEGIN
+		--Revisa si es diferente a los campos a revisar
+		IF (NEW.motivo <> 'lt') OR (NEW.motivo <> 'he') THEN
+			RETURN NEW; 
+		END IF;
+
+		--Se realiza la consulta;
+		Select COUNT(*) INTO existe FROM departamento d, empleado e WHERE d.uid_departamento = e.NEW.trabaja
+		AND d.nombre = 'Horno' AND e.num_expediente= NEW.num_exp ;
+		IF (existe = 1) AND (NEW.motivo = 'lt') OR (NEW.motivo = 'he')THEN
+			RETURN NEW;
+		END IF;
+		RAISE EXCEPTION 'Error: Motivo invalida, porque el empleado no es un Hornero.';
+		END;
+	$$ LANGUAGE plpgsql;
+
+	--HIST_TURNO
+	--Numero 11
+	CREATE OR REPLACE FUNCTION HORNERO_CARGO() RETURNS TRIGGER AS $$
 	DECLARE
+		existe numeric(1);
 	BEGIN
-	
+		Select COUNT(*) INTO existe FROM departamento d, empleado e WHERE d.uid_departamento = e.NEW.trabaja
+		AND d.nombre = 'Horno' AND e.num_expediente= NEW.num_expediente ;
+		IF existe = 1 THEN
+			RETURN NEW;
+		END IF;
+		RAISE EXCEPTION 'Error: El empleado no es un Hornero.';
 	END;
-	$$ LANGUAGE plpgsql;*/
+	$$ LANGUAGE plpgsql;
 --------------------------------------------------------------------------------------------------------
 --                                           Trigger                                                  --
 --------------------------------------------------------------------------------------------------------
@@ -179,27 +220,32 @@ triggers e índices del sistema.
 	--INASISTENCIA 
 	CREATE OR REPLACE TRIGGER SUPERVISION_CONGRUENTE_INASISTENCIA BEFORE INSERT OR UPDATE ON REUNION FOR EACH ROW EXECUTE FUNCTION REUNION_SUPERVISOR(); --7
 	
+	--MOLDE
+
 	--DET_EXP
-	CREATE OR REPLACE TRIGGER trigger_inasistencias AFTER INSERT ON inasistencia FOR EACH ROW EXECUTE FUNCTION DET_INASISTENCIA_AMONESTACION(); --9
-	
+	CREATE OR REPLACE TRIGGER CAMPO_DET_EXP BEFORE INSERT ON DET_EXP FOR EACH ROW EXECUTE FUNCTION DET_EXP_CAMPOS(); --8
+	CREATE OR REPLACE TRIGGER INASISTENCIA_AMONESTACION_DET_EXP AFTER INSERT ON DET_EXP FOR EACH ROW EXECUTE FUNCTION DET_INASISTENCIA_AMONESTACION(); --9
+	CREATE OR REPLACE TRIGGER  LLEGADA_TARDE_HORAS_EXTRAS_DET_EXP BEFORE INSERT ON DET_EXP FOR EACH ROW EXECUTE FUNCTION LH_TARDE_EXTRA(); --10
+
 	--HIST_TURNO
-	
+	CREATE OR REPLACE TRIGGER HORNERO_CARGO_HIST_TURNO BEFORE INSERT ON HIST_TURNO FOR EACH ROW EXECUTE FUNCTION HORNERO_CARGO(); --11
+
 --------------------------------------------------------------------------------------------------------
 --                                           INDEX                                                    --
 --------------------------------------------------------------------------------------------------------
 --Proceso Catalogo
-CREATE INDEX PIE_MOLDE ON PIEZA(uid_molde);
+	CREATE INDEX PIE_MOLDE ON PIEZA(uid_molde);
 
 --Proceso Empleado
-CREATE INDEX EMP_SUPERVISOR ON EMPLEADO (supervisor);
-CREATE INDEX EMP_DEP ON EMPLEADO(trabaja);
-CREATE INDEX DEP_PADRE ON DEPARTAMENTO(uid_dep_padre);
+	CREATE INDEX EMP_SUPERVISOR ON EMPLEADO (supervisor);
+	CREATE INDEX EMP_DEP ON EMPLEADO(trabaja);
+	CREATE INDEX DEP_PADRE ON DEPARTAMENTO(uid_dep_padre);
 
 --Proceso Venta
-CREATE INDEX CLI_PAIS ON CLIENTE(uid_pais);
-CREATE INDEX FAC_PEDIDO ON FACTURA (uid_cliente);
-CREATE INDEX DET_PED_PIE_JUEGO ON DETALLE_PEDIDO_PIEZA(uid_juego);
-CREATE INDEX DET_PED_PIE_PIEZA ON DETALLE_PEDIDO_PIEZA(uid_pieza, uid_coleccion);
+	CREATE INDEX CLI_PAIS ON CLIENTE(uid_pais);
+	CREATE INDEX FAC_PEDIDO ON FACTURA (uid_cliente);
+	CREATE INDEX DET_PED_PIE_JUEGO ON DETALLE_PEDIDO_PIEZA(uid_juego);
+	CREATE INDEX DET_PED_PIE_PIEZA ON DETALLE_PEDIDO_PIEZA(uid_pieza, uid_coleccion);
 
 --------------------------------------------------------------------------------------------------------
 --                                           VIEW                                                     --

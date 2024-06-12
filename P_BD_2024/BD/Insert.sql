@@ -105,10 +105,10 @@ INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24276581, '2001-07-02',
 INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24387692, '1990-05-01', 'A+', 'F', 'Calle Carabobo','ind','og', 2600, 04263456789, 14, 'María', 'Ramírez', 'Blanco', null,10);--34
 
 /* Horneros  */
-insert into empleado values(nextval('empleado_exp_seq'),24474669,'2003-06-03','B-', 'M','Avenida  Solarium','geo','og',2600,04149116301,9,'Paco','Gutierrez','García',null,12);--35
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24509814, '2002-05-30', 'AB+', 'F', 'Calle Boyacá','geo','og', 2600, 04247654321, 9, 'Ana', 'Suárez', 'López',null,12);--36
-insert into empleado values(nextval('empleado_exp_seq'),27474662,'2000-06-03','B-','M','Avenida Progreso movimiento','geo','og',1900,0414911703,15,'Juan','Muñoz','Vega',null,12);--37
-INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 26362514, '1997-04-09', 'A+', 'F', 'Calle Libertad','geo','og', 1900, 04283654721, 15, 'Gabriela', 'Pérez', 'García',null,12);--38
+insert into empleado values(nextval('empleado_exp_seq'),24474669,'2003-06-03','B-', 'M','Avenida  Solarium','ba','og',2600,04149116301,15,'Paco','Gutierrez','García',null,12);--35
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24509814, '2002-05-30', 'AB+', 'F', 'Calle Boyacá','ba','og', 2600, 04247654321, 15, 'Ana', 'Suárez', 'López',null,12);--36
+insert into empleado values(nextval('empleado_exp_seq'),27474662,'2000-06-03','B-','M','Avenida Progreso movimiento','ba','og',1900,0414911703,15,'Juan','Muñoz','Vega',null,12);--37
+INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 26362514, '1997-04-09', 'A+', 'F', 'Calle Libertad','ba','og', 1900, 04283654721, 15, 'Gabriela', 'Pérez', 'García',null,12);--38
 
 /*  otro departamento   */
 INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 27273645, '1999-06-08', 'B-', 'M', 'Avenida Morán','geo','og', 1900, 04162345678, 15, 'Luis', 'Gómez', 'López',null, 11);--39
@@ -116,7 +116,10 @@ INSERT INTO empleado VALUES(nextval('empleado_exp_seq'), 24184756, '1998-06-07',
 
 
 /* reunion */
-insert into reunion values (4,'2024-06-04','Se comento sobre la productividad general de la fabrica');
+
+insert into reunion values (4,'2024-06-04','Se comentó sobre la productividad general de la fabrica');
+insert into reunion values (4,'2024-06-14','Se comentó sobre el rendmiento de la fábrica');
+insert into reunion values (4,'2024-06-01','Se discutió la falta de comunicación en el equipo');
 insert into reunion values (4,'2024-08-04','asignacion de horarios del mes');
 insert into reunion values (5,'2024-07-24','resumen de la semana');
 insert into reunion values (5,'2024-02-09','resumen de la semana');
@@ -127,10 +130,12 @@ insert into reunion values (8,'2024-03-08','resumen de la semana');
 insert into reunion values (9,'2024-05-08','informacion sobre bonos');
 
 /*    horario */
-insert into HIST_TURNO values (5,'2024-05-01',1);
-insert into HIST_TURNO values (4,'2024-05-01',1);
-insert into HIST_TURNO values (2,'2024-05-01',2);
-insert into HIST_TURNO values (3,'2024-05-01',3);
+insert into HIST_TURNO values (35,'2024-05-01',1);
+insert into HIST_TURNO values (36,'2024-05-01',1);
+insert into HIST_TURNO values (37,'2024-05-01',2);
+insert into HIST_TURNO values (15,'2024-05-01',2);
+insert into HIST_TURNO values (38,'2024-05-01',3);
+
 
 
 
@@ -153,7 +158,7 @@ insert into det_exp values(26,nextval('det_exp_uid_seq'),'2024-06-14','in',null)
 insert into det_exp values(26,nextval('det_exp_uid_seq'),'2024-06-01','in',null);
 insert into det_exp values(4,nextval('det_exp_uid_seq'),'2024-06-04','bm',500);
 insert into det_exp values(27,nextval('det_exp_uid_seq'),'2023-12-31','ba',1000);
-insert into det_exp values(28,nextval('det_exp_uid_seq'),'2024-06-15','am',null,null,null,'Llego falto 3 dias al trabajo en el ultimo mes );
+insert into det_exp values(28,nextval('det_exp_uid_seq'),'2024-06-15','am',null,null,null,'Llego falto 3 dias al trabajo en el ultimo mes' );
 insert into det_exp values(29,nextval('det_exp_uid_seq'),'2024-02-14','lt',null,2);
 insert into det_exp values(30,nextval('det_exp_uid_seq'),'2024-02-14','he',null,null,2);
 insert into det_exp values(27,nextval('det_exp_uid_seq'),'2024-05-04','lt',null,3);
@@ -173,16 +178,16 @@ insert into det_exp values(35,nextval('det_exp_uid_seq'),'2024-06-01','in',null)
 
 
 /*  tablas de intereseccion  */
+
 insert into INASISTENCIA values (4,'2024-06-04',26);
-insert into INASISTENCIA values (4,'2024-06-14',26);
-insert into INASISTENCIA values (4,'2024-06-01',26);
-insert into INASISTENCIA values (12,'2024-06-08',40);
-insert into INASISTENCIA values (12,'2024-06-04',33);
-insert into INASISTENCIA values (8,'2024-06-14',40);
-insert into INASISTENCIA values (9,'2024-06-01',35);
-insert into INASISTENCIA values (10,'2024-02-04',34);
-insert into INASISTENCIA values (7,'2024-02-14',34);
-insert into INASISTENCIA values (5,'2024-06-01',33);
+insert into INASISTENCIA values (4,'2024-08-04',26);
+insert into INASISTENCIA values (5,'2024-07-24',26);
+insert into INASISTENCIA values (5,'2024-02-09',40);
+insert into INASISTENCIA values (7,'2024-01-27',40);
+insert into INASISTENCIA values (6,'2024-03-08',35);
+insert into INASISTENCIA values (8,'2024-04-08',34);
+insert into INASISTENCIA values (8,'2024-03-08',34);
+insert into INASISTENCIA values (9,'2024-05-08',33);
 
 
 /* estados de salud  */
@@ -199,14 +204,14 @@ insert into estado_salud values(nextval('estado_salud_uid_seq'),'Alergia a las m
 insert into E_E values (1, 1,'Tiene Diabetes 1');
 insert into E_E values (4, 2,'Tiene enfermedad de valvulas cardiacas');
 insert into E_E values (6, 3,'Tiene cancer de garganta');
-insert into E_E values (4, 3,'Tiene cancer de prostata);
+insert into E_E values (4, 3,'Tiene cancer de prostata');
 insert into E_E values (22, 5,'Es alergico al polen');
 insert into E_E values (40, 6,'Es alergico a los acaros');
 insert into E_E values (35, 8,'Es alergico a los alimentos');
 insert into E_E values (37, 9,'Es a las mascotas');
 insert into E_E values (20, 8,'Es alergico a los alimentos');
 insert into E_E values (17, 3,'Tiene cancer de Mama');
-.
+
 
 
 --------------------------------------------------------------------------------------------------------
@@ -224,36 +229,50 @@ insert into coleccion values(nextval ('coleccion_uid_seq ') ,'Era Moderna','2024
 
 /*forma : red,rec,cua,ova*/
 --MOLDE
-insert into molde values(nextval ('molde_uid_seq'),'JA','100x190mm',1.5);
+insert into molde values(nextval ('molde_uid_seq'),'JA','10x19cm',1.5);
 insert into molde values(nextval ('molde_uid_seq'),'JA','12x17cm',1);
-insert into molde values(nextval ('molde_uid_seq'),'TT','10x18cm',6);
-insert into molde values(nextval ('molde_uid_seq'),'TT','12x20cm',2);
-insert into molde values(nextval ('molde_uid_seq'),'LE','18x11cm',6);
-insert into molde values(nextval ('molde_uid_seq'),'LE','19x12cm',2);
-insert into molde values(nextval ('molde_uid_seq'),'AZ',20,2.5,9);
+insert into molde values(nextval ('molde_uid_seq'),'TT','10x18cm',null,6);
+insert into molde values(nextval ('molde_uid_seq'),'TT','12x20cm',null,2);
+insert into molde values(nextval ('molde_uid_seq'),'LE','18x11cm',null,6);
+insert into molde values(nextval ('molde_uid_seq'),'LE','19x12cm',null,2);
+insert into molde values(nextval ('molde_uid_seq'),'AZ','9x10cm',null,9);
+
 insert into molde values(nextval ('molde_uid_seq'),'CA','19x12cm');
 insert into molde values(nextval ('molde_uid_seq'),'CA','7x6cm');
 insert into molde values(nextval ('molde_uid_seq'),'CA','26x20cm');
 insert into molde values(nextval ('molde_uid_seq'),'CA','47x38cm');
 insert into molde values(nextval ('molde_uid_seq'),'CA','28x5cm');
-insert into molde values(nextval ('molde_uid_seq'),'BD','44x22cm');
-insert into molde values(nextval ('molde_uid_seq'),'BD','44x22cm');
-insert into molde values(nextval ('molde_uid_seq'),'BD','35x18cm');
-insert into molde values(nextval ('molde_uid_seq'),'BD','35x18cm');
-insert into molde values(nextval ('molde_uid_seq'),'PL','24cm');
-insert into molde values(nextval ('molde_uid_seq'),'PL','27x27cm');
-insert into molde values(nextval ('molde_uid_seq'),'PL','14x11cm');
-insert into molde values(nextval ('molde_uid_seq'),'PL','23x23cm');
-insert into molde values(nextval ('molde_uid_seq'),'PL','35x35cm');
-insert into molde values(nextval ('molde_uid_seq'),'PL','28x28cm');
-insert into molde values(nextval ('molde_uid_seq'),'PL','35x18cm');
-insert into molde values(nextval ('molde_uid_seq'),'TA','3x7cm');
-insert into molde values(nextval ('molde_uid_seq'),'TA','4x10cm');
-insert into molde values(nextval ('molde_uid_seq'),'TA','3x8cm');
-insert into molde values(nextval ('molde_uid_seq'),'TA','4x6cm');
+
+insert into molde values(nextval ('molde_uid_seq'),'BD','44x22cm',null,null,'ova');
+insert into molde values(nextval ('molde_uid_seq'),'BD','44x22cm',null,null,'rec');
+insert into molde values(nextval ('molde_uid_seq'),'BD','35x18cm',null,null,'ova');
+insert into molde values(nextval ('molde_uid_seq'),'BD','35x18cm',null,null,'rec');
+
+insert into molde values(nextval ('molde_uid_seq'),'PL','24cm',null,null,'red','HO');
+insert into molde values(nextval ('molde_uid_seq'),'PL','24cm',null,null,'cua','HO');
+insert into molde values(nextval ('molde_uid_seq'),'PL','27x27cm',null,null,'red','LL');
+insert into molde values(nextval ('molde_uid_seq'),'PL','27x27cm',null,null,'cua','LL');
+insert into molde values(nextval ('molde_uid_seq'),'PL','27x27cm',null,null,'rec','LL');
+insert into molde values(nextval ('molde_uid_seq'),'PL','14x11cm',null,null,null,'TT');
+insert into molde values(nextval ('molde_uid_seq'),'PL','14x11cm',null,null,null,'TC');
+insert into molde values(nextval ('molde_uid_seq'),'PL','14x11cm',null,null,null,'TM');
+insert into molde values(nextval ('molde_uid_seq'),'PL','23x23cm',null,null,'red','PO');
+insert into molde values(nextval ('molde_uid_seq'),'PL','23x23cm',null,null,'cua','PO');
+insert into molde values(nextval ('molde_uid_seq'),'PL','23x23cm',null,null,'rec','PO');
+insert into molde values(nextval ('molde_uid_seq'),'PL','35x35cm',null,null,'red','PR');
+insert into molde values(nextval ('molde_uid_seq'),'PL','35x35cm',null,null,'cua','PR');
+insert into molde values(nextval ('molde_uid_seq'),'PL','35x35cm',null,null,'rec','PR');
+insert into molde values(nextval ('molde_uid_seq'),'PL','28x28cm',null,null,null,'PA');
+
+insert into molde values(nextval ('molde_uid_seq'),'TA','3x7cm',null,null,null,null,'CS');
+insert into molde values(nextval ('molde_uid_seq'),'TA','4x10cm',null,null,null,null,'CC');
+insert into molde values(nextval ('molde_uid_seq'),'TA','3x8cm',null,null,null,null,'TS');
+insert into molde values(nextval ('molde_uid_seq'),'TA','4x6cm',null,null,null,null,'TC');
+insert into molde values(nextval ('molde_uid_seq'),'TA','3x8cm',null,null,null,null,'MS');
+insert into molde values(nextval ('molde_uid_seq'),'TA','4x6cm',null,null,null,null,'MC');
+
 insert into molde values(nextval ('molde_uid_seq'),'EN','38x22cm');
 insert into molde values(nextval ('molde_uid_seq'),'EN','30x18cm');
-
 
 --VAJILLA
 insert into vajilla values(nextval ('vajilla_uid_seq'),'Waima',6,'Diseño con ondas azules y verdes que evocan las aguas del río Negro, con detalles en dorado que representan las pepitas de oro que se encuentran en la región.');

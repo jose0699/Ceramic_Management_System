@@ -7,7 +7,7 @@
 		<parameterDescription><![CDATA[Mes del horario de los horneros]]></parameterDescription>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT e.num_expediente,e.primer_nombre ||' '|| e.primer_apellido as nombre, h.mesano as fecha_turno, h.turno,  
+		<![CDATA[SELECT e.num_expediente, e.num_cedula,e.primer_nombre ||' '|| e.primer_apellido as nombre, to_char(h.mesano, 'TMMONTH "DE" YYYY') as fecha_turno, h.turno,  
 		CASE WHEN h.turno = 1 THEN '7:00 am a 3:00 pm'
 			 WHEN h.turno = 2 THEN '3:00 pm a 11:00 pm'
 			 WHEN h.turno = 3 THEN '11:00 pm a 7:00 am'
@@ -21,11 +21,16 @@ ORDER BY h.turno;]]>
 		<property name="com.jaspersoft.studio.field.label" value="num_expediente"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="empleado"/>
 	</field>
+	<field name="num_cedula" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="num_cedula"/>
+		<property name="com.jaspersoft.studio.field.label" value="num_cedula"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empleado"/>
+	</field>
 	<field name="nombre" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="nombre"/>
 		<property name="com.jaspersoft.studio.field.label" value="nombre"/>
 	</field>
-	<field name="fecha_turno" class="java.sql.Date">
+	<field name="fecha_turno" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="fecha_turno"/>
 		<property name="com.jaspersoft.studio.field.label" value="fecha_turno"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="hist_turno"/>
@@ -68,9 +73,9 @@ ORDER BY h.turno;]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="96" splitType="Stretch">
+		<band height="131" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="10" width="567" height="86" forecolor="#778C43" uuid="ebdb4368-9893-4b85-9659-932c05b8fb9a"/>
+				<reportElement x="0" y="1" width="567" height="110" forecolor="#778C43" uuid="ebdb4368-9893-4b85-9659-932c05b8fb9a"/>
 				<box topPadding="8" leftPadding="2" bottomPadding="6" rightPadding="6">
 					<pen lineStyle="Solid" lineColor="#0B6233"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -84,76 +89,49 @@ ORDER BY h.turno;]]>
 				<text><![CDATA[CERÁMICA REAL]]></text>
 			</staticText>
 			<image vAlign="Middle" onErrorType="Icon">
-				<reportElement x="214" y="1" width="90" height="75" uuid="b8bc82f5-9367-4352-b4ea-02336e612767"/>
+				<reportElement x="210" y="-10" width="90" height="75" uuid="b8bc82f5-9367-4352-b4ea-02336e612767"/>
 				<imageExpression><![CDATA["logo_emp.png"]]></imageExpression>
 			</image>
-			<textField pattern="dd &apos;de&apos; MMMMM &apos;de&apos; yyyy">
-				<reportElement x="304" y="64" width="259" height="31" uuid="7239c380-c5da-49ae-83df-e7f530d04e6f"/>
-				<box topPadding="4" leftPadding="4" bottomPadding="8" rightPadding="4"/>
-				<textElement textAlignment="Right">
-					<font fontName="Poppins" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="0" y="65" width="128" height="30" uuid="80a28ee9-edf9-49fc-9eb7-9eaf6759084f"/>
+				<reportElement x="440" y="10" width="128" height="30" uuid="80a28ee9-edf9-49fc-9eb7-9eaf6759084f"/>
 				<box padding="4"/>
-				<textElement textAlignment="Left">
-					<font fontName="Poppins" size="12"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Poppins" size="10"/>
 				</textElement>
 				<text><![CDATA[Grupo #2]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="304" y="15" width="263" height="59" uuid="2935dba5-2f45-4a6b-b2ed-a7d15885b4df"/>
-				<box topPadding="8" leftPadding="2" bottomPadding="8" rightPadding="8">
+				<reportElement x="5" y="59" width="562" height="31" uuid="2935dba5-2f45-4a6b-b2ed-a7d15885b4df"/>
+				<box padding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.0"/>
 					<leftPen lineWidth="0.0"/>
 					<bottomPen lineWidth="0.0" lineColor="#778C43"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement textAlignment="Right">
-					<font fontName="Poppins Medium" size="12" isBold="false" isItalic="false"/>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins Medium" size="15" isBold="false" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[HORARIO MENSUAL DE LOS HORNEROS
-DEL DEPARTAMENTO DE HORNOS]]></text>
-			</staticText>
-		</band>
-	</title>
-	<pageHeader>
-		<band height="64" splitType="Stretch">
-			<staticText>
-				<reportElement x="310" y="6" width="170" height="36" uuid="dfa1f237-5e83-4154-8005-bb3c06e05fa0"/>
-				<box topPadding="8" leftPadding="2" bottomPadding="8" rightPadding="8">
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="0.0" lineColor="#778C43"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Left">
-					<font fontName="Poppins Light" size="12" isBold="false" isItalic="false"/>
-				</textElement>
-				<text><![CDATA[Horarios operativos para:]]></text>
+				<text><![CDATA[HORARIO DE LOS HORNEROS DEL DEPARTAMENTO DE HORNOS]]></text>
 			</staticText>
 			<textField pattern="MMMMM &apos;de&apos; yyyy" isBlankWhenNull="true">
-				<reportElement x="0" y="6" width="567" height="36" uuid="bd2bce40-0b79-446a-932c-ed06d0c15bd3"/>
-				<box topPadding="8" leftPadding="2" bottomPadding="8" rightPadding="8">
+				<reportElement x="210" y="80" width="215" height="31" uuid="bd2bce40-0b79-446a-932c-ed06d0c15bd3"/>
+				<box padding="4">
 					<pen lineColor="#7DA44E"/>
 					<bottomPen lineWidth="1.5"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement textAlignment="Right">
-					<font fontName="Poppins SemiBold" size="12"/>
+				<textElement textAlignment="Left">
+					<font fontName="Poppins Medium" size="15"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{fecha_turno}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["PARA "+$F{fecha_turno}]]></textFieldExpression>
 			</textField>
 		</band>
-	</pageHeader>
+	</title>
 	<columnHeader>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="280" y="0" width="290" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="776424c5-a3f8-4e16-a22a-4e8c053ab532">
+				<reportElement mode="Opaque" x="140" y="0" width="240" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="776424c5-a3f8-4e16-a22a-4e8c053ab532">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -164,13 +142,13 @@ DEL DEPARTAMENTO DE HORNOS]]></text>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Center">
 					<font fontName="Poppins Medium" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[NOMBRE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="280" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="1b0fc3cf-007f-4e15-a0f2-d4984746094e">
+				<reportElement mode="Opaque" x="0" y="0" width="140" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="1b0fc3cf-007f-4e15-a0f2-d4984746094e">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2104a3bf-b7b7-4260-a0a7-31a7e9420a84"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -187,23 +165,40 @@ DEL DEPARTAMENTO DE HORNOS]]></text>
 				</textElement>
 				<text><![CDATA[NÚMERO EXPEDIENTE]]></text>
 			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="380" y="0" width="190" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="c480d8d8-9082-4f32-a878-259c55621cba">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box padding="6">
+					<pen lineStyle="Dashed" lineColor="#75FFA5"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins Medium" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CÉDULA]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="30" splitType="Stretch">
 			<textField>
-				<reportElement x="280" y="0" width="290" height="30" uuid="9957dcec-f36f-483d-8afa-7e9d0b90cc54"/>
-				<box padding="5">
+				<reportElement x="140" y="0" width="240" height="30" uuid="9957dcec-f36f-483d-8afa-7e9d0b90cc54"/>
+				<box topPadding="5" leftPadding="35" bottomPadding="5" rightPadding="5">
 					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Left">
 					<font fontName="Poppins" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="0" width="280" height="30" uuid="a6857164-adb4-4578-bf39-9502ea6ea131"/>
+				<reportElement x="0" y="0" width="140" height="30" uuid="a6857164-adb4-4578-bf39-9502ea6ea131"/>
 				<box padding="5">
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
@@ -212,6 +207,17 @@ DEL DEPARTAMENTO DE HORNOS]]></text>
 					<font fontName="Poppins" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{num_expediente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="0" width="190" height="30" uuid="cf3b4dd3-56a3-483c-ae1c-5d66edb9bbc7"/>
+				<box padding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_cedula}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

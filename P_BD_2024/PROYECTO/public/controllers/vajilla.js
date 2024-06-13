@@ -22,7 +22,7 @@ renderListaColeccion();
 function renderListaColeccion(){
   let listaPiezasHTML = '';
 
-  piezasColeccion.forEach((pieza) => {
+  piezasColeccion.forEach((pieza) => {un 
     const {id, nombre} = pieza;
 
     const html = `

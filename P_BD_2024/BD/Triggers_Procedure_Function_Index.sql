@@ -72,31 +72,18 @@ triggers e índices del sistema.
 	Declare 
 		cant_supervisados numeric (2);
 	BEGIN
-		IF (cargo <> 'og' and supervisor is null) THEN
+		IF (new.cargo <> 'og' and new.supervisor is null) THEN
 			RETURN NEW;
 		END IF;
 		
-		SELECT COUNT(*) INTO cant_supervisados FROM empleado e WHERE e.supervisor = NEW.supervisor; 
-		IF ((cargo = 'og') AND  ((cant_supervisados = 0)) OR 
-			((cant_supervisados > 0) AND (NEW.supervisor is NULL))) THEN
+		SELECT COUNT(*) INTO cant_supervisados FROM empleado e WHERE e.supervisor = NEW.supervisor AND e.supervisor is null; 
+		IF ((new.cargo = 'og') AND ((cant_supervisados >= 0))) THEN
 			RETURN NEW;		
 		END IF;		 
 		RAISE EXCEPTION 'Error: El empleado no puede tener supervisor.';
 	END;
 	$$ LANGUAGE plpgsql;
 	
-	--Numero 5
-	CREATE OR REPLACE FUNCTION MAX_SUPERVISION() RETURNS TRIGGER AS $$ 
-	Declare 
-		cant_supervisados numeric (2);
-	BEGIN
-		SELECT COUNT(*) INTO cant_supervisados FROM empleado e WHERE e.supervisor = NEW.supervisor; 
-		IF cant_supervisados > 10 THEN
-			RAISE EXCEPTION 'Error: El supervisor alcanzo la cantidad maxima de empleado supervisados.';			
-		END IF;	
-		RETURN NEW;
-	END;
-	$$ LANGUAGE plpgsql;
 	
 	--RESUMEN_REUNION
 	--Numero 6
@@ -129,8 +116,19 @@ triggers e índices del sistema.
 	END;
 	$$ LANGUAGE plpgsql;
 	
-	--MOLDE
+	/*
+		Cuando se registre un id_empleado en la tabla, debe crearse un registro de inasistencia en la tabla de det_expediente.
+	*/
 	--Numero 8
+	CREATE OR REPLACE FUNCTION INASISTENCIA_REGISTRADA() RETURNS TRIGGER AS $$
+	BEGIN
+		INSERT INTO det_exp VALUES (NEW.num_expediente, nextval('det_exp_uid_seq'), NEW.fecha_hora, 'in', NULL, NULL, NULL, 'Falto a la ruenión semanal.');
+		RETURN NEW;
+	END;
+	$$ LANGUAGE plpgsql;
+	
+	--DET_EXP
+	--Numero 9
 	CREATE OR REPLACE FUNCTION DET_EXP_CAMPOS() RETURNS  TRIGGER AS $$
 	DECLARE
 	BEGIN
@@ -143,30 +141,8 @@ triggers e índices del sistema.
 		RAISE EXCEPTION 'Error: Está ingresando información en un campo que no corresponde al motivo..';
 	END;
 	$$ LANGUAGE plpgsql;
-
-	--DET_EXP
-	--Numero 9
-	CREATE OR REPLACE FUNCTION DET_INASISTENCIA_AMONESTACION() RETURNS TRIGGER AS $$
-		DECLARE
-		  num_inasistencias numeric(1);
-		BEGIN
-		  -- Contar el número de inasistencias del empleado en el último mes
-		  SELECT COUNT(*) INTO num_inasistencias
-		  FROM DET_EXP
-		  WHERE num_exp= NEW.num_expediente
-			AND fecha BETWEEN NEW.fecha - INTERVAL '3 month' AND NEW.fecha;
-
-		  -- Si es la tercera inasistencia en el último mes, generar la amonestación
-		  IF num_inasistencias = 3 THEN
-			INSERT INTO DET_EXP VALUES
-			(NEW.num_expediente,  nextval('det_exp_uid_seq'), CURRENT_DATE, 'am', null, null, null, 'Amonestación por 3 inasistencias en el último mes');
-		  END IF;
-
-		  RETURN NEW;
-		END;
-	$$ LANGUAGE plpgsql;
-
-	--Numero 10
+	
+		--Numero 11
 	CREATE OR REPLACE FUNCTION LH_TARDE_EXTRA() RETURNS TRIGGER AS $$
 		DECLARE
 		existe numeric(1);
@@ -177,23 +153,24 @@ triggers e índices del sistema.
 		END IF;
 
 		--Se realiza la consulta;
-		Select COUNT(*) INTO existe FROM departamento d, empleado e WHERE d.uid_departamento = e.NEW.trabaja
-		AND d.nombre = 'Horno' AND e.num_expediente= NEW.num_exp ;
+		Select COUNT(*) INTO existe FROM departamento d, empleado e WHERE d.uid_departamento = e.trabaja and  d.nombre = 'Hornos'  
+		and e.num_expediente = NEW.num_expediente;
+		
 		IF (existe = 1) AND (NEW.motivo = 'lt') OR (NEW.motivo = 'he')THEN
 			RETURN NEW;
 		END IF;
 		RAISE EXCEPTION 'Error: Motivo invalida, porque el empleado no es un Hornero.';
 		END;
 	$$ LANGUAGE plpgsql;
-
+	
 	--HIST_TURNO
-	--Numero 11
+	--Numero 12
 	CREATE OR REPLACE FUNCTION HORNERO_CARGO() RETURNS TRIGGER AS $$
 	DECLARE
 		existe numeric(1);
 	BEGIN
-		Select COUNT(*) INTO existe FROM departamento d, empleado e WHERE d.uid_departamento = e.NEW.trabaja
-		AND d.nombre = 'Horno' AND e.num_expediente= NEW.num_expediente ;
+		Select COUNT(*) INTO existe FROM departamento d, empleado e WHERE d.uid_departamento = e.trabaja and  d.nombre = 'Hornos'  
+		and e.num_expediente = NEW.num_expediente;
 		IF existe = 1 THEN
 			RETURN NEW;
 		END IF;
@@ -210,25 +187,20 @@ triggers e índices del sistema.
 	CREATE OR REPLACE TRIGGER GERENTE_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION GERENCIA_EMPLEADO(); --1
 	CREATE OR REPLACE TRIGGER DEPARTAMENTO_CARGO_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION DEPARTAMENTO_EMPLEADO(); --2 
 	CREATE OR REPLACE TRIGGER SUPERVISOR_DEPARTAMENTO_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION SUPERVISOR_DEPARTAMENTO(); --3
-	CREATE OR REPLACE TRIGGER NO_SUPERVISION_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION NO_SUPERVISION(); --4
-	CREATE OR REPLACE TRIGGER MAX_SUPERVISION_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION MAX_SUPERVISION(); --5
-	
+	CREATE OR REPLACE TRIGGER NO_SUPERVISION_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION NO_SUPERVISION(); --4	
 	
 	--RESUMEN_REUNION
 	CREATE OR REPLACE TRIGGER REUNION_SUPERVISOR BEFORE INSERT OR UPDATE ON REUNION FOR EACH ROW EXECUTE FUNCTION REUNION_SUPERVISOR(); --6
 	
 	--INASISTENCIA 
 	CREATE OR REPLACE TRIGGER SUPERVISION_CONGRUENTE_INASISTENCIA BEFORE INSERT OR UPDATE ON REUNION FOR EACH ROW EXECUTE FUNCTION REUNION_SUPERVISOR(); --7
-	
-	--MOLDE
-
+	CREATE OR REPLACE TRIGGER inasistencia_registrada AFTER INSERT ON inasistencia FOR EACH ROW EXECUTE FUNCTION INASISTENCIA_REGISTRADA();--8
 	--DET_EXP
-	CREATE OR REPLACE TRIGGER CAMPO_DET_EXP BEFORE INSERT ON DET_EXP FOR EACH ROW EXECUTE FUNCTION DET_EXP_CAMPOS(); --8
-	CREATE OR REPLACE TRIGGER INASISTENCIA_AMONESTACION_DET_EXP AFTER INSERT ON DET_EXP FOR EACH ROW EXECUTE FUNCTION DET_INASISTENCIA_AMONESTACION(); --9
-	CREATE OR REPLACE TRIGGER  LLEGADA_TARDE_HORAS_EXTRAS_DET_EXP BEFORE INSERT ON DET_EXP FOR EACH ROW EXECUTE FUNCTION LH_TARDE_EXTRA(); --10
+	CREATE OR REPLACE TRIGGER CAMPO_DET_EXP BEFORE INSERT ON DET_EXP FOR EACH ROW EXECUTE FUNCTION DET_EXP_CAMPOS(); --9
+	CREATE OR REPLACE TRIGGER  LLEGADA_TARDE_HORAS_EXTRAS_DET_EXP BEFORE INSERT ON DET_EXP FOR EACH ROW EXECUTE FUNCTION LH_TARDE_EXTRA(); --11
 
 	--HIST_TURNO
-	CREATE OR REPLACE TRIGGER HORNERO_CARGO_HIST_TURNO BEFORE INSERT ON HIST_TURNO FOR EACH ROW EXECUTE FUNCTION HORNERO_CARGO(); --11
+	CREATE OR REPLACE TRIGGER HORNERO_CARGO_HIST_TURNO BEFORE INSERT ON HIST_TURNO FOR EACH ROW EXECUTE FUNCTION HORNERO_CARGO(); --12
 
 --------------------------------------------------------------------------------------------------------
 --                                           INDEX                                                    --

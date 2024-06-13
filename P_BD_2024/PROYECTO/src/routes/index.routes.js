@@ -51,3 +51,14 @@ router.get('/Ceramica_Real/Vajilla', (req, res) => {
 router.post('/Ceramica_Real/Vajilla', (req, res) => {
 
 });
+
+/*------------------------------------------------------------------------------------------------------------*/
+/*                                        Rutas de Colección                                                  */ 
+/*------------------------------------------------------------------------------------------------------------*/
+router.get('/Ceramica_Real/Coleccion', (req, res) => {
+    const adminPath = path.join(__dirname, '../../public/views/coleccion.html');
+    res.sendFile(adminPath);
+});
+router.post('/Ceramica_Real/Coleccion', (req, res) => {
+
+});

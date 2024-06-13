@@ -248,7 +248,7 @@ CREATE TABLE VAJILLA (
 CREATE TABLE PIEZA (
 	uid_coleccion numeric(2) not null,
 	uid_pieza numeric(3) not null,
-	descripcion varchar(128),
+	descripcion varchar(256),
 	precio numeric(8,2),
 	uid_molde numeric(2) not null,
 	CONSTRAINT fk_coleccion_pieza FOREIGN KEY (uid_coleccion) REFERENCES COLECCION(uid_coleccion),

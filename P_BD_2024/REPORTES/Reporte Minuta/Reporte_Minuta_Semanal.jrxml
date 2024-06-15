@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Reporte_Minuta_Semanal" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d1accb80-7ba1-4e95-a086-484ec6ff06ec">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Proyecto_BD"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="297"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="692"/>
+	<style name="isInasistente" mode="Opaque" forecolor="#FFFFFF" backcolor="#0B6233" fontName="Poppins" fontSize="13" isBold="true">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{asistencia}.equalsIgnoreCase( "INASISTENTES" )]]></conditionExpression>
+			<style mode="Opaque" forecolor="#FFFFFF" backcolor="#C11818"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="id departamento" class="java.lang.Integer">
+		<parameterDescription><![CDATA[id del departamento donde se realizó la reunión]]></parameterDescription>
+	</parameter>
+	<parameter name="Id Supervisor" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Id del supervisor a cargo de la reunión]]></parameterDescription>
+	</parameter>
+	<parameter name="fecha de la reunion" class="java.sql.Date">
+		<parameterDescription><![CDATA[fecha del día en que se llevo a cabo la reunión]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT e.num_expediente,
+	e.num_cedula,
+	e.primer_nombre ||' '|| e.primer_apellido ||' '|| COALESCE(e.segundo_nombre,'') ||' '|| COALESCE(e.segundo_apellido,'') as nombre,
+		COALESCE(to_char(i.fecha_hora, 'TMDAY DD "DE" TMMONTH "DE" YYYY'),
+		to_char( $P{fecha de la reunion} ::date, 'TMDAY DD "DE" TMMONTH "DE" YYYY')) fecha_hora,
+	  CASE 
+	    WHEN i.num_expediente IS NULL THEN 'ASISTENTES'
+	    ELSE 'INASISTENTES'
+	  END AS asistencia,
+   e.supervisor
+FROM inasistencia i
+RIGHT OUTER JOIN empleado e 
+ON  i.num_expediente = e.num_expediente AND i.fecha_hora = $P{fecha de la reunion} 
+WHERE e.supervisor =  $P{Id Supervisor} 
+ORDER BY asistencia ASC;]]>
+	</queryString>
+	<field name="num_expediente" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="num_expediente"/>
+		<property name="com.jaspersoft.studio.field.label" value="num_expediente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empleado"/>
+	</field>
+	<field name="num_cedula" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="num_cedula"/>
+		<property name="com.jaspersoft.studio.field.label" value="num_cedula"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empleado"/>
+	</field>
+	<field name="nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre"/>
+	</field>
+	<field name="fecha_hora" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_hora"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_hora"/>
+	</field>
+	<field name="asistencia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="asistencia"/>
+		<property name="com.jaspersoft.studio.field.label" value="asistencia"/>
+	</field>
+	<field name="supervisor" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="supervisor"/>
+		<property name="com.jaspersoft.studio.field.label" value="supervisor"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empleado"/>
+	</field>
+	<variable name="asistencia" class="java.lang.String">
+		<variableExpression><![CDATA["Inasistente"]]></variableExpression>
+	</variable>
+	<group name="grAsistencia">
+		<groupExpression><![CDATA[$F{asistencia}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<textField>
+					<reportElement style="isInasistente" x="0" y="0" width="360" height="30" uuid="c2588ecc-a1b3-4591-bdd2-69a0a191b201"/>
+					<box topPadding="5" leftPadding="13" bottomPadding="5" rightPadding="5"/>
+					<textFieldExpression><![CDATA[$F{asistencia}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="111" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="1" width="567" height="110" forecolor="#778C43" uuid="536a510f-5e4a-4b1f-8f0a-fb2c912589cc"/>
+				<box topPadding="8" leftPadding="2" bottomPadding="6" rightPadding="6">
+					<pen lineStyle="Solid" lineColor="#0B6233"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#0B6233"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Poppins SemiBold" size="26"/>
+				</textElement>
+				<text><![CDATA[CERÁMICA REAL]]></text>
+			</staticText>
+			<image vAlign="Middle" onErrorType="Icon">
+				<reportElement x="210" y="-10" width="90" height="75" uuid="a19bafb6-69e3-417b-a7d7-3f156216d7aa"/>
+				<imageExpression><![CDATA["logo_emp.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="440" y="10" width="128" height="30" uuid="4adaf395-cf33-4124-bd67-8219ba92fb58"/>
+				<box padding="4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Poppins" size="10"/>
+				</textElement>
+				<text><![CDATA[Grupo #2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="60" width="562" height="31" uuid="88c25594-2c7c-4244-9e41-769b501bc33e"/>
+				<box padding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0" lineColor="#778C43"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins Medium" size="15" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[MINUTA DE LA REUNIÓN DEL]]></text>
+			</staticText>
+			<textField pattern="MMMMM &apos;de&apos; yyyy" isBlankWhenNull="true">
+				<reportElement x="134" y="80" width="312" height="31" uuid="a74dc4bf-4556-4cc9-abbc-c29850825fc6"/>
+				<box padding="4">
+					<pen lineColor="#7DA44E"/>
+					<bottomPen lineWidth="1.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins Medium" size="15" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_hora}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="127" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="20" width="360" height="100" uuid="9f044266-c6cf-4602-ba85-d4ce4ebe1fdc">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="Id Supervisor">
+					<subreportParameterExpression><![CDATA[$P{Id Supervisor}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="id departamento">
+					<subreportParameterExpression><![CDATA[$P{id departamento}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subrep_supervisor.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="360" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="cd3e93c7-8882-474c-8147-e641e5c5a77c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<pen lineStyle="Dashed" lineColor="#75FFA5"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Poppins Medium" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OPERARIOS GENERALES]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="220" y="0" width="140" height="30" uuid="33d45409-5bc5-468e-b01a-2792bdfa1c0f"/>
+				<box padding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_cedula}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="220" height="30" uuid="31e49cd3-bd79-42c7-ae4d-7eef30ce5d37"/>
+				<box topPadding="5" leftPadding="15" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Poppins" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="570" height="30" uuid="7bab0a82-e2a6-4f0e-8b58-ae56f111c345"/>
+				<box>
+					<topPen lineWidth="1.25"/>
+				</box>
+				<textElement>
+					<font fontName="Poppins Medium" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="100" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement x="0" y="0" width="360" height="100" uuid="7f5319cc-81f3-4877-a803-07beeb8b4108">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="Id Supervisor">
+					<subreportParameterExpression><![CDATA[$P{Id Supervisor}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fecha de la reunion">
+					<subreportParameterExpression><![CDATA[$P{fecha de la reunion}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subrep_minuta.jrxml"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

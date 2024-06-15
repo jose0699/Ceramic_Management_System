@@ -29,6 +29,7 @@ $$ LANGUAGE plpgsql;
 --------------------------------------------------------------------------------------------------------
 --                                           Function                                                --
 --------------------------------------------------------------------------------------------------------
+/*
 CREATE OR REPLACE FUNCTION porcentaje_inasistencia() AS $$
 DECLARE 
 
@@ -71,6 +72,15 @@ BEGIN
   RETURN porcentaje;
 END;
 $$ LANGUAGE plpgsql;
+*/
 
 
 
+--------------------------------------------------------------------------------------------------------
+--                           Funciones y Procedimientos Menores                                       --
+--------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION edad (fec_nac date) RETURNS date AS $$
+	BEGIN
+		RETURN (round(((current_date- fec_nac)/365),0));
+	END; $$ LANGUAGE plpgsql;

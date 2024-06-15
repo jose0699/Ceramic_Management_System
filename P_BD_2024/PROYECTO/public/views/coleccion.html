@@ -1,12 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="shortcut icon" href="/images/logo_emp.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h5>principal</h5>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="shortcut icon" href="/images/logo_emp.png">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--Obtener fonts de google fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+        <!--obtener hojas de estilo-->
+        <link rel="stylesheet" type="text/css" href="/styles/general.css">
+        <link rel="stylesheet" type="text/css" href="/styles/header.css">  
+        <link rel="stylesheet" type="text/css" href="/styles/form.css"> 
+        
+        <!--Pestaña-->
+        <link rel="icon" href="/images/logo_emp.png" type="image/x-icon">
+        <title>Agregar Coleccion</title>
+    </head>
+    <body>
+        <header>
+            <div class="left-section"> 
+                <p class = "company-name">CERÁMICA REAL</p>
+                <img class = "company-logo" src="/images/logo_emp.png">
+            </div>
+
+            <div class = "right-section">
+                <div class ="right-menu">
+                    <a class="option-button" href="/Ceramica_Real/Pieza">
+                        Pieza
+                    </a>
+                    <a class="option-button" href="/Ceramica_Real/Vajilla">
+                        Vajilla
+                    </a>
+                    <a class="option-button" href="/Ceramica_Real/Coleccion">
+                        Colección
+                    </a>
+                </div>
+
+                <div class = "menu-decoration-line">
+                    <div class="diamond-shape"></div>
+                    <hr class = "menu-line">
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <p class = "section-title">Agregar Colección</p>
+            <div class = "main-grid">
+                <div class = "form-left-side">
+                    
+                    <div class = "form-section">
+
+                      <div>
+                        <p class = "input-title">Linea</p>
+                        <select id="linea" class = "form-select">
+                            <option value="F">Familiar</option>
+                            <option value="I">Institucional</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <p class = "input-title">Categoría</p>
+                        <select id="linea" class = "form-select">
+                            <option value="cla">Clásica/Elegante</option>
+                            <option value="cou">Country</option>
+                            <option value="mod">Moderna</option>
+                        </select>
+                      </div>
+
+                    </div>
+
+
+                    <div class = "form-section">
+
+                        <div>
+                            <p class = "secret-input-title">Nueva Linea (Opcional)</p>
+                            <input id="nombre" class = "secret-form-input" type = "text" placeholder="Linea:">
+                        </div>
+  
+                        <div>
+                          <p class = "secret-input-title">Nueva categoría (Opcional)</p>
+                          <input id="nombre" class = "secret-form-input" type = "text" placeholder="Categoría:">
+                        </div>
+  
+                      </div>
+
+                    <div class = "form-section">
+                        <div>
+                            <p class = "input-title">Nombre</p>
+                            <input id="nombre" class = "form-input" type = "text" placeholder="Colección:">
+                        </div>
+                    </div>
+
+                    <div class = "form-section">
+                        <div>
+                            <p class = "input-title">Descripción</p>
+                            <textarea id="descripcion" class = "description-input" rows="5"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class = "form-right-side-pieza">
+                    <img class = "colection-form-image" src="/images/coleccion.jpg">
+                    <button id='agregar' class = "fetch-button">Agregar</button>
+                </div>
+            </div>
+
+
+        </main>
+
+        <!--
+            <div class = "contact-info">
+                <p class = "info-text">Acerca de nosotros</p>
+            </div>
+        -->
+
+        <script type="module" src="/controllers/pieza.js"></script>
+    </body>
 </html>

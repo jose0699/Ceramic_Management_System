@@ -45,8 +45,11 @@
   font-size: 18px;
 }
 
+
+
 .form-input,
-.description-input{
+.description-input,
+.secret-form-input{
   border: rgb(83, 114, 58);
   border-width: thin;
   border-radius:10px;
@@ -70,7 +73,8 @@
 }
 
 .form-input:focus,
-.description-input:focus{
+.description-input:focus,
+.secret-form-input:focus{
   outline:rgb(164, 235, 116);
   outline-width: thin;
   outline-style: solid;
@@ -180,6 +184,30 @@
   opacity: 0.4;
 }
 
+/*COLECCION STYLES*/
+
+.secret-input-title{
+  color: rgb(90,90,90);
+  font-weight: 350;
+  font-size: 14px;
+}
+
+.secret-form-input{
+  border: rgb(83, 114, 58);
+  border-width: thin;
+  border-radius:10px;
+  border-style: solid;
+  width: 200px;
+  height: 15px;
+  padding: 4px 8px 4px 8px;
+}
+
+.colection-form-image{
+  width: 45%;
+  margin-bottom: 3px;
+  border-style: none;
+  border-radius: 10px;
+}
 
 /*
   rgb(50,175,215)

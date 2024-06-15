@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subrep_supervisor" pageWidth="360" pageHeight="100" columnWidth="360" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="22bd1e0b-66b4-43af-a737-a2bb1301fb9e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Proyecto_BD"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="Id Supervisor" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Id del supervisor a cargo de la reunión]]></parameterDescription>
+	</parameter>
+	<parameter name="id departamento" class="java.lang.Integer">
+		<parameterDescription><![CDATA[id del departamento donde se realizó la reunión]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT e.num_expediente,
+	   e.primer_nombre ||' '|| e.primer_apellido ||' '|| COALESCE(e.segundo_nombre,'') ||' '|| COALESCE(e.segundo_apellido,'') as nombre,
+	   e.num_cedula,
+	   upper(d.nombre) ndepart,
+	   cargo
+FROM departamento d, empleado e
+WHERE d.uid_departamento = $P{id departamento} 
+AND d.nivel = 4 
+AND e.cargo = 'og' 
+AND e.supervisor is NULL
+AND e.num_expediente =  $P{Id Supervisor}]]>
+	</queryString>
+	<field name="num_expediente" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="num_expediente"/>
+		<property name="com.jaspersoft.studio.field.label" value="num_expediente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empleado"/>
+	</field>
+	<field name="nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre"/>
+	</field>
+	<field name="num_cedula" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="num_cedula"/>
+		<property name="com.jaspersoft.studio.field.label" value="num_cedula"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empleado"/>
+	</field>
+	<field name="ndepart" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ndepart"/>
+		<property name="com.jaspersoft.studio.field.label" value="ndepart"/>
+	</field>
+	<field name="cargo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cargo"/>
+		<property name="com.jaspersoft.studio.field.label" value="cargo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empleado"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="70" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="0" y="0" width="360" height="30" forecolor="#FFFFFF" backcolor="#0B6233" uuid="a6a38ec6-8fa3-4f5a-9f5e-7de3ef5b492f"/>
+				<box topPadding="5" leftPadding="7" bottomPadding="5" rightPadding="5">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Poppins" size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DEPARTAMENTO: " + $F{ndepart}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="30" width="220" height="40" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="e553e24f-1f4a-44af-b912-e307cfe2e12e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="9" leftPadding="14" bottomPadding="9" rightPadding="9">
+					<pen lineStyle="Dashed" lineColor="#75FFA5"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Poppins Medium" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SUPERVISOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="220" y="30" width="140" height="40" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="7eb344da-9dc8-4bac-beda-1400b52252e2">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box padding="10">
+					<pen lineStyle="Dashed" lineColor="#75FFA5"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins Medium" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CÉDULA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="220" height="30" uuid="2b70dabf-4846-47d6-94d8-2e9d9b7b5a7e"/>
+				<box topPadding="5" leftPadding="15" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Poppins" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="0" width="140" height="30" uuid="dfaf420b-4fe2-446e-aeae-9a4cb066abc3"/>
+				<box padding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_cedula}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

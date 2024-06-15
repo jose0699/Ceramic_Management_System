@@ -22,7 +22,7 @@ renderListaColeccion();
 function renderListaColeccion(){
   let listaPiezasHTML = '';
 
-  piezasColeccion.forEach((pieza) => {un 
+  piezasColeccion.forEach((pieza) => {
     const {id, nombre} = pieza;
 
     const html = `
@@ -61,6 +61,7 @@ function renderListaColeccion(){
 
 }
 
+
 document.addEventListener('DOMContentLoaded', function() {
   var input = document.getElementById('capacidad');
 
@@ -69,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
     input.value = numero;
   });
 });
+
 
 //renderiza la lista de la vajilla
 function renderListaVajilla(){
@@ -86,14 +88,12 @@ function renderListaVajilla(){
       </div>
     `; 
 
-    console.log(html);
-
     resumenVajillaHTML += html;
   });
 
   document.querySelector('.js-vajilla-scrollmenu')
     .innerHTML = resumenVajillaHTML;
-}
+};
 
 //FUNCIONES DE BUSQUEDA EN PIEZASCOLECCION Y AÑADIR A LA LISTA DE LA VAJILLA
 function addPieza(id){
@@ -147,7 +147,7 @@ function getPieza(id){
   });
 
   return piezaBuscada;
-}
+};
 
 /*---------------------------------------------------------------------------------------*/
 /*                                     COLECCIÓN                                         */

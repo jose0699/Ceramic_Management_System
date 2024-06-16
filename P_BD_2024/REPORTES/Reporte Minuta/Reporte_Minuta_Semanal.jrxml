@@ -23,7 +23,7 @@
 	<queryString>
 		<![CDATA[SELECT e.num_expediente,
 	e.num_cedula,
-	e.primer_nombre ||' '|| e.primer_apellido ||' '|| COALESCE(e.segundo_nombre,'') ||' '|| COALESCE(e.segundo_apellido,'') as nombre,
+		CONCAT(e.primer_nombre, ' ', COALESCE(e.segundo_nombre, ''), ' ', e.primer_apellido, ' ', COALESCE(e.segundo_apellido, '')) as nombre,
 		COALESCE(to_char(i.fecha_hora, 'TMDAY DD "DE" TMMONTH "DE" YYYY'),
 		to_char( $P{fecha de la reunion} ::date, 'TMDAY DD "DE" TMMONTH "DE" YYYY')) fecha_hora,
 	  CASE 
@@ -72,7 +72,7 @@ ORDER BY asistencia ASC;]]>
 		<groupHeader>
 			<band height="30">
 				<textField>
-					<reportElement style="isInasistente" x="0" y="0" width="360" height="30" uuid="c2588ecc-a1b3-4591-bdd2-69a0a191b201"/>
+					<reportElement style="isInasistente" x="0" y="0" width="360" height="30" backcolor="#0B6233" uuid="c2588ecc-a1b3-4591-bdd2-69a0a191b201"/>
 					<box topPadding="5" leftPadding="13" bottomPadding="5" rightPadding="5"/>
 					<textFieldExpression><![CDATA[$F{asistencia}]]></textFieldExpression>
 				</textField>

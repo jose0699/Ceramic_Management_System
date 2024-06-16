@@ -1,3 +1,6 @@
+  let select_coleccion = false;
+
+
 //Lista en memoria para testear
 const piezasColeccion = [{
   id: '1035149785',
@@ -60,17 +63,6 @@ function renderListaColeccion(){
     })
 
 }
-
-
-document.addEventListener('DOMContentLoaded', function() {
-  var input = document.getElementById('capacidad');
-
-  input.addEventListener('input', function() {
-    var numero = input.value.replace(/\D/g, ''); // Eliminar caracteres no numéricos
-    input.value = numero;
-  });
-});
-
 
 //renderiza la lista de la vajilla
 function renderListaVajilla(){
@@ -153,3 +145,49 @@ function getPieza(id){
 /*                                     COLECCIÓN                                         */
 /*---------------------------------------------------------------------------------------*/
 
+//Molde
+function Agregar_select_coleccion(datos){
+  var select = document.getElementById("coleccion");
+  select.innerHTML = "";
+
+  var option = document.createElement("option"); // Declarar la variable option
+    option.value = 'NaN';
+    option.selected = true;
+    option.disabled = true;
+    option.textContent = 'Opciones';
+    select.appendChild(option);
+
+  for (var i = 0; i < datos.length; i++) {
+    var opcion = document.createElement("option");
+    opcion.text = datos[i].nombre;
+    opcion.value = datos[i].linea + datos[i].uid_coleccion.toString();
+    select.add(opcion);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  if(!select_coleccion) {
+    select_coleccion = true;
+    let peticion = {
+      pet: 1
+    };
+    fetch('/Ceramica_Real/Pieza', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(peticion)
+    })
+      .then(response => response.json())
+      .then(data => {
+        let datos = data;
+        console.log(datos);
+        Agregar_select_coleccion(datos);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  } else{
+    select_coleccion = true;
+  }
+});

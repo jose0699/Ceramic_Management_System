@@ -44,7 +44,28 @@ const PIEZA = (req, res, datos) => {
     });
   };
 
+
+
+  const COLECCION = (req, res, datos) => {
+    const { nombre, linea, categoria, descripcion } = datos;
+    const consulta = 
+      `
+      INSERT INTO COLECCION VALUES(nextval ('coleccion_uid_seq'), $1, CURRENT_DATE, $2, $3, $4);
+      `
+    ;
+    const valores = [nombre, linea, categoria, descripcion];
+    pool.query(consulta, valores, (error, resultado) => {
+      if (error) {
+        console.error('Error al ejecutar la consulta:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+      } else {
+        res.status(200).json(resultado.rows);
+      }
+    });
+  };
+
 module.exports = {
     PIEZA,
-    FAMILIAR_HISTORICO_PRECIO
+    FAMILIAR_HISTORICO_PRECIO,
+    COLECCION
 }

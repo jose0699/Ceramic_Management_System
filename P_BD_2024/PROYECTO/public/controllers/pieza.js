@@ -30,45 +30,19 @@ function Agregar_select_coleccion(datos){
 function Agregar_select_Molde(datos){
   var select = document.getElementById("molde");
   select.innerHTML = "";
-
   var option = document.createElement("option"); // Declarar la variable option
-    option.value = 'NaN';
-    option.selected = true;
-    option.disabled = true;
-    option.textContent = 'Opciones';
-    select.appendChild(option);
+  option.value = 'NaN';
+  option.selected = true;
+  option.disabled = true;
+  option.textContent = 'Opciones';
+  select.appendChild(option);
 
   for (var i = 0; i < datos.length; i++) {
     var opcion = document.createElement("option");
-
-    if(datos[i].tipo == 'Jarra'){
-      opcion.text = datos[i].tipo + ' ' + datos[i].tamaño + ' ' +  datos[i].volumen.toString() + ' ' + ' lts';
-
-    } else if (datos[i].tipo == 'Tetera' || datos[i].tipo == 'Lechera'  || datos[i].tipo == 'Azucarero'){
-      if(!(datos[i].cant_persona == 'null' || datos[i].cant_persona == null)){
-        opcion.text = datos[i].tipo + ' ' + datos[i].tamaño + ' ' + datos[i].volumen.toString()+ 'lts' + ' ' +datos[i].cant_persona + 'pers';
-      }else {
-        opcion.text = datos[i].tipo + ' ' + datos[i].tamaño;
-      }
-    } else if(datos[i].tipo == 'Cazuela' || datos[i].tipo == 'Enzaladera' || datos[i].tipo == 'Bandeja'){
-      opcion.text = datos[i].tipo + ' ' + datos[i].tamaño;
-    
-    } else if(datos[i].tipo == 'Plato'){
-      if(!(datos[i].plato == 'null' || datos[i].plato == null)){
-        opcion.text = datos[i].plato + ' ' + datos[i].tamaño ;
-      } else {
-        opcion.text = datos[i].tipo + ' ' + datos[i].tamaño;
-      }
-    }else if(datos[i].tipo == 'Taza'){
-      if(!(datos[i].taza == 'null' || datos[i].taza == null)){
-        opcion.text = datos[i].taza + ' ' + datos[i].tamaño;
-      } else {
-        opcion.text = datos[i].tipo + ' ' + datos[i].tamaño;
-      }
-    }
+    opcion.text = datos[i].molde;
     opcion.value = datos[i].uid_molde;
     select.add(opcion);
-  }
+  }  
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -88,6 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
       .then(response => response.json())
       .then(data => {
         let datos = data;
+        console.log(datos);
         Agregar_select_coleccion(datos);
       })
       .catch(error => {

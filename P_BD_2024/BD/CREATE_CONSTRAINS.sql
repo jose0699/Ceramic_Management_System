@@ -188,7 +188,7 @@ CREATE TABLE MOLDE(
 	tamaño varchar(10) not null,
 	volumen numeric(3,2),
 	cant_persona numeric(1),
-  forma varchar(3),
+  	forma varchar(3),
 	tipo_plato varchar(2),
 	tipo_taza varchar(2),
 	CONSTRAINT tipo_molde CHECK (tipo in ('JA', 'TT', 'LE', 'AZ', 'CA', 'BD', 'PL', 'TA', 'EN')),

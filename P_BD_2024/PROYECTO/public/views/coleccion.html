@@ -55,6 +55,7 @@
                       <div>
                         <p class = "input-title">Linea</p>
                         <select id="linea" class = "form-select">
+                            <option value="NaN" disabled selected>Opciones</option>
                             <option value="F">Familiar</option>
                             <option value="I">Institucional</option>
                         </select>
@@ -62,7 +63,8 @@
 
                       <div>
                         <p class = "input-title">Categoría</p>
-                        <select id="linea" class = "form-select">
+                        <select id="categoria" class = "form-select">
+                            <option value="NaN" disabled selected>Opciones</option>
                             <option value="cla">Clásica/Elegante</option>
                             <option value="cou">Country</option>
                             <option value="mod">Moderna</option>
@@ -76,12 +78,12 @@
 
                         <div>
                             <p class = "secret-input-title">Nueva Linea (Opcional)</p>
-                            <input id="nombre" class = "secret-form-input" type = "text" placeholder="Linea:">
+                            <input id="nueva_linea" class = "secret-form-input" type = "text" placeholder="Linea:">
                         </div>
   
                         <div>
                           <p class = "secret-input-title">Nueva categoría (Opcional)</p>
-                          <input id="nombre" class = "secret-form-input" type = "text" placeholder="Categoría:">
+                          <input id="nueva_categoria" class = "secret-form-input" type = "text" placeholder="Categoría:">
                         </div>
   
                       </div>
@@ -117,6 +119,6 @@
             </div>
         -->
 
-        <script type="module" src="/controllers/pieza.js"></script>
+        <script type="module" src="/controllers/coleccion.js"></script>
     </body>
 </html>

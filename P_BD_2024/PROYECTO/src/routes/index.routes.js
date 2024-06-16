@@ -32,7 +32,7 @@ router.post('/Ceramica_Real/Pieza', (req, res) => {
     break;
 
     case 3:
-    insert.PIEZA(req, res, datos);
+        insert.PIEZA(req, res, datos);
     break;
 
     case 4:
@@ -49,7 +49,12 @@ router.get('/Ceramica_Real/Vajilla', (req, res) => {
     res.sendFile(adminPath);
 });
 router.post('/Ceramica_Real/Vajilla', (req, res) => {
-
+    const datos = req.body;
+  switch (parseInt(datos.pet)){
+    case 1:
+        select.COLECCION(req, res);
+    break;
+  }
 });
 
 /*------------------------------------------------------------------------------------------------------------*/
@@ -60,5 +65,10 @@ router.get('/Ceramica_Real/Coleccion', (req, res) => {
     res.sendFile(adminPath);
 });
 router.post('/Ceramica_Real/Coleccion', (req, res) => {
-
+    const datos = req.body;
+    switch (parseInt(datos.pet)){
+        case 1:
+            insert.COLECCION(req, res, datos);
+        break;
+      }
 });

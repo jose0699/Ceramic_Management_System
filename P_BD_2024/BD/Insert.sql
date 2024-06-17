@@ -372,41 +372,41 @@ insert into pieza values (5,nextval ('pieza_uid_seq'),'Tesoro Escondido: Un plat
 /*Familiar_historico_precio */		/*Listo */
 
 
-insert into familiar_historico_precio values(1,1,'2010-01-08 04:05:06' ,10);
-insert into familiar_historico_precio values(1,2,'2012-03-15 21:13:42' ,2);
-insert into familiar_historico_precio values(1,3,'2014-07-22 18:29:19' ,3);
-insert into familiar_historico_precio values(1,4,'2017-11-09 06:54:33' ,10);
-insert  into familiar_historico_precio values(1,5,'2011-05-24 10:32:11' ,6);
-insert into familiar_historico_precio values(1,6,'2019-08-03 00:18:27' ,9);
-insert into familiar_historico_precio values(1,7,'2010-12-28 14:48:02' ,1);
-insert into familiar_historico_precio values(1,8,'2015-04-11 05:23:58' ,7);
-insert into familiar_historico_precio values(1,9,'2021-09-20 23:47:16' ,1);
-insert into familiar_historico_precio values(1,10,'2013-06-07 12:15:45' ,25);
+insert into familiar_historico_precio values(1,1,'2024-03-01 04:05:06' ,10);
+insert into familiar_historico_precio values(1,2,'2024-03-01 21:13:42' ,2);
+insert into familiar_historico_precio values(1,3,'2024-03-01 18:29:19' ,3);
+insert into familiar_historico_precio values(1,4,'2024-03-01 06:54:33' ,10);
+insert into familiar_historico_precio values(1,5,'2024-03-01 10:32:11' ,6);
+insert into familiar_historico_precio values(1,6,'2024-03-01 00:18:27' ,9);
+insert into familiar_historico_precio values(1,7,'2024-03-01 14:48:02' ,1);
+insert into familiar_historico_precio values(1,8,'2024-03-01 05:23:58' ,7);
+insert into familiar_historico_precio values(1,9,'2024-03-01 23:47:16' ,1);
+insert into familiar_historico_precio values(1,10,'2024-03-01 12:15:45' ,25);
 
-insert into familiar_historico_precio values(2,11,'2018-02-26 08:51:23' ,1);
-insert into familiar_historico_precio values(2,12,'2016-10-04 17:09:34' ,11);
-insert into familiar_historico_precio values(2,13,'2010-03-23 09:21:56' ,14);
-insert into familiar_historico_precio values(2,14,'2014-12-31 22:30:01' ,10);
-insert into familiar_historico_precio values(2,15,'2017-05-16 01:42:43' ,2);
-insert into familiar_historico_precio values(2,16,'2011-09-08 15:58:50' ,3);
-insert into familiar_historico_precio values(2,17,'2019-02-12 11:06:14' ,5);
-insert into familiar_historico_precio values(2,18,'2010-08-10 20:33:29' ,4);
-insert into familiar_historico_precio values(2,19,'2015-01-29 03:17:32' ,12);
-insert into familiar_historico_precio values(2,20,'2021-03-05 07:24:48' ,17);
+insert into familiar_historico_precio values(2,11,'2024-03-01 08:51:23' ,1);
+insert into familiar_historico_precio values(2,12,'2024-03-01 17:09:34' ,11);
+insert into familiar_historico_precio values(2,13,'2024-03-01 09:21:56' ,14);
+insert into familiar_historico_precio values(2,14,'2024-03-01 22:30:01' ,10);
+insert into familiar_historico_precio values(2,15,'2024-03-01 01:42:43' ,2);
+insert into familiar_historico_precio values(2,16,'2024-03-01 15:58:50' ,3);
+insert into familiar_historico_precio values(2,17,'2024-03-01 11:06:14' ,5);
+insert into familiar_historico_precio values(2,18,'2024-03-01 20:33:29' ,4);
+insert into familiar_historico_precio values(2,19,'2024-03-01 03:17:32' ,12);
+insert into familiar_historico_precio values(2,20,'2024-03-01 07:24:48' ,17);
 
 
-insert into familiar_historico_precio values(3,21,'2013-11-22 16:02:51' ,24);
-insert into familiar_historico_precio values(3,22,'2018-07-01 19:45:04' ,3);
-insert into familiar_historico_precio values(3,23,'2016-03-18 13:37:19' ,8);
-insert into familiar_historico_precio values(3,24,'2010-04-15 08:12:31' ,1);
-insert into familiar_historico_precio values(3,25,'2014-08-27 14:49:25' ,9);
-insert into familiar_historico_precio values(3,26,'2013-11-22 16:02:51' ,24);
-insert into familiar_historico_precio values(3,27,'2018-07-01 19:45:04' ,3);
-insert into familiar_historico_precio values(3,28,'2016-03-18 13:37:19' ,8);
-insert into familiar_historico_precio values(3,29,'2010-04-15 08:12:31' ,1);
-insert into familiar_historico_precio values(3,30,'2014-08-27 14:49:25' ,9);
-insert into familiar_historico_precio values(3,31,'2013-11-22 16:02:51' ,24);
-insert into familiar_historico_precio values(3,32,'2018-07-01 19:45:04' ,3);
+insert into familiar_historico_precio values(3,21,'2024-03-01 16:02:51' ,24);
+insert into familiar_historico_precio values(3,22,'2024-03-01 19:45:04' ,3);
+insert into familiar_historico_precio values(3,23,'2024-03-01 13:37:19' ,8);
+insert into familiar_historico_precio values(3,24,'2024-03-01 08:12:31' ,1);
+insert into familiar_historico_precio values(3,25,'2024-03-01 14:49:25' ,9);
+insert into familiar_historico_precio values(3,26,'2024-03-01 16:02:51' ,24);
+insert into familiar_historico_precio values(3,27,'2024-03-01 19:45:04' ,3);
+insert into familiar_historico_precio values(3,28,'2024-03-01 13:37:19' ,8);
+insert into familiar_historico_precio values(3,29,'2024-03-01 08:12:31' ,1);
+insert into familiar_historico_precio values(3,30,'2024-03-01 14:49:25' ,9);
+insert into familiar_historico_precio values(3,31,'2024-03-01 16:02:51' ,24);
+insert into familiar_historico_precio values(3,32,'2024-03-01 19:45:04' ,3);
 
 
 

@@ -21,7 +21,7 @@ function Agregar_select_coleccion(datos){
   for (var i = 0; i < datos.length; i++) {
     var opcion = document.createElement("option");
     opcion.text = datos[i].nombre;
-    opcion.value = datos[i].linea + datos[i].uid_coleccion.toString();
+    opcion.value = datos[i].uid_coleccion.toString();
     select.add(opcion);
   }
 }
@@ -30,6 +30,7 @@ function Agregar_select_coleccion(datos){
 function Agregar_select_Molde(datos){
   var select = document.getElementById("molde");
   select.innerHTML = "";
+
   var option = document.createElement("option"); // Declarar la variable option
   option.value = 'NaN';
   option.selected = true;
@@ -62,7 +63,6 @@ document.addEventListener("DOMContentLoaded", function() {
       .then(response => response.json())
       .then(data => {
         let datos = data;
-        console.log(datos);
         Agregar_select_coleccion(datos);
       })
       .catch(error => {
@@ -173,7 +173,6 @@ document.addEventListener('DOMContentLoaded', function() {
           input.value = numero_anterior;
         }
       }
-      console.log(numero_actual + ' '+ numero_actual.length)
 
     } else {
       aux++;
@@ -190,45 +189,57 @@ document.addEventListener('DOMContentLoaded', function() {
 /*---------------------------------------------------------------------------------------*/
 /*                                   Agregar                                             */
 /*---------------------------------------------------------------------------------------*/
-
+function limpieza() {
+  const elements = ['coleccion', 'molde', 'precio', 'descripcion'];
+  elements.forEach(element => {
+    document.getElementById(element).value = element === 'precio' || element === 'descripcion' ? '' : 'NaN';
+  });
+  numero_actual = '';
+  numero_anterior = '';
+}
 const agregar = document.getElementById("agregar");
 agregar.addEventListener("click", function(event) {
   var coleccion=document.getElementById("coleccion").value;
   var molde=document.getElementById("molde").value;
   var precio=document.getElementById("precio").value;
   var descripcion=document.getElementById("descripcion").value;
+  let aux = descripcion;
 
-  if(coleccion == 'NaN'){
+ if(coleccion == 'NaN'){
     alert(' Error 1: Debe elegir una colección.');
+  } else if( coleccion.length > 2){
+    alert('Error 2: El identificador de la coleccion supera el maximo.');
   } else if(molde == 'NaN'){
     alert('Error 2: Debe elegir un molde.');
-  } else if(precio.length == 0 && false){
-
-  } else if(! descripcion == null){
-
+  } else if(molde.length > 3){
+    alert('Error 2: El identificador de la molde supera el maximo.');
+  }else if(precio.length == 0){
+    alert('Error 2: El precio no puede quedar vacío.');
+  } else if( descripcion.length == 0){
+    aux = null;
   }else {
-    let des = descripcion;
-    if(descripcion.length == 0){
-      des = null;
-    }
-
-    if(coleccion[0] == 'F'){
-      let peticion = {
-        pet: 3,
-        coleccion: coleccion.slice(1, coleccion.length), 
-        descripcion: des, 
-        precio: precio, 
-        molde: molde
-      };
-    }else {
-      let peticion = {
-        pet: 3,
-        coleccion: coleccion.slice(1, coleccion.length), 
-        descripcion: des, 
-        precio: null, 
-        molde: molde
-      };
-    }
+    let peticion = {
+      pet: 3,
+      coleccion: parseInt(coleccion), 
+      descripcion: aux, 
+      precio: precio, 
+      molde: parseInt(molde)
+    };
+   fetch('/Ceramica_Real/Pieza', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(peticion)
+    })
+      .then(response => response.json())
+      .then(data => {
+        alert('Insertado con exito');
+        limpieza();
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
 });
 

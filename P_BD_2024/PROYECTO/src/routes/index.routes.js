@@ -54,6 +54,18 @@ router.post('/Ceramica_Real/Vajilla', (req, res) => {
     case 1:
         select.COLECCION(req, res);
     break;
+
+    case 2:
+        select.LINEA_COLECCION(req, res, datos);
+    break;
+
+    case 3:
+        select.PIEZA_X_COLECCION_FAMILIAR(req, res, datos);
+    break;
+
+    case 4:
+        select.PIEZA_X_COLECCION_RESTANTES(req, res, datos);
+    break;
   }
 });
 
@@ -70,5 +82,6 @@ router.post('/Ceramica_Real/Coleccion', (req, res) => {
         case 1:
             insert.COLECCION(req, res, datos);
         break;
+        
       }
 });

@@ -2,33 +2,37 @@
 
 
 //Lista en memoria para testear
-const piezasColeccion = [{
+let piezasColeccion = [/*{
   id: '1035149785',
-  nombre: 'Amazonia Taza Moca'
+  nombre: 'Amazonia Taza Moca',
+  precio: null
 },{
   id: '1035140455',
-  nombre: 'Amazonia Tetera 6pers'
+  nombre: 'Amazonia Tetera 6pers',
+  precio: null
 },{
   id: '1035140004',
-  nombre: 'Amazonia Lechera 6pers'
-}
+  nombre: 'Amazonia Lechera 6pers',
+  precio: null
+}*/
 ];
 
 //Aquí se irán guardando el id de la pieza y la cantidad de que tiene la vajilla de esta misma 
 let piezasVajilla = [];
 
 //se genera el html de la coleccion, en un futuro se llamará a esta función cada vez que se seleccione una función en el select
-renderListaColeccion();
+//renderListaColeccion();
 
 //FUNCIONES DE GENERACION DE HTML
 //renderiza la lista de la coleccion
+
 function renderListaColeccion(){
   let listaPiezasHTML = '';
 
   piezasColeccion.forEach((pieza) => {
     const {id, nombre} = pieza;
 
-    const html = `
+    let html = `
       <div class = "pieza-container js-pieza-container" data-pieza-id="${id}">
           ${nombre}
           <div>
@@ -160,7 +164,7 @@ function Agregar_select_coleccion(datos){
   for (var i = 0; i < datos.length; i++) {
     var opcion = document.createElement("option");
     opcion.text = datos[i].nombre;
-    opcion.value = datos[i].linea + datos[i].uid_coleccion.toString();
+    opcion.value = datos[i].uid_coleccion.toString();
     select.add(opcion);
   }
 }
@@ -171,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let peticion = {
       pet: 1
     };
-    fetch('/Ceramica_Real/Pieza', {
+    fetch('/Ceramica_Real/Vajilla', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -181,7 +185,6 @@ document.addEventListener("DOMContentLoaded", function() {
       .then(response => response.json())
       .then(data => {
         let datos = data;
-        console.log(datos);
         Agregar_select_coleccion(datos);
       })
       .catch(error => {
@@ -191,3 +194,75 @@ document.addEventListener("DOMContentLoaded", function() {
     select_coleccion = true;
   }
 });
+
+function LLENAR_PIEZA_COLECCION(datos){
+  for (i=0; i<datos.length; i++){
+
+  }
+}
+
+const coleccion = document.getElementById("coleccion");
+coleccion.addEventListener("change", function(event) {
+  
+  if(coleccion.value != 'NaN'){
+    let peticion = {
+      pet: 2,
+      coleccion: parseInt(coleccion.value) 
+    };
+    fetch('/Ceramica_Real/Vajilla', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(peticion)
+    })
+      .then(response => response.json())
+      .then(data => {
+        let datos = data;
+        let aux = datos[0].linea === 'F' ? 3 : 4;
+        let peticion_dos = {
+          pet: aux,
+          coleccion: parseInt(coleccion.value) 
+        };
+       
+        //Segunda consulta
+        fetch('/Ceramica_Real/Vajilla', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(peticion_dos)
+        })
+          .then(response => response.json())
+          .then(data_dos => {
+            piezasColeccion = [];
+            renderListaColeccion();
+            piezasVajilla = [];
+            renderListaVajilla()
+            data_dos.forEach(pieza => {
+              let piezaObj = {
+                id: pieza.id,
+                nombre: pieza.nombre,
+                precio: pieza.precio
+              };
+              piezasColeccion.push(piezaObj);
+            });
+            renderListaColeccion();
+            console.log(data_dos);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+});
+
+/*---------------------------------------------------------------------------------------*/
+/*                                     AGREGAR                                           */
+/*---------------------------------------------------------------------------------------*/
+
+

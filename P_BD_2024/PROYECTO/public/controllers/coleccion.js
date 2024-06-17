@@ -1,3 +1,12 @@
+function limpieza() {
+  const elements = ['linea', 'categoria', 'nueva_linea', 'nueva_categoria', 'nombre','descripcion'];
+  elements.forEach(element => {
+    document.getElementById(element).value = element === 'linea' || element === 'categoria' ? 'NaN' : '' ;
+  });
+  numero_actual = '';
+  numero_anterior = '';
+}
+
 const agregar = document.getElementById("agregar");
 agregar.addEventListener("click", function(event) {
   var linea=document.getElementById("linea").value;
@@ -43,6 +52,7 @@ agregar.addEventListener("click", function(event) {
         .then(response => response.json())
         .then(data => {
             alert('Insertado con exito');
+            limpieza();
         })
         .catch(error => {
           console.error(error);

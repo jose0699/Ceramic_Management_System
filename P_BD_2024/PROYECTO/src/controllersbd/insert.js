@@ -10,11 +10,12 @@ const pool = new Pool({
 
 const PIEZA = (req, res, datos) => {
     const { coleccion, descripcion, precio, molde } = datos;
-    const consulta = 
-      `
+    const consulta = 'CALL insert_pieza($1, $2, $3, $4);';
+      /*
       INSERT INTO PIEZA VALUES($1 , nextval ('pieza_uid_seq'), $2, $3, $4);
-      `
-    ;
+      `*/
+
+    
     const valores = [coleccion, descripcion, precio, molde];
     pool.query(consulta, valores, (error, resultado) => {
       if (error) {
@@ -54,6 +55,24 @@ const PIEZA = (req, res, datos) => {
       `
     ;
     const valores = [nombre, linea, categoria, descripcion];
+    pool.query(consulta, valores, (error, resultado) => {
+      if (error) {
+        console.error('Error al ejecutar la consulta:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+      } else {
+        res.status(200).json(resultado.rows);
+      }
+    });
+  };
+
+  const VAJILLA = (req, res, datos) => {
+    const { nombre, capacidad, descripcion } = datos;
+    const consulta = 
+      `
+      SELECT * FROM insertar_vajilla($1, $2, $3)
+      `
+    ;
+    const valores = [nombre, capacidad, descripcion];
     pool.query(consulta, valores, (error, resultado) => {
       if (error) {
         console.error('Error al ejecutar la consulta:', error);

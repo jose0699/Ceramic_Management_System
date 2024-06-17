@@ -25,10 +25,34 @@ CREATE OR REPLACE PROCEDURE rotacion_turnos_horneros() AS $$
   END;
 
 $$ LANGUAGE plpgsql;
+	
+CREATE OR REPLACE PROCEDURE insert_pieza(coleccion numeric(2), descripcion varchar(256), precio numeric(8,2), uid_molde numeric(2)) AS $$
+	DECLARE
+		linea_coleccion varchar(1);
+		new_uid_pieza numeric(3);
+	BEGIN
+		SELECT  c.linea INTO linea_coleccion FROM coleccion c WHERE c.uid_coleccion = coleccion;
+		
+		IF linea_coleccion = 'F' THEN 
+			INSERT INTO pieza VALUES (coleccion,nextval ('pieza_uid_seq'),descripcion,precio,uid_molde);
+			new_uid_pieza := lastval();
+			
+			INSERT INTO familiar_historico_precio values(coleccion, new_uid_pieza ,CURRENT_DATE , precio, NULL);
+		ELSE
+			INSERT INTO pieza VALUES (coleccion,nextval ('pieza_uid_seq'),descripcion,precio,uid_molde);		
+		END IF;
+	END;
+$$ LANGUAGE plpgsql;	
 
 --------------------------------------------------------------------------------------------------------
---                                           Function                                                --
+--                                            Function                                                --
 --------------------------------------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION insertar_vajilla(nombre varchar(60), capacidad numeric(1), descripcion varchar(256)) returns numeric(3) AS $$ 
+BEGIN
+	INSERT INTO vajilla values(nextval ('vajilla_uid_seq'),nombre, capacidad, descripcion);
+	return lastval();
+END;
+$$ LANGUAGE plpgsql;
 
 --NUMERO 6
 CREATE OR REPLACE FUNCTION obtener_dias_no_laborales() RETURNS numeric(2) AS $$

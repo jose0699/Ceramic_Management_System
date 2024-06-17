@@ -343,26 +343,26 @@ insert into pieza values (3,nextval ('pieza_uid_seq'),'Un Toque de Refinamiento 
 insert into pieza values (3,nextval ('pieza_uid_seq'),'Mañana de Té: Comienza tu día con una sonrisa con esta taza de cerámica decorada con motivos de la hora del té, perfecta para disfrutar de tu café o té matutino.',null,31);--46
 
 
-insert into pieza values (4,nextval ('pieza_uid_seq'),'Amanecer Británico: Un plato ideal para la comida principal, adornado con una escena rústica de una granja inglesa al amanecer, con el humo que sale de la chimenea y el aroma del desayuno recién hecho flotando en el aire.',10,18);--46
-insert into pieza values (4,nextval ('pieza_uid_seq'),'Earl Grey: Una taza cilíndrica con asa, perfecta para disfrutar de una taza de té Earl Grey, la bebida tradicional del desayuno inglés, decorada con una ilustración de una tetera humeante y una taza elegante, rodeados de hojas de té aromáticas.',10,31);--46
+insert into pieza values (4,nextval ('pieza_uid_seq'),'Amanecer Británico: Un plato ideal para la comida principal, adornado con una escena rústica de una granja inglesa al amanecer, con el humo que sale de la chimenea y el aroma del desayuno recién hecho flotando en el aire.',3.5,18);--46
+insert into pieza values (4,nextval ('pieza_uid_seq'),'Earl Grey: Una taza cilíndrica con asa, perfecta para disfrutar de una taza de té Earl Grey, la bebida tradicional del desayuno inglés, decorada con una ilustración de una tetera humeante y una taza elegante, rodeados de hojas de té aromáticas.',3.5,31);--46
 
-insert into pieza values (4,nextval ('pieza_uid_seq'),'Desayuno Campestre: Una bandeja con bordes ligeramente elevados, perfecta para servir un desayuno completo, adornada con un diseño alegre de huevos fritos con yemas soleadas, crujientes tiras de tocino y rebanadas de pan tostado.',10,14);--46
-insert into pieza values (4,nextval ('pieza_uid_seq'),'Brunch Dominguero: Una bandeja con bordes bajos, ideal para disfrutar de un brunch familiar, decorada con un diseño colorido de huevos revueltos, tocino en forma de corazón, gofres con arándanos y un vaso de jugo de naranja.',10,15);--46
-insert into pieza values (4,nextval ('pieza_uid_seq'),'Picnic Picante: Una bandeja  con bordes ondulados, perfecta para un picnic picante, adornada con un diseño rústico de huevos rancheros con salsa picante, tortillas calientes, frijoles refritos y aguacate fresco.',10,15);--46
-insert into pieza values (4,nextval ('pieza_uid_seq'),'Nube Dorada: Una jarra de forma cilíndrica con asa y pico vertedor, ideal para servir café o té caliente, decorada con un diseño de huevos revueltos en forma de nube, con yemas doradas que se derraman sobre crujientes tiras de tocino.',10,2);--46
-
-
-
-
-insert into pieza values (5,nextval ('pieza_uid_seq'),'Ostra Brillante: Un plato con bordes curvos que evoca la forma de una ostra abierta, perfecto para sopas o guisos, adornado con una perla iridiscente en el centro, como una joya marina.',10,17);--46
-insert into pieza values (5,nextval ('pieza_uid_seq'),'Concha de Tesoro: Un plato y ancho con bordes ligeramente elevados, ideal para ensaladas o acompañamientos, decorado con una concha marina abierta que revela una perla resplandeciente, como un tesoro escondido.',10,19);--46
-insert into pieza values (5,nextval ('pieza_uid_seq'),'Plato Espuma de las Olas: Un plato , perfecto para la comida principal, adornado con un diseño de olas rompiendo en la orilla, dejando tras de sí una espuma blanca nacarada que recuerda a las perlas.',10,28);--46
-insert into pieza values (5,nextval ('pieza_uid_seq'),'Sirena Encantada: Una taza cilíndrica con asa, ideal para iniciar el día con una taza de café o té caliente, decorada con una ilustración de una sirena nadando entre perlas, con su cola iridiscente brillando bajo el agua.',10,34);--46
+insert into pieza values (4,nextval ('pieza_uid_seq'),'Desayuno Campestre: Una bandeja con bordes ligeramente elevados, perfecta para servir un desayuno completo, adornada con un diseño alegre de huevos fritos con yemas soleadas, crujientes tiras de tocino y rebanadas de pan tostado.',3,14);--46
+insert into pieza values (4,nextval ('pieza_uid_seq'),'Brunch Dominguero: Una bandeja con bordes bajos, ideal para disfrutar de un brunch familiar, decorada con un diseño colorido de huevos revueltos, tocino en forma de corazón, gofres con arándanos y un vaso de jugo de naranja.',4,15);--46
+insert into pieza values (4,nextval ('pieza_uid_seq'),'Picnic Picante: Una bandeja  con bordes ondulados, perfecta para un picnic picante, adornada con un diseño rústico de huevos rancheros con salsa picante, tortillas calientes, frijoles refritos y aguacate fresco.',4,15);--46
+insert into pieza values (4,nextval ('pieza_uid_seq'),'Nube Dorada: Una jarra de forma cilíndrica con asa y pico vertedor, ideal para servir café o té caliente, decorada con un diseño de huevos revueltos en forma de nube, con yemas doradas que se derraman sobre crujientes tiras de tocino.',4,2);--46
 
 
 
-insert into pieza values (5,nextval ('pieza_uid_seq'),'Caracola Sonriente: Un plato  con bordes curvos que evocan la forma de una caracola marina, perfecto para sopas o guisos, adornado con una ilustración de una caracola con una sonrisa tallada en su espiral, como si cantara una melodía del mar.',10,20);--46
-insert into pieza values (5,nextval ('pieza_uid_seq'),'Tesoro Escondido: Un plato  con bordes ligeramente elevados, ideal para ensaladas o acompañamientos, decorado con un diseño de una concha marina abierta que revela un collar de perlas y pequeñas piedras preciosas, como un tesoro escondido bajo las olas.',10,26);--46
+
+insert into pieza values (5,nextval ('pieza_uid_seq'),'Ostra Brillante: Un plato con bordes curvos que evoca la forma de una ostra abierta, perfecto para sopas o guisos, adornado con una perla iridiscente en el centro, como una joya marina.',3,17);--46
+insert into pieza values (5,nextval ('pieza_uid_seq'),'Concha de Tesoro: Un plato y ancho con bordes ligeramente elevados, ideal para ensaladas o acompañamientos, decorado con una concha marina abierta que revela una perla resplandeciente, como un tesoro escondido.',3,19);--46
+insert into pieza values (5,nextval ('pieza_uid_seq'),'Plato Espuma de las Olas: Un plato , perfecto para la comida principal, adornado con un diseño de olas rompiendo en la orilla, dejando tras de sí una espuma blanca nacarada que recuerda a las perlas.',3.5,28);--46
+insert into pieza values (5,nextval ('pieza_uid_seq'),'Sirena Encantada: Una taza cilíndrica con asa, ideal para iniciar el día con una taza de café o té caliente, decorada con una ilustración de una sirena nadando entre perlas, con su cola iridiscente brillando bajo el agua.',1.5,34);--46
+
+
+
+insert into pieza values (5,nextval ('pieza_uid_seq'),'Caracola Sonriente: Un plato  con bordes curvos que evocan la forma de una caracola marina, perfecto para sopas o guisos, adornado con una ilustración de una caracola con una sonrisa tallada en su espiral, como si cantara una melodía del mar.',3.5,20);--46
+insert into pieza values (5,nextval ('pieza_uid_seq'),'Tesoro Escondido: Un plato  con bordes ligeramente elevados, ideal para ensaladas o acompañamientos, decorado con un diseño de una concha marina abierta que revela un collar de perlas y pequeñas piedras preciosas, como un tesoro escondido bajo las olas.',3.5,26);--46
 
 
 
@@ -416,61 +416,61 @@ insert into familiar_historico_precio values(3,32,'2024-03-01 19:45:04' ,3);
 
 
 
-insert into DETALLE_PIEZA_VAJILLA values (1,1,1,10);
-insert into DETALLE_PIEZA_VAJILLA values (1,1,2,12);
-insert into DETALLE_PIEZA_VAJILLA values (1,1,3,8);
-insert into DETALLE_PIEZA_VAJILLA values (1,1,4,24);
+insert into DETALLE_PIEZA_VAJILLA values (1,1,1,3);
+insert into DETALLE_PIEZA_VAJILLA values (1,1,2,3);
+insert into DETALLE_PIEZA_VAJILLA values (1,1,3,2);
+insert into DETALLE_PIEZA_VAJILLA values (1,1,8,2);
 
-insert into DETALLE_PIEZA_VAJILLA values (2,1,5,32);
-insert into DETALLE_PIEZA_VAJILLA values (2,1,6,10);
-insert into DETALLE_PIEZA_VAJILLA values (2,1,7,22);
-insert into DETALLE_PIEZA_VAJILLA values (2,1,8,20);
-insert into DETALLE_PIEZA_VAJILLA values (2,1,9,28);
-insert into DETALLE_PIEZA_VAJILLA values (2,1,10,50);
+insert into DETALLE_PIEZA_VAJILLA values (2,1,5,2);
+insert into DETALLE_PIEZA_VAJILLA values (2,1,6,2);
+insert into DETALLE_PIEZA_VAJILLA values (2,1,7,2);
+insert into DETALLE_PIEZA_VAJILLA values (2,1,8,1);
+insert into DETALLE_PIEZA_VAJILLA values (2,1,9,3);
+insert into DETALLE_PIEZA_VAJILLA values (2,1,10,2);
 
-insert into DETALLE_PIEZA_VAJILLA values (3,2,11,40);
-insert into DETALLE_PIEZA_VAJILLA values (3,2,12,32);
-insert into DETALLE_PIEZA_VAJILLA values (3,2,13,28);
-insert into DETALLE_PIEZA_VAJILLA values (3,2,14,22);
-insert into DETALLE_PIEZA_VAJILLA values (3,2,15,28);
-insert into DETALLE_PIEZA_VAJILLA values (3,2,16,34);
-
-
-insert into DETALLE_PIEZA_VAJILLA values (4,2,17,42);
-insert into DETALLE_PIEZA_VAJILLA values (4,2,18,44);
-insert into DETALLE_PIEZA_VAJILLA values (4,2,19,46);
-insert into DETALLE_PIEZA_VAJILLA values (4,2,20,18);
+insert into DETALLE_PIEZA_VAJILLA values (3,2,11,4);
+insert into DETALLE_PIEZA_VAJILLA values (3,2,12,2);
+insert into DETALLE_PIEZA_VAJILLA values (3,2,13,2);
+insert into DETALLE_PIEZA_VAJILLA values (3,2,14,2);
+insert into DETALLE_PIEZA_VAJILLA values (3,2,15,1);
+insert into DETALLE_PIEZA_VAJILLA values (3,2,20,4);
 
 
-insert into DETALLE_PIEZA_VAJILLA values (5,3,21,30);
-insert into DETALLE_PIEZA_VAJILLA values (5,3,22,28);
-insert into DETALLE_PIEZA_VAJILLA values (5,3,23,26);
-insert into DETALLE_PIEZA_VAJILLA values (5,3,24,24);
-insert into DETALLE_PIEZA_VAJILLA values (5,3,25,28);
-insert into DETALLE_PIEZA_VAJILLA values (5,3,26,24);
+insert into DETALLE_PIEZA_VAJILLA values (4,2,17,2);
+insert into DETALLE_PIEZA_VAJILLA values (4,2,18,2);
+insert into DETALLE_PIEZA_VAJILLA values (4,2,19,2);
+insert into DETALLE_PIEZA_VAJILLA values (4,2,20,2);
 
-insert into DETALLE_PIEZA_VAJILLA values (6,3,27,38);
-insert into DETALLE_PIEZA_VAJILLA values (6,3,28,40);
-insert into DETALLE_PIEZA_VAJILLA values (6,3,29,50);
-insert into DETALLE_PIEZA_VAJILLA values (6,3,30,48);
-insert into DETALLE_PIEZA_VAJILLA values (6,3,31,46);
-insert into DETALLE_PIEZA_VAJILLA values (6,3,32,20);
 
-insert into DETALLE_PIEZA_VAJILLA values (7,4,33,30);
-insert into DETALLE_PIEZA_VAJILLA values (7,4,34,12);
+insert into DETALLE_PIEZA_VAJILLA values (5,3,21,2);
+insert into DETALLE_PIEZA_VAJILLA values (5,3,22,2);
+insert into DETALLE_PIEZA_VAJILLA values (5,3,23,2);
+insert into DETALLE_PIEZA_VAJILLA values (5,3,24,1);
+insert into DETALLE_PIEZA_VAJILLA values (5,3,25,1);
+insert into DETALLE_PIEZA_VAJILLA values (5,3,26,1);
 
-insert into DETALLE_PIEZA_VAJILLA values (8,4,35,40);
-insert into DETALLE_PIEZA_VAJILLA values (8,4,36,50);
-insert into DETALLE_PIEZA_VAJILLA values (8,4,37,48);
-insert into DETALLE_PIEZA_VAJILLA values (8,4,38,36);
+insert into DETALLE_PIEZA_VAJILLA values (6,3,27,2);
+insert into DETALLE_PIEZA_VAJILLA values (6,3,28,2);
+insert into DETALLE_PIEZA_VAJILLA values (6,3,29,2);
+insert into DETALLE_PIEZA_VAJILLA values (6,3,30,1);
+insert into DETALLE_PIEZA_VAJILLA values (6,3,31,1);
+insert into DETALLE_PIEZA_VAJILLA values (6,3,32,5);
 
-insert into DETALLE_PIEZA_VAJILLA values (9,5,39,32);
-insert into DETALLE_PIEZA_VAJILLA values (9,5,40,30);
-insert into DETALLE_PIEZA_VAJILLA values (9,5,41,28);
-insert into DETALLE_PIEZA_VAJILLA values (9,5,42,26);
+insert into DETALLE_PIEZA_VAJILLA values (7,4,33,10);
+insert into DETALLE_PIEZA_VAJILLA values (7,4,34,10);
 
-insert into DETALLE_PIEZA_VAJILLA values (10,5,43,40);
-insert into DETALLE_PIEZA_VAJILLA values (10,5,44,18);
+insert into DETALLE_PIEZA_VAJILLA values (8,4,35,3);
+insert into DETALLE_PIEZA_VAJILLA values (8,4,36,3);
+insert into DETALLE_PIEZA_VAJILLA values (8,4,37,3);
+insert into DETALLE_PIEZA_VAJILLA values (8,4,38,2);
+
+insert into DETALLE_PIEZA_VAJILLA values (9,5,39,2);
+insert into DETALLE_PIEZA_VAJILLA values (9,5,40,2);
+insert into DETALLE_PIEZA_VAJILLA values (9,5,41,2);
+insert into DETALLE_PIEZA_VAJILLA values (9,5,42,6);
+
+insert into DETALLE_PIEZA_VAJILLA values (10,5,43,15);
+insert into DETALLE_PIEZA_VAJILLA values (10,5,44,15);
 
 
 --------------------------------------------------------------------------------------------------------

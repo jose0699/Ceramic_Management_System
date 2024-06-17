@@ -39,7 +39,8 @@
 /*CSS de Inputs, selects y buttons*/
 
 
-.input-title{
+.input-title,
+.input-title-vajilla{
   color: rgb(90,90,90);
   font-weight: 500;
   font-size: 18px;
@@ -114,11 +115,20 @@
 /*CSS exclusivo de vajilla*/
 
 .piece-list{
-  width: 70%;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
 
+.price-tag{
+  display: inline-block;
+  color:rgb(26, 78, 26);
+  font-weight: 600;
+}
+
+.input-title-vajilla{
+  color: rgb(121, 161, 20);
+}
 
 .scrollmenu{
   width: 100%;
@@ -139,6 +149,7 @@
 
 .pieza-container{
   flex: 1;
+  font-size: 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -209,6 +220,8 @@
   border-style: none;
   border-radius: 10px;
 }
+
+
 
 /*
   rgb(50,175,215)

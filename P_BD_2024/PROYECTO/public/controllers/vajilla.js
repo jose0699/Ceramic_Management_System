@@ -30,12 +30,14 @@ function renderListaColeccion(){
   let listaPiezasHTML = '';
 
   piezasColeccion.forEach((pieza) => {
-    const {id, nombre} = pieza;
+    const {id, nombre,precio} = pieza;
 
     let html = `
       <div class = "pieza-container js-pieza-container" data-pieza-id="${id}">
           ${nombre}
+
           <div>
+              <div style="color: rgb(214, 91, 42); display: inline">$${precio}</div>
               <button class="add-button js-add-button" data-pieza-id="${id}">+</button>
               <button class="minus-button js-minus-button" data-pieza-id="${id}">-</button>
           </div>
@@ -71,6 +73,7 @@ function renderListaColeccion(){
 //renderiza la lista de la vajilla
 function renderListaVajilla(){
   let resumenVajillaHTML = '';
+  let precioVajilla = 0;
 
   piezasVajilla.forEach((pieza) => {
     const id = pieza.id;
@@ -85,10 +88,16 @@ function renderListaVajilla(){
     `; 
 
     resumenVajillaHTML += html;
+    precioVajilla+=Number(piezaEncontrada.precio)*Number(pieza.cantidad);
   });
+
+  precioVajilla-=(precioVajilla*0.15);
 
   document.querySelector('.js-vajilla-scrollmenu')
     .innerHTML = resumenVajillaHTML;
+
+  document.querySelector('.js-price-tag')
+    .innerHTML = `PRECIO ESTIMADO: $${precioVajilla}`
 };
 
 //FUNCIONES DE BUSQUEDA EN PIEZASCOLECCION Y AÑADIR A LA LISTA DE LA VAJILLA

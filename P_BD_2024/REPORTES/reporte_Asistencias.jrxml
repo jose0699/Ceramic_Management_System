@@ -18,7 +18,7 @@
 		   e.supervisor,
 		   upper(CONCAT(s.primer_nombre, ' ', COALESCE(s.segundo_nombre, ''), ' ', s.primer_apellido, ' ', COALESCE(s.segundo_apellido, ''))) as nombre_supervisor,
 		   s.num_cedula,
-		   porcentaje_inasistencia_empleado(e.num_expediente,'2024-05-31' ) pinac
+		   porcentaje_inasistencia_empleado(e.num_expediente, $P{mes}  ) pinac
 	FROM departamento d, empleado s, empleado e
 	WHERE s.num_expediente = e.supervisor
 	AND d.uid_departamento = s.trabaja
@@ -63,10 +63,13 @@
 		<property name="com.jaspersoft.studio.field.label" value="num_cedula"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="empleado"/>
 	</field>
-	<field name="pinac" class="java.lang.String">
+	<field name="pinac" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="pinac"/>
 		<property name="com.jaspersoft.studio.field.label" value="pinac"/>
 	</field>
+	<variable name="por_asisTotal" class="java.lang.Float" calculation="Average">
+		<variableExpression><![CDATA[$F{pinac}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -113,7 +116,7 @@
 				<text><![CDATA[INFORME MENSUAL DE INASISTENCIA DEL SUPERVISOR]]></text>
 			</staticText>
 			<textField pattern="MMMMM &apos;de&apos; yyyy" isBlankWhenNull="true">
-				<reportElement x="20" y="80" width="547" height="31" uuid="e253b818-8227-4a4d-b051-fb2df9049c45"/>
+				<reportElement x="22" y="80" width="547" height="31" uuid="e253b818-8227-4a4d-b051-fb2df9049c45"/>
 				<box padding="4">
 					<pen lineColor="#7DA44E"/>
 					<bottomPen lineWidth="1.5"/>
@@ -122,7 +125,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="Poppins Medium" size="15" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nombre_supervisor} + " DEL DEPARTAMENTO " + $F{ndepart}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombre_supervisor} + " DEL DEPARTAMENTO DE " + $F{ndepart}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -136,9 +139,9 @@
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Poppins" size="12"/>
+					<font fontName="Poppins" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[DATEFORMAT($P{mes},"MMMM-yyyy")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[UPPER(DATEFORMAT($P{mes},"MMMM-yyyy"))]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -238,7 +241,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{num_cedula}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="380" y="0" width="187" height="30" uuid="0cc1f2a8-af7f-404e-aec3-5cf1a1f25c75"/>
 				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
 					<bottomPen lineWidth="1.0"/>
@@ -247,7 +250,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="Poppins" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{pinac}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pinac} +"%"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -255,9 +258,49 @@
 		<band height="45" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="570" height="30" uuid="e60330ad-11fa-4510-bc93-be9890adbedb"/>
+				<box>
+					<topPen lineWidth="1.25"/>
+				</box>
+				<textElement>
+					<font fontName="Poppins Medium" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="42" splitType="Stretch">
+			<textField>
+				<reportElement x="380" y="-1" width="187" height="30" forecolor="#0B6233" uuid="53bb9e4f-f4dc-4c94-8266-e9ad246c26a7"/>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{por_asisTotal} +"%"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="380" height="30" forecolor="#FFFFFF" backcolor="#0B6233" uuid="4cb151ef-0ba7-47cd-a925-d1fd90d7d05d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<pen lineStyle="Dashed" lineColor="#0B6233"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins Medium" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL PORCENTAJE DE ASISTENCIA]]></text>
+			</staticText>
+		</band>
 	</summary>
 </jasperReport>

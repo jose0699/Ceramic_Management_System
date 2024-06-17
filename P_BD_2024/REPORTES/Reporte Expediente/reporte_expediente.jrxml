@@ -15,6 +15,7 @@
 	<queryString>
 		<![CDATA[SELECT 
 	upper(CONCAT(e.primer_nombre, ' ', COALESCE(e.segundo_nombre, ''), ' ', e.primer_apellido, ' ', COALESCE(e.segundo_apellido, '')))as nombre,
+	upper(CONCAT(e.primer_nombre, ' ', e.primer_apellido)) as nom,
 	e.num_expediente,
 	e.num_cedula,
 	to_char(e.fecha_nacimiento,'DD-TMMM-YYYY') fecha_nacimiento,
@@ -49,6 +50,10 @@ WHERE e.num_expediente =$P{id Empleado} ;]]>
 	<field name="nombre" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="nombre"/>
 		<property name="com.jaspersoft.studio.field.label" value="nombre"/>
+	</field>
+	<field name="nom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nom"/>
+		<property name="com.jaspersoft.studio.field.label" value="nom"/>
 	</field>
 	<field name="num_expediente" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="num_expediente"/>
@@ -151,7 +156,7 @@ WHERE e.num_expediente =$P{id Empleado} ;]]>
 				<textElement textAlignment="Center">
 					<font fontName="Poppins Medium" size="15" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["#"+$F{num_expediente}+" "+$F{nombre}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["#"+$F{num_expediente}+" "+$F{nom}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -188,7 +193,7 @@ WHERE e.num_expediente =$P{id Empleado} ;]]>
 				<textElement textAlignment="Left">
 					<font fontName="Poppins Medium" size="13" isBold="true"/>
 				</textElement>
-				<text><![CDATA[NOMBRE:]]></text>
+				<text><![CDATA[NOMBRE COMPLETO:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="380" y="31" width="100" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="e5cbb925-8406-47ce-bff0-8e72fb47fac0">
@@ -432,7 +437,7 @@ WHERE e.num_expediente =$P{id Empleado} ;]]>
 				<subreportExpression><![CDATA["subrDet_Exp.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement x="0" y="460" width="567" height="62" uuid="e3a92312-0b15-4cae-bddb-09ee95e2b3ef"/>
+				<reportElement x="0" y="460" width="567" height="62" isRemoveLineWhenBlank="true" uuid="e3a92312-0b15-4cae-bddb-09ee95e2b3ef"/>
 				<subreportParameter name="id Empleado">
 					<subreportParameterExpression><![CDATA[$P{id Empleado}]]></subreportParameterExpression>
 				</subreportParameter>

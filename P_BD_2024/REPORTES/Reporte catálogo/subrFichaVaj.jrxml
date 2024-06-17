@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subrFichaVaj" pageWidth="570" pageHeight="792" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="12e002ca-d980-4a41-a782-2867faa7f71c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Proyecto_BD"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="id coleccion" class="java.lang.Integer">
+		<parameterDescription><![CDATA[id de la coleccion de la que se requiere el catálogo]]></parameterDescription>
+	</parameter>
+	<parameter name="Tasa $" class="java.math.BigDecimal">
+		<parameterDescription><![CDATA[Tasa para ejecutar la conversión a Bs]]></parameterDescription>
+	</parameter>
+	<parameter name="fecha_inicio" class="java.sql.Date">
+		<parameterDescription><![CDATA[fecha desde la cual se quiere buscar los precios]]></parameterDescription>
+	</parameter>
+	<parameter name="fecha_fin" class="java.sql.Date">
+		<parameterDescription><![CDATA[fecha hasta la cual se quiere buscar los precios]]></parameterDescription>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[WITH precios_vaj AS (
+	SELECT DISTINCT
+	c.nombre,
+	v.uid_juego,
+	calcular_precio_vajilla(v.uid_juego, d.uid_coleccion,  $P{fecha_inicio} ,   $P{fecha_fin}  ) precio,
+	CASE
+	  WHEN c.linea = 'F' THEN 'Familiar'
+	  WHEN c.linea = 'I' THEN 'Institucional'
+	END linea
+	FROM coleccion c, vajilla v, detalle_pieza_vajilla d 
+	WHERE v.uid_juego = d.uid_juego
+	AND c.uid_coleccion = d.uid_coleccion
+	AND d.uid_coleccion = 3
+)
+
+SELECT 
+	v.uid_juego,
+	x.nombre coleccion,
+	v.nombre vajilla,
+	m.molde,
+	v.capacidad,
+	p.uid_pieza,
+	d.cantidad,
+	x.precio,
+	v.descripcion,
+	x.linea
+FROM vajilla v, detalle_pieza_vajilla d, nombres_moldes m, precios_vaj x, pieza p
+WHERE v.uid_juego = d.uid_juego
+AND v.uid_juego =  x.uid_juego
+AND d.uid_pieza = p.uid_pieza
+AND m.uid_molde = p.uid_molde
+AND d.uid_coleccion = 3
+ORDER BY vajilla]]>
+	</queryString>
+	<field name="uid_juego" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="uid_juego"/>
+		<property name="com.jaspersoft.studio.field.label" value="uid_juego"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vajilla"/>
+	</field>
+	<field name="coleccion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="coleccion"/>
+		<property name="com.jaspersoft.studio.field.label" value="coleccion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="coleccion"/>
+	</field>
+	<field name="vajilla" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="vajilla"/>
+		<property name="com.jaspersoft.studio.field.label" value="vajilla"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vajilla"/>
+	</field>
+	<field name="molde" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="molde"/>
+		<property name="com.jaspersoft.studio.field.label" value="molde"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="nombres_moldes"/>
+	</field>
+	<field name="capacidad" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="capacidad"/>
+		<property name="com.jaspersoft.studio.field.label" value="capacidad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vajilla"/>
+	</field>
+	<field name="uid_pieza" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="uid_pieza"/>
+		<property name="com.jaspersoft.studio.field.label" value="uid_pieza"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pieza"/>
+	</field>
+	<field name="cantidad" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="cantidad"/>
+		<property name="com.jaspersoft.studio.field.label" value="cantidad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_pieza_vajilla"/>
+	</field>
+	<field name="precio" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="precio"/>
+		<property name="com.jaspersoft.studio.field.label" value="precio"/>
+	</field>
+	<field name="descripcion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descripcion"/>
+		<property name="com.jaspersoft.studio.field.label" value="descripcion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vajilla"/>
+	</field>
+	<field name="linea" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="linea"/>
+		<property name="com.jaspersoft.studio.field.label" value="linea"/>
+	</field>
+	<variable name="sumaPiezas" class="java.lang.Integer" resetType="Group" resetGroup="grVajilla" calculation="Sum">
+		<variableExpression><![CDATA[$F{cantidad}]]></variableExpression>
+	</variable>
+	<group name="grVajilla">
+		<groupExpression><![CDATA[$F{vajilla}]]></groupExpression>
+		<groupHeader>
+			<band height="93">
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="0" y="0" width="570" height="32" forecolor="#FFFFFF" backcolor="#4E9171" uuid="d88ae26f-6267-4719-9ebf-afd47bd93d18"/>
+					<box topPadding="5" leftPadding="15" bottomPadding="5" rightPadding="5">
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font fontName="Poppins" size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{coleccion}+" "+$F{vajilla}+ " "+$F{capacidad}+" Personas - "+$F{uid_juego}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="31" width="150" height="31" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="cf0c62f9-b366-4ac3-bdd8-681b19e44b2c">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+						<pen lineStyle="Dashed" lineColor="#75FFA5"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font fontName="Poppins Medium" size="13" isBold="true"/>
+					</textElement>
+					<text><![CDATA[JUEGO DE:]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="grVajilla">
+					<reportElement positionType="Float" x="150" y="31" width="420" height="30" printWhenGroupChanges="grVajilla" uuid="2feada0c-b73c-4f85-a4c0-44be1dfca127"/>
+					<box topPadding="5" leftPadding="32" bottomPadding="5" rightPadding="5">
+						<bottomPen lineWidth="1.0" lineColor="#7DA44E"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font fontName="Poppins" size="13"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumaPiezas}  +" Piezas"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" mode="Opaque" x="0" y="61" width="570" height="31" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="e4934c5b-49cf-4fe9-8e3b-a74f421ec797">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+						<pen lineStyle="Dashed" lineColor="#75FFA5"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font fontName="Poppins Medium" size="13" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Piezas que la conforman:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="123">
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="68" width="150" height="50" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="d2391153-059a-4576-be74-ac09dcfbb554">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+						<pen lineStyle="Dashed" lineColor="#75FFA5"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Poppins Medium" size="13" isBold="true"/>
+					</textElement>
+					<text><![CDATA[DESCRIPCIÓN]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="150" y="67" width="420" height="50" uuid="5aa8c270-6a4a-4a83-88c1-960d02f3b72b">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box topPadding="5" leftPadding="32" bottomPadding="5" rightPadding="5">
+						<bottomPen lineWidth="1.0" lineColor="#7DA44E"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font fontName="Poppins" size="13"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="150" height="31" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="e1b3678e-376d-446c-9ed4-a6e56a788103">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<printWhenExpression><![CDATA[$F{linea}.equals("Familiar")]]></printWhenExpression>
+					</reportElement>
+					<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+						<pen lineStyle="Dashed" lineColor="#75FFA5"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font fontName="Poppins Medium" size="13" isBold="true"/>
+					</textElement>
+					<text><![CDATA[PRECIO Bs.S]]></text>
+				</staticText>
+				<textField pattern="#,##0.##¤;(#,##0.##) ¤">
+					<reportElement positionType="Float" x="150" y="0" width="420" height="30" isRemoveLineWhenBlank="true" uuid="0ccb464d-2935-40a4-9104-243403ced73f">
+						<printWhenExpression><![CDATA[$F{linea}.equals("Familiar")]]></printWhenExpression>
+					</reportElement>
+					<box topPadding="5" leftPadding="32" bottomPadding="5" rightPadding="5">
+						<bottomPen lineWidth="1.0" lineColor="#7DA44E"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font fontName="Poppins" size="13"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{precio}.multiply($P{Tasa $})]]></textFieldExpression>
+				</textField>
+				<textField pattern="$#,##0.##;¤-#,##0.##">
+					<reportElement positionType="Float" x="150" y="34" width="420" height="30" isRemoveLineWhenBlank="true" uuid="4438c280-4106-47f6-94cf-8b808e4b1d6a"/>
+					<box topPadding="5" leftPadding="32" bottomPadding="5" rightPadding="5">
+						<bottomPen lineWidth="1.0" lineColor="#7DA44E"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font fontName="Poppins" size="13"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" mode="Opaque" x="0" y="34" width="150" height="31" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="81d277eb-6544-45af-b67f-446d8b94f69a">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+						<pen lineStyle="Dashed" lineColor="#75FFA5"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font fontName="Poppins Medium" size="13" isBold="true"/>
+					</textElement>
+					<text><![CDATA[PRECIO $]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="570" height="30" forecolor="#FFFFFF" backcolor="#0B6233" uuid="7e62cd59-44b0-4251-af70-cd4706f85cf1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}==1]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<pen lineStyle="Dashed" lineColor="#0B6233"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins Medium" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FICHAS DETALLADAS DE LAS VAJILLAS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField pattern="$#,##0.##;¤-#,##0.##">
+				<reportElement positionType="Float" x="70" y="0" width="500" height="30" isRemoveLineWhenBlank="true" uuid="b5d91345-720a-48b1-ac98-fbf5544de4fb"/>
+				<box topPadding="5" leftPadding="32" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="1.0" lineColor="#7DA44E"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Poppins" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{molde}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="0" width="80" height="30" isRemoveLineWhenBlank="true" uuid="049197ed-21aa-47ec-bb6f-8b5dbe6b53be"/>
+				<box topPadding="5" leftPadding="32" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="1.0" lineColor="#7DA44E"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Poppins" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

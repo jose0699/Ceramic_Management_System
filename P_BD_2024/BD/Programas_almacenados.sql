@@ -26,6 +26,44 @@ CREATE OR REPLACE PROCEDURE rotacion_turnos_horneros() AS $$
 
 $$ LANGUAGE plpgsql;
 	
+
+CREATE OR REPLACE PROCEDURE division_operarios_departamento(ndept IN departamento.nombre%TYPE) AS $$
+	DECLARE
+		num_operarios numeric(4);
+		nivel_dept numeric(1);
+		grupos_operarios numeric(4);
+		op_por_grupo numeric(4);
+		op_restantes numeric(4);
+
+	BEGIN
+		SELECT d.nivel INTO nivel_dept FROM departamento d WHERE UPPER(d.nombre) = UPPER(ndept);
+
+		IF nivel_dept <> 4 OR nivel_dept is null THEN
+				raise exception 'Error: El departamento solicitado no contiene operarios generales';
+		END IF;
+
+		SELECT COUNT(e.trabaja) INTO num_operarios
+		FROM departamento d, empleado e 
+		WHERE d.uid_departamento = e.trabaja
+		AND UPPER(d.nombre) = UPPER(ndept);
+
+		grupos_operarios := floor((num_operarios / 10) + 1);
+		op_por_grupo := floor(num_operarios / grupos_operarios);
+		op_restantes:= num_operarios % grupos_operarios;
+
+		CASE
+			WHEN op_restantes = 0 THEN
+					raise notice 'Para el departamento de % se sugiere una división de: % grupos de % empleados, cada grupo con un operario como Supervisor',
+												ndept, grupos_operarios, op_por_grupo;
+			WHEN op_restantes <= op_por_grupo THEN
+					raise notice 'Para el departamento de % se sugiere una división de % grupos: % grupos de % empleados, y % grupos de % empleados, cada grupo con un operario como Supervisor',
+												ndept, grupos_operarios, grupos_operarios-op_restantes, op_por_grupo, op_restantes, op_por_grupo+1;
+			ELSE
+					raise notice 'Para el departamento de % se sugiere una división de % grupos: % grupos de 9 empleados, y % grupos de 10 empleados, cada grupo con un operario como Supervisor',
+												ndept, grupos_operarios, grupos_operarios-op_restantes, grupos_operarios-(grupos_operarios-op_restantes);
+		END CASE;
+	END;
+$$ LANGUAGE plpgsql;
 	
 
 --------------------------------------------------------------------------------------------------------
@@ -129,32 +167,41 @@ CREATE OR REPLACE FUNCTION obtener_dias_laborales(v_cargo varchar(2), v_departam
   END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION contar_inasistencias(v_id_empleado IN empleado.num_expediente%TYPE, mes_inicio date) RETURNS numeric(4) AS $$
+  DECLARE
+    mes_fin date;
+    n_inasistencias numeric(4);
+
+  BEGIN
+      mes_fin := mes_inicio + interval '1 month' - interval '1 day';
+      SELECT COUNT(d.num_exp) INTO n_inasistencias FROM det_exp d WHERE d.num_exp = v_id_empleado AND fecha BETWEEN mes_inicio AND mes_fin;
+      RETURN n_inasistencias;
+  END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION porcentaje_inasistencia_empleado(v_id_empleado IN empleado.num_expediente%TYPE, mes_inicio date) RETURNS numeric(5,2) AS $$
   DECLARE
     dias_laborales numeric(2);
     inasistencias numeric(2);
     porcentaje_inac numeric(5,2);
-    --mes_inicio date;
-    mes_fin date;
     v_cargo varchar(2);
     v_departamento numeric(2);
   BEGIN
-      --mes_inicio := date_trunc('month', now());
-      mes_fin := mes_inicio + interval '1 month' - interval '1 day';
+      
 
    		SELECT e.cargo, e.trabaja FROM EMPLEADO e WHERE e.num_expediente = v_id_empleado INTO v_cargo, v_departamento;
 
-      dias_laborales := obtener_dias_laborales(v_cargo, v_departamento);  
-      --raise notice 'dl: %', dias_laborales;
-      SELECT COUNT(d.num_exp) INTO inasistencias FROM det_exp d WHERE d.num_exp = v_id_empleado AND fecha BETWEEN mes_inicio AND mes_fin;
-      --raise notice 'inac: %', inasistencias;
+      dias_laborales := obtener_dias_laborales(v_cargo, v_departamento); 
+
+      inasistencias := contar_inasistencias(v_id_empleado,mes_inicio);
+
       porcentaje_inac := 100-(inasistencias/dias_laborales) * 100;
-      --raise notice 'Value: %', porcentaje_inac;
+
       RETURN porcentaje_inac;
   END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION porcentaje_ina_supervisor(v_id_supervisor IN empleado.num_expediente%TYPE, mes_inicio date) RETURNS varchar(4) AS $$
+CREATE OR REPLACE FUNCTION porcentaje_ina_supervisor(v_id_supervisor IN empleado.num_expediente%TYPE, mes_inicio date) RETURNS numeric(5,2) AS $$
   DECLARE
     porcentaje_inac numeric(5,2);
   BEGIN
@@ -163,14 +210,185 @@ CREATE OR REPLACE FUNCTION porcentaje_ina_supervisor(v_id_supervisor IN empleado
       FROM empleado e
       WHERE e.supervisor = v_id_supervisor;
 
-      RETURN CONCAT('%', to_char(porcentaje_inac,'990'));
+      RETURN porcentaje_inac;
+      --RETURN CONCAT('%', to_char(porcentaje_inac,'990'));
   END;
 $$ LANGUAGE plpgsql;
 --Hasta aquí es el número 6
 
 
+--NUMERO 7 FUNCIONES PARA MOSTRAR DATOS AL USUARIO
+
+CREATE OR REPLACE FUNCTION mostrar_empleados_departamento(nom_dept IN departamento.nombre%TYPE) RETURNS
+		TABLE (	id_departamento numeric(2)
+						, nombre_departamento text 
+						, numero_expediente_empleado numeric(4)
+						, nombre_completo_empleado text
+						, cargo text
+		      )
+AS $$
+  BEGIN
+		RETURN QUERY SELECT
+                d.uid_departamento,
+								UPPER(d.nombre) nombre_departamento,
+								e.num_expediente,
+								CONCAT(e.primer_nombre, ' ', COALESCE(e.segundo_nombre, ''), ' ', e.primer_apellido, ' ', COALESCE(e.segundo_apellido, '')) as nombre_empleado,
+								CASE
+									WHEN e.cargo = 'se' THEN 'Secretaria'
+									WHEN e.cargo = 'ge'	THEN 'Gerente'
+									WHEN e.cargo = 'me' THEN 'Mecánico'
+									WHEN e.cargo = 'in'	THEN 'Inspector'
+									WHEN e.cargo = 'el' THEN 'Electricista'
+									WHEN e.cargo = 'og'	THEN 'Operario General'
+								END cargo
+							FROM empleado e, departamento d
+							WHERE  d.uid_departamento = e.trabaja
+							AND	 UPPER(d.nombre) = UPPER(nom_dept);
+	END;
+$$ LANGUAGE plpgsql;
 
 
+
+CREATE OR REPLACE FUNCTION mostrar_supervisores_departamento(nom_dept IN departamento.nombre%TYPE) RETURNS
+		TABLE (	id_departamento numeric(2)
+						, nombre_departamento text 
+						, numero_expediente_empleado numeric(4)
+						, nombre_completo_supervisor text
+		      )
+AS $$
+  DECLARE
+    nivel numeric(1);
+  BEGIN
+    SELECT d.nivel INTO nivel FROM departamento d WHERE UPPER(d.nombre) = UPPER(nom_dept);
+
+    IF nivel <> 4 THEN
+      raise exception 'Error: El departameno Solicitado no es un departamento que contenga Supervisores';
+      RETURN QUERY SELECT;
+    END IF;
+
+    IF nivel is null THEN
+      raise exception 'Error: El departameno Solicitado no existe';
+      RETURN QUERY SELECT;
+    END IF;
+
+		RETURN QUERY SELECT
+                d.uid_departamento,
+								UPPER(d.nombre),
+								e.num_expediente,
+								CONCAT(e.primer_nombre, ' ', COALESCE(e.segundo_nombre, ''), ' ', e.primer_apellido, ' ', COALESCE(e.segundo_apellido, ''))
+							FROM empleado e, departamento d
+							WHERE  d.uid_departamento = e.trabaja
+              AND  (d.nivel = 4 AND e.supervisor is NULL AND e.cargo = 'og')
+							AND	 UPPER(d.nombre) = UPPER(nom_dept);
+	END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION mostrar_supervisados_supervisor(v_uid_supervisor IN empleado.num_expediente%TYPE) RETURNS
+		TABLE (	id_departamento numeric(2)
+						, nombre_departamento text 
+						, numero_expediente_empleado numeric(4)
+						, nombre_completo_empleado text
+            , nombre_completo_supervisor text
+		      )
+AS $$
+  DECLARE
+    esSupervisor numeric(1);
+    cargo varchar(2);
+    supervisor numeric(4);
+    nombreSupervisor text;
+  BEGIN
+      --Se verifica que el empleado sea un supervisor
+      SELECT e.cargo, e.supervisor, CONCAT(e.primer_nombre, ' ', COALESCE(e.segundo_nombre, ''), ' ', e.primer_apellido, ' ', COALESCE(e.segundo_apellido, ''))
+      INTO cargo, supervisor, nombreSupervisor FROM empleado e WHERE e.num_expediente = v_uid_supervisor;
+
+      IF (cargo <> 'og') OR (supervisor IS NOT NULL) THEN
+        raise exception 'Error: El empleado solicitado no es supervisor';
+        RETURN QUERY SELECT;
+      END IF;
+
+    	SELECT COUNT(e.num_expediente) INTO esSupervisor
+			FROM empleado e, empleado s
+			WHERE s.num_expediente = e.supervisor
+			AND e.supervisor = v_uid_supervisor;
+
+      IF esSupervisor = 0 THEN
+        raise exception 'Error: El empleado solicitado no es supervisor';
+        RETURN QUERY SELECT;
+      END IF;
+
+      RETURN QUERY SELECT
+                  d.uid_departamento,
+                  UPPER(d.nombre),
+                  e.num_expediente,
+                  CONCAT(e.primer_nombre, ' ', COALESCE(e.segundo_nombre, ''), ' ', e.primer_apellido, ' ', COALESCE(e.segundo_apellido, '')),
+                  nombreSupervisor
+                FROM empleado e, departamento d
+                WHERE  d.uid_departamento = e.trabaja
+                AND  e.supervisor = v_uid_supervisor;
+	END;
+$$ LANGUAGE plpgsql;
+
+
+---mostrar CATÁLOGO
+
+CREATE OR REPLACE FUNCTION mostrar_colecciones(tipo_linea varchar(20)) RETURNS
+		TABLE (	id_coleccion numeric(2)
+						, nombre_coleccion varchar(40) 
+						, categoria text
+		      )
+AS $$
+  BEGIN
+      tipo_linea := UPPER(substring(tipo_linea FROM 1 FOR 1));
+
+      RETURN QUERY SELECT
+                    c.uid_coleccion,
+                    c.nombre,
+                    CASE
+                      WHEN c.categoria = 'cou' THEN 'Country'
+                      WHEN c.categoria = 'cla' THEN 'Clásica'
+                      WHEN c.categoria = 'mod' THEN 'Moderna'
+                    END
+                FROM coleccion c
+                WHERE  c.linea = tipo_linea;
+	END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION mostrar_piezas_coleccion(v_id_coleccion IN coleccion.uid_coleccion%TYPE) RETURNS
+		TABLE (	  nombre_coleccion varchar(40) 
+            , uid_pieza  numeric(3) 
+            , molde text
+		      )
+AS $$
+  BEGIN
+    RETURN QUERY SELECT c.nombre coleccion,
+                        p.uid_pieza, 
+                        m.molde
+            FROM coleccion c, nombres_moldes m, pieza p
+            WHERE c.uid_coleccion = p.uid_coleccion
+            AND m.uid_molde = p.uid_molde
+            AND c.uid_coleccion = v_id_coleccion;
+  END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION mostrar_vajillas_coleccion(v_id_coleccion IN coleccion.uid_coleccion%TYPE) RETURNS
+		TABLE (	  nombre_coleccion varchar(40) 
+            , uid_pieza  numeric(3) 
+            , nombre_vajilla varchar(60)
+		      )
+AS $$
+  BEGIN
+    RETURN QUERY SELECT DISTINCT c.nombre,
+                        v.uid_juego, 
+                        v.nombre
+            FROM coleccion c, detalle_pieza_vajilla d, vajilla v
+            WHERE c.uid_coleccion = d.uid_coleccion
+            AND v.uid_juego = d.uid_juego
+            AND c.uid_coleccion = v_id_coleccion;
+  END;
+$$ LANGUAGE plpgsql;
+
+--HASTA AQUÍ EL NÚMERO 6
 
 
 
@@ -178,11 +396,22 @@ $$ LANGUAGE plpgsql;
 --   Funciones y Procedimientos Menores       (Apoyo a inserciones, obtener tablas según parametros) --
 --------------------------------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION edad (fec_nac date) RETURNS integer AS $$
-	BEGIN
-		RETURN (round(((current_date- fec_nac)/365),0));
-	END; $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION obtener_fecha_historico(v_id_pieza IN pieza.uid_pieza%TYPE,ffinc date) RETURNS date AS $$
+	DECLARE
+		fecha_hist date;
+		v_fecha timestamp;
+	BEGIN
+			v_fecha:=ffinc::timestamp;
+		  SELECT MAX(f.fecha_inicio)::date 
+			INTO fecha_hist 
+			FROM familiar_historico_precio f 
+			WHERE f.uid_pieza = v_id_pieza
+			AND f.fecha_inicio<=v_fecha;
+			
+			RETURN fecha_hist;
+	END;
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION insertar_vajilla(nombre varchar(60), capacidad numeric(1), descripcion varchar(256)) returns numeric(3) AS $$ 
 BEGIN
@@ -294,7 +523,8 @@ AS $$
             ORDER BY c.uid_coleccion, p.uid_pieza ASC;
         END IF;
   END;
-$$ LANGUAGE plpgsql
+$$ LANGUAGE plpgsql;
+
 /*
 CREATE OR REPLACE FUNCTION datos_ficha_pieza(v_uid_pieza IN pieza.uid_pieza%TYPE, v_uid_coleccion, finc date, ffin date) RETURNS 
   TABLE 

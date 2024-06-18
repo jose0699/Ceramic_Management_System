@@ -205,17 +205,17 @@ agregar.addEventListener("click", function(event) {
   var descripcion=document.getElementById("descripcion").value;
   let aux = descripcion;
 
- if(coleccion == 'NaN'){
-    alert(' Error 1: Debe elegir una colección.');
-  } else if( coleccion.length > 2){
-    alert('Error 2: El identificador de la coleccion supera el maximo.');
-  } else if(molde == 'NaN'){
-    alert('Error 2: Debe elegir un molde.');
-  } else if(molde.length > 3){
-    alert('Error 2: El identificador de la molde supera el maximo.');
-  }else if(precio.length == 0){
-    alert('Error 2: El precio no puede quedar vacío.');
-  } else if( descripcion.length == 0){
+  if (coleccion === 'NaN') {
+    alert('Error: Debe seleccionar una colección válida.');
+  } else if (String(coleccion).length > 2) {
+    alert('Error: El identificador de la colección no debe exceder 2 caracteres.');
+  } else if (molde === 'NaN') {
+    alert('Error: Debe seleccionar un molde válido.');
+  } else if (molde.length > 3) {
+    alert('Error: El identificador del molde no debe exceder 3 caracteres.');
+  } else if (precio.length === 0) {
+    alert('Error: Debe ingresar un precio.');
+  }else if( descripcion.length == 0){
     aux = null;
   }else {
     let peticion = {

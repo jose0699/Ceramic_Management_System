@@ -11,7 +11,6 @@ triggers e índices del sistema.
 --------------------------------------------------------------------------------------------------------
 --                                           Function                                                --
 --------------------------------------------------------------------------------------------------------
-
 --Proceso Venta
 	--EMPLEADO
 	--Numero 1
@@ -148,21 +147,20 @@ triggers e índices del sistema.
 		existe numeric(1);
 		BEGIN
 		--Revisa si es diferente a los campos a revisar
-		IF (NEW.motivo <> 'lt') OR (NEW.motivo <> 'he') THEN
+		IF (NEW.motivo <> 'lt') AND (NEW.motivo <> 'he') THEN
 			RETURN NEW; 
 		END IF;
 
 		--Se realiza la consulta;
 		Select COUNT(*) INTO existe FROM departamento d, empleado e WHERE d.uid_departamento = e.trabaja and  d.nombre = 'Hornos'  
 		and e.num_expediente = NEW.num_expediente;
-		
-		IF (existe = 1) AND (NEW.motivo = 'lt') OR (NEW.motivo = 'he')THEN
+		IF (existe <> 0) AND (NEW.motivo = 'lt') OR (NEW.motivo = 'he')THEN
 			RETURN NEW;
 		END IF;
 		RAISE EXCEPTION 'Error: Motivo invalida, porque el empleado no es un Hornero.';
 		END;
 	$$ LANGUAGE plpgsql;
-	
+		
 	--HIST_TURNO
 	--Numero 12
 	CREATE OR REPLACE FUNCTION HORNERO_CARGO() RETURNS TRIGGER AS $$

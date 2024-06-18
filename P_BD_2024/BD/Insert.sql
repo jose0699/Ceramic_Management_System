@@ -165,11 +165,7 @@ insert into det_exp values(26,nextval('det_exp_uid_seq'),'2024-06-01','in',null)
 insert into det_exp values(4,nextval('det_exp_uid_seq'),'2024-06-04','bm',500);
 insert into det_exp values(27,nextval('det_exp_uid_seq'),'2023-12-31','ba',1000);
 insert into det_exp values(28,nextval('det_exp_uid_seq'),'2024-06-01','am',null,null,null,'faltó 3 dias al trabajo en mes de mayo');
-insert into det_exp values(29,nextval('det_exp_uid_seq'),'2024-02-14','lt',null,2);
-insert into det_exp values(30,nextval('det_exp_uid_seq'),'2024-02-14','he',null,null,2);
-insert into det_exp values(27,nextval('det_exp_uid_seq'),'2024-05-04','lt',null,3);
 insert into det_exp values(40,nextval('det_exp_uid_seq'),'2024-06-08','in',null);
-insert into det_exp values(35,nextval('det_exp_uid_seq'),'2024-01-04','lt',null,2);
 insert into det_exp values(6,nextval('det_exp_uid_seq'),'2024-05-03','bm',500);
 insert into det_exp values(33,nextval('det_exp_uid_seq'),'2024-05-03','in',null);
 insert into det_exp values(40,nextval('det_exp_uid_seq'),'2024-05-10','in',null);
@@ -181,6 +177,10 @@ insert into det_exp values(35,nextval('det_exp_uid_seq'),'2024-05-16','in',null)
 insert into det_exp values(36,nextval('det_exp_uid_seq'),'2024-05-31','in',null,null,null,'No asistió a la reunión semanal');
 insert into det_exp values(37,nextval('det_exp_uid_seq'),'2024-05-31','in',null,null,null,'No asistió a la reunión semanal');
 insert into det_exp values(37,nextval('det_exp_uid_seq'),'2024-05-03','in',null,null,null,'No asistió a la reunión semanal');
+--insert into det_exp values(29,nextval('det_exp_uid_seq'),'2024-02-14','lt',null,2);
+--insert into det_exp values(30,nextval('det_exp_uid_seq'),'2024-02-14','he',null,null,2);
+--insert into det_exp values(27,nextval('det_exp_uid_seq'),'2024-05-04','lt',null,3);
+--insert into det_exp values(35,nextval('det_exp_uid_seq'),'2024-01-04','lt',null,2);
 
 
 /*  tablas de intereseccion  */					/*listo*/

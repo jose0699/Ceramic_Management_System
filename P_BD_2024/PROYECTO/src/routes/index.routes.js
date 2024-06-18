@@ -66,6 +66,14 @@ router.post('/Ceramica_Real/Vajilla', (req, res) => {
     case 4:
         select.PIEZA_X_COLECCION_RESTANTES(req, res, datos);
     break;
+
+    case 5:
+        insert.VAJILLA(req, res, datos);
+    break;
+
+    case 6:
+        insert.VAJILLA_PIEZA(req, res, datos);
+    break;
   }
 });
 

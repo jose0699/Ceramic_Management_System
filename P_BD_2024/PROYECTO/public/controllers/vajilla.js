@@ -71,7 +71,7 @@ function renderListaColeccion(){
 }
 
 //renderiza la lista de la vajilla
-function renderListaVajilla(){
+function renderListaVajilla() {
   let resumenVajillaHTML = '';
   let precioVajilla = 0;
 
@@ -81,24 +81,31 @@ function renderListaVajilla(){
     const piezaEncontrada = getPieza(id);
 
     const html = `
-      <div class = "pieza-container">
-          ${piezaEncontrada.nombre}
-          <p class="js-quantity">${pieza.cantidad}</p>
+      <div class="pieza-container">
+        ${piezaEncontrada.nombre}
+        <p class="js-quantity">${pieza.cantidad}</p>
       </div>
-    `; 
+    `;
 
     resumenVajillaHTML += html;
-    precioVajilla+=Number(piezaEncontrada.precio)*Number(pieza.cantidad);
+
+    // Limitar el precio a dos decimales
+    const piecePriceWithTwoDecimals = (piezaEncontrada.precio * pieza.cantidad).toFixed(2);
+    precioVajilla += parseFloat(piecePriceWithTwoDecimals);
   });
 
-  precioVajilla-=(precioVajilla*0.15);
+  // Aplicar el descuento del 15%
+  const precioDescuento = precioVajilla - (precioVajilla * 0.15);
+
+  // Limitar el precio total a dos decimales
+  const totalPriceWithTwoDecimals = precioDescuento.toFixed(2);
 
   document.querySelector('.js-vajilla-scrollmenu')
     .innerHTML = resumenVajillaHTML;
 
   document.querySelector('.js-price-tag')
-    .innerHTML = `PRECIO ESTIMADO: $${precioVajilla}`
-};
+    .innerHTML = `PRECIO ESTIMADO: $${totalPriceWithTwoDecimals}`;
+}
 
 //FUNCIONES DE BUSQUEDA EN PIEZASCOLECCION Y AÑADIR A LA LISTA DE LA VAJILLA
 function addPieza(id){
@@ -257,12 +264,10 @@ coleccion.addEventListener("change", function(event) {
               piezasColeccion.push(piezaObj);
             });
             renderListaColeccion();
-            console.log(data_dos);
           })
           .catch(error => {
             console.error(error);
           });
-
       })
       .catch(error => {
         console.error(error);
@@ -273,5 +278,80 @@ coleccion.addEventListener("change", function(event) {
 /*---------------------------------------------------------------------------------------*/
 /*                                     AGREGAR                                           */
 /*---------------------------------------------------------------------------------------*/
+function limpieza() {
+  const elements = ['coleccion', 'capacidad', 'nombre', 'descripcion'];
+  elements.forEach(element => {
+    document.getElementById(element).value = element === 'coleccion' || element === 'capacidad' ? 'NaN' : '' ;
+  });
+  piezasColeccion = [];
+  piezasVajilla = [];
+  renderListaColeccion();
+  renderListaVajilla()
+}
 
+let pieza_cantidad= [];
+const agregar = document.getElementById("agregar");
+agregar.addEventListener("click", function(event) {
+  let nombre = document.getElementById("nombre");
+  let capacidad = document.getElementById("capacidad");
+  let descripcion = document.getElementById("descripcion");
+  let coleccion = document.getElementById("coleccion");
+  let aux = descripcion.value;
 
+  if (coleccion.value ==='NaN') {
+    alert('Error: Debe seleccionar una colección válida.');
+  } else if (piezasVajilla.length == 0 || piezasVajilla.length === null) {
+    alert('Error: Debe seleccionar al menos una pieza de vajilla.');
+  } else if (nombre.length == 0) {
+    alert('Error: Debe ingresar un nombre.');
+  } else if (nombre.length > 60) {
+    alert('Error: El nombre no debe exceder los 60 caracteres.');
+  } else if (capacidad.value == 'NaN') {
+    alert('Error: Debe seleccionar una capacidad válida.');
+  } else if (parseInt(capacidad.value) > 9) {
+    alert('Error: La capacidad no debe exceder 9.');
+  } else if (descripcion.length == 0) {
+    aux = null;
+  } else if (descripcion.length > 256) {
+    alert('Error: La descripción no debe exceder los 256 caracteres.');
+  }else {
+    let peticion = {
+      pet: 5,
+      nombre: nombre.value,
+      capacidad: capacidad.value,
+      descripcion: aux
+    };
+    fetch('/Ceramica_Real/Vajilla', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(peticion)
+    })
+    .then(response => response.json())
+    .then(data => {
+      const peticion_dos = {
+        pet: 6,
+        vajilla: parseInt(data[0].insertar_vajilla),
+        coleccion: parseInt(coleccion.value),
+        pieza_cantidad: piezasVajilla
+      };
+    
+      return fetch('/Ceramica_Real/Vajilla', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(peticion_dos)
+      });
+    })
+    .then(response => response.json())
+    .then(data_dos => {
+      alert('Insertado con éxito');
+      limpieza()
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+});

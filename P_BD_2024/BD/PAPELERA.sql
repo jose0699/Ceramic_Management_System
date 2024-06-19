@@ -76,3 +76,67 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 */
+
+/*
+CREATE OR REPLACE FUNCTION datos_ficha_pieza(v_uid_pieza IN pieza.uid_pieza%TYPE, v_uid_coleccion, finc date, ffin date) RETURNS 
+  TABLE 
+               (uid_pieza  numeric(3)   
+               , nombre varchar(40)
+               , molde text
+               , forma text
+               , precio numeric(8,2))
+AS $$
+  DECLARE
+    linea varchar(10);
+  BEGIN
+        SELECT	c.linea INTO linea
+        FROM coleccion c
+        WHERE c.uid_coleccion = v_id_coleccion;
+
+
+    		IF linea = 'F' THEN
+
+          RETURN QUERY
+               SELECT  p.uid_pieza,	
+                c.nombre,
+                m.molde,
+                  CASE WHEN mo.forma = 'ova' THEN ' ovalado'
+                  WHEN mo.forma = 'rec' THEN ' rectangular'
+                  WHEN mo.forma = 'cua' THEN ' cuadrado'
+                  WHEN mo.forma = 'red' THEN ' redondo'
+                  ELSE ''
+                END forma,
+                f.precio
+                FROM coleccion c, nombres_moldes m, molde mo, familiar_historico_precio f, pieza p
+                WHERE c.uid_coleccion = p.uid_coleccion
+                AND m.uid_molde = p.uid_molde
+                AND mo.uid_molde = p.uid_molde
+                AND c.uid_coleccion = f.uid_coleccion AND f.uid_pieza = p.uid_pieza
+                AND (f.fecha_inicio BETWEEN finc AND ffin) 
+                AND p.uid_pieza = v_uid_pieza
+                AND c.uid_coleccion = v_id_coleccion;
+            
+        ELSE
+
+          RETURN QUERY
+            SELECT p.uid_pieza, 
+                c.nombre coleccion, 
+                m.molde, 
+                p.precio,
+                  CASE WHEN mo.forma = 'ova' THEN ' ovalado'
+                  WHEN mo.forma = 'rec' THEN ' rectangular'
+                  WHEN mo.forma = 'cua' THEN ' cuadrado'
+                  WHEN mo.forma = 'red' THEN ' redondo'
+                  ELSE ''
+                END forma
+            FROM coleccion c, nombres_moldes m, pieza p
+            WHERE c.uid_coleccion = p.uid_coleccion
+            AND m.uid_molde = p.uid_molde
+            AND p.uid_pieza = v_uid_pieza
+            AND c.uid_coleccion = v_id_coleccion
+            ORDER BY c.uid_coleccion, p.uid_pieza ASC;
+
+        END IF;
+  END;
+$$ LANGUAGE plpgsql
+*/

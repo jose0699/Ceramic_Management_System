@@ -177,10 +177,10 @@ insert into det_exp values(35,nextval('det_exp_uid_seq'),'2024-05-16','in',null)
 insert into det_exp values(36,nextval('det_exp_uid_seq'),'2024-05-31','in',null,null,null,'No asistió a la reunión semanal');
 insert into det_exp values(37,nextval('det_exp_uid_seq'),'2024-05-31','in',null,null,null,'No asistió a la reunión semanal');
 insert into det_exp values(37,nextval('det_exp_uid_seq'),'2024-05-03','in',null,null,null,'No asistió a la reunión semanal');
+insert into det_exp values(35,nextval('det_exp_uid_seq'),'2024-01-04','lt',null,2);
 --insert into det_exp values(29,nextval('det_exp_uid_seq'),'2024-02-14','lt',null,2);
 --insert into det_exp values(30,nextval('det_exp_uid_seq'),'2024-02-14','he',null,null,2);
 --insert into det_exp values(27,nextval('det_exp_uid_seq'),'2024-05-04','lt',null,3);
---insert into det_exp values(35,nextval('det_exp_uid_seq'),'2024-01-04','lt',null,2);
 
 
 /*  tablas de intereseccion  */					/*listo*/
@@ -476,6 +476,93 @@ insert into DETALLE_PIEZA_VAJILLA values (10,5,44,15);
 --------------------------------------------------------------------------------------------------------
 --                                     Proceso de Venta                                               --
 --------------------------------------------------------------------------------------------------------
+/*Clientes */
+
+insert into cliente values(nextval('cliente_uid_seq') ,'Casa Pakea' ,'0212 5551212' ,'Casa_Pakea@gmail.com' , 1);--1
+insert into cliente values( nextval('cliente_uid_seq'),'El Leñador' ,'0414 2223333' ,'El_Leñador@gmail.com' , 1);--2
+insert into cliente values( nextval('cliente_uid_seq'), 'Posada Margot','0416 4243032' ,'Posada_Margot@gmail.com' ,1 );--3
+
+
+insert into cliente values(nextval('cliente_uid_seq') , 'Holiday Inn Hotel & Suites','323 444-3333' , 'Holiday_Inn@gmail.com',4 );--4
+insert into cliente values( nextval('cliente_uid_seq'), 'Hard Rock Cafe NY', '212 555212','HardRockCafer@gmail.com' , 4);--5
+
+insert into cliente values( nextval('cliente_uid_seq'), 'Pearl Urban Lounge Santo Domingo','809 555-1212' ,'PearlUrban@gmail.com' , 2);--6
+insert into cliente values( nextval('cliente_uid_seq'), 'Cayo Levantado Resort','829 444-3333' ,'CayoLevantado @gmail.com' ,2 );--7
+
+insert into cliente values( nextval('cliente_uid_seq'), 'Máxima Marea','571 555-1212' ,'MáximaMarea@gmail.com' , 5);--8
+insert into cliente values( nextval('cliente_uid_seq'),'La Santa Guadalupe Medellin' , '314 444-3333', 'LaSantaGuadalupe@gmail.com', 5);--9
+
+insert into cliente values( nextval('cliente_uid_seq'), 'Dona Firmina','55 11 5555-1212' ,'DonaFirmina@gmail.com' , 6);--10
+insert into cliente values( nextval('cliente_uid_seq'), 'Vista Cafe', '55 21 4444-3333', 'VistaCafe@gmail.com', 6);--11
+
+insert into cliente values( nextval('cliente_uid_seq'), 'Oporto Cafe', '56 9 5555-1212', 'OportoCafe@gmail.com',3 );--12
+insert into cliente values( nextval('cliente_uid_seq'), 'Zanzibar',' 56 2 2222-3333' , 'Zanzibar@gmail.com', 3);--13
+
+--Tabla Intermedias
+
+
+/*Contratos*/
+
+insert into contrato values (1,nextval('contrato_uid_seq') ,15 ,'2022-04-10 08:51:00' );--1
+insert into contrato values (2,nextval('contrato_uid_seq')  ,20 ,'2021-05-01 14:57:00' );--2
+insert into contrato values (3,nextval('contrato_uid_seq') ,30 ,'2019-06-08 15:49:00'  );--3
+insert into contrato values (4,nextval('contrato_uid_seq') ,15 , '2018-07-14 16:25:00' );--4
+insert into contrato values ( 5,nextval('contrato_uid_seq'), 10, '2020-10-16 09:21:00' );--5
+insert into contrato values (6,nextval('contrato_uid_seq') , 5, '2018-02-12 10:30:00');--6
+insert into contrato values (7,nextval('contrato_uid_seq') , 10, '2019-04-24 11:12:00' );--7
+insert into contrato values ( 8,nextval('contrato_uid_seq'), 15, '2023-03-31 17:45:00');--8
+insert into contrato values ( 9,nextval('contrato_uid_seq'), 20, '2024-01-02 10:50:00');--9
+
+
+insert into pedido values(1,nextval('pedido_uid_seq') ,'2024-01-18 10:50:00' ,null,'2024-03-18 10:50:00' , 'A','F' );--1
+insert into pedido values(2,nextval('pedido_uid_seq') ,'2024-02-17 10:50:00' ,null,'2024-04-17 10:50:00'  , 'E','I' );--2
+insert into pedido values(3,nextval('pedido_uid_seq') ,'2024-03-16 10:50:00' ,null,'2024-05-16 10:50:00'  , 'A','I' );--3
+insert into pedido values(4,nextval('pedido_uid_seq') ,'2024-04-15 10:50:00' ,null,'2024-06-15 10:50:00'  , 'E','I' );--4
+insert into pedido values(5,nextval('pedido_uid_seq') ,'2024-05-14 10:50:00' ,null,'2024-07-14 10:50:00'  , 'A','I' );--5
+insert into pedido values(6,nextval('pedido_uid_seq') ,'2024-06-13 10:50:00' ,null,'2024-08-13 10:50:00' , 'E','I' );--6
+insert into pedido values(7,nextval('pedido_uid_seq') ,'2024-07-12 10:50:00' ,null,'2024-09-12 10:50:00'  , 'E','I' );--7
+insert into pedido values(8,nextval('pedido_uid_seq') ,'2024-08-11 10:50:00' ,null,'2024-10-11 10:50:00'  , 'A','I' );--8
+insert into pedido values(9,nextval('pedido_uid_seq') ,'2024-09-10 10:50:00' ,null,'2024-11-10 10:50:00' , 'A','I' );--9
+
+
+/*
+	Leyenda(estado):
+	--A: Aprobado
+	--C: Cancelado
+	--E: Emitido
+
+	Leyenda(tipo_pedido):
+	--F: Familiar
+	--I: Internacional
+*/
+--Tablas Intercepcion
+
+
+
+
+/*Factura*/
+insert into factura values( 1,1,nextval('factura_uid_seq') ,'2024-01-18 10:50:00' , 943.5 );--1
+insert into factura values( 3,3,nextval('factura_uid_seq') ,'2024-03-16 10:50:00' , 420 );--2
+insert into factura values( 5,5,nextval('factura_uid_seq') ,'2024-05-14 10:50:00' , 324 );--3
+insert into factura values( 8,8,nextval('factura_uid_seq') ,'2024-08-11 10:50:00', 1107.25 );--4
+insert into factura values( 9,9,nextval('factura_uid_seq') ,'2024-09-10 10:50:00', 186.4 );--5
+
+/*Detalle pedido Pieza*/		/*detalle pedido es cantidad de articulos en el pedido*/
+insert into DETALLE_PEDIDO_PIEZA values( 1,1 , 1,1 ,1);
+insert into DETALLE_PEDIDO_PIEZA values( 1,1 , 2,1 ,null,1,1);
+insert into DETALLE_PEDIDO_PIEZA values( 1,1 , 3,1 ,null,1,2);
+insert into DETALLE_PEDIDO_PIEZA values( 1,1 , 4,1 ,null,1,3);
+insert into DETALLE_PEDIDO_PIEZA values( 1,1 , 5,1 ,null,1,4);
+insert into DETALLE_PEDIDO_PIEZA values( 3, 3, 7,24 , null, 1, 10);
+insert into DETALLE_PEDIDO_PIEZA values( 5, 5, 8,30 ,null , 2,19);
+insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 9,15 ,2 );
+insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 10,15 ,null,1,5);
+insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 11,15 ,null,1,6);
+insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 12,15 ,null,1,7 );
+insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 13,15 ,null,1,8 );
+insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 14,15 ,null,1,9);
+insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 15,15 ,null,1,10 );
+insert into DETALLE_PEDIDO_PIEZA values( 9, 9, 5,18 ,null , 3,27);
 
 /*
 	                                   Tablas listas

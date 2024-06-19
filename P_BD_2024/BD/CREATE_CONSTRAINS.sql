@@ -188,7 +188,7 @@ CREATE TABLE MOLDE(
 	tamaño varchar(10) not null,
 	volumen numeric(3,2),
 	cant_persona numeric(1),
-  	forma varchar(3),
+  forma varchar(3),
 	tipo_plato varchar(2),
 	tipo_taza varchar(2),
 	CONSTRAINT tipo_molde CHECK (tipo in ('JA', 'TT', 'LE', 'AZ', 'CA', 'BD', 'PL', 'TA', 'EN')),
@@ -283,7 +283,7 @@ CREATE TABLE DETALLE_PIEZA_VAJILLA (
 
 CREATE TABLE CLIENTE(
 	uid_cliente numeric(3) not null,
-	nombre varchar(30) not null,
+	nombre varchar(50) not null,
 	telefono varchar(15) not null,
 	email varchar(256) not null,
 	uid_pais numeric(2) not null,

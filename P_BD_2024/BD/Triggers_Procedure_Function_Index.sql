@@ -153,7 +153,7 @@ triggers e índices del sistema.
 
 		--Se realiza la consulta;
 		Select COUNT(*) INTO existe FROM departamento d, empleado e WHERE d.uid_departamento = e.trabaja and  d.nombre = 'Hornos'  
-		and e.num_expediente = NEW.num_expediente;
+		and e.num_expediente = NEW.num_exp;
 		IF (existe <> 0) AND (NEW.motivo = 'lt') OR (NEW.motivo = 'he')THEN
 			RETURN NEW;
 		END IF;
@@ -178,9 +178,7 @@ triggers e índices del sistema.
 --------------------------------------------------------------------------------------------------------
 --                                           Trigger                                                  --
 --------------------------------------------------------------------------------------------------------
-
 --Proceso Venta
-
 	--EMPLEADO
 	CREATE OR REPLACE TRIGGER GERENTE_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION GERENCIA_EMPLEADO(); --1
 	CREATE OR REPLACE TRIGGER DEPARTAMENTO_CARGO_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION DEPARTAMENTO_EMPLEADO(); --2 
@@ -222,7 +220,6 @@ triggers e índices del sistema.
 --------------------------------------------------------------------------------------------------------
 
 CREATE OR REPLACE VIEW nombres_moldes AS
-
 	SELECT m.uid_molde, 
 		CASE WHEN m.tipo = 'JA' THEN 'Jarra'
 			WHEN m.tipo = 'TT' THEN 'Tetera'

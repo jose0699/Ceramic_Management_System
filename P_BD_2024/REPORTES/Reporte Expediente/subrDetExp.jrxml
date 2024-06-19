@@ -48,7 +48,7 @@
 	WHERE d.num_exp = e.num_expediente
 	AND e.num_expediente = $P{id Empleado}
 	AND d.fecha BETWEEN  $P{fecha inicial} AND $P{fecha final} 
-	ORDER BY motivo DESC,fecha ASC;]]>
+	ORDER BY motivo DESC,d.uid DESC,fecha ASC;]]>
 	</queryString>
 	<field name="num_exp" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="num_exp"/>
@@ -136,7 +136,7 @@
 					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#7DA44E"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#7DA44E"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">

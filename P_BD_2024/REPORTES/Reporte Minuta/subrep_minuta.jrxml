@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subrep_supervisor" pageWidth="360" pageHeight="100" columnWidth="360" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="22bd1e0b-66b4-43af-a737-a2bb1301fb9e">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subrep_supervisor" pageWidth="570" pageHeight="100" whenNoDataType="AllSectionsNoDetail" columnWidth="570" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="22bd1e0b-66b4-43af-a737-a2bb1301fb9e">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Proyecto_BD"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<parameter name="Id Supervisor" class="java.lang.Integer">
 		<parameterDescription><![CDATA[Id del supervisor a cargo de la reunión]]></parameterDescription>
 	</parameter>
@@ -13,8 +22,7 @@
 		<![CDATA[SELECT e.resumen
 FROM reunion e
 WHERE e.num_expediente =  $P{Id Supervisor}
-AND e.fecha_hora =  $P{fecha de la reunion} 
-]]>
+AND e.fecha_hora =  $P{fecha de la reunion}]]>
 	</queryString>
 	<field name="resumen" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="resumen"/>
@@ -27,7 +35,7 @@ AND e.fecha_hora =  $P{fecha de la reunion}
 	<columnHeader>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="360" height="30" forecolor="#FFFFFF" backcolor="#0B6233" uuid="0dc0330f-08c2-4ddd-bbaf-0f6d56c587e2">
+				<reportElement mode="Opaque" x="0" y="0" width="570" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="0dc0330f-08c2-4ddd-bbaf-0f6d56c587e2">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -38,7 +46,7 @@ AND e.fecha_hora =  $P{fecha de la reunion}
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Center">
 					<font fontName="Poppins" size="13" isBold="true"/>
 				</textElement>
 				<text><![CDATA[RESUMEN]]></text>
@@ -47,8 +55,8 @@ AND e.fecha_hora =  $P{fecha de la reunion}
 	</columnHeader>
 	<detail>
 		<band height="70" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="0" width="360" height="70" uuid="c25f521c-aae2-47f5-a707-a4c27a8d0c98">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="570" height="70" uuid="c25f521c-aae2-47f5-a707-a4c27a8d0c98">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">

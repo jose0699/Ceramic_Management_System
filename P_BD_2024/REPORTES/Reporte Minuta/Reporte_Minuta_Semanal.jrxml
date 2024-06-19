@@ -11,8 +11,8 @@
 			<style mode="Opaque" forecolor="#FFFFFF" backcolor="#C11818"/>
 		</conditionalStyle>
 	</style>
-	<parameter name="id departamento" class="java.lang.Integer">
-		<parameterDescription><![CDATA[id del departamento donde se realizó la reunión]]></parameterDescription>
+	<parameter name="nombre departamento" class="java.lang.String">
+		<parameterDescription><![CDATA[npmbre del departamento donde se realizó la reunión]]></parameterDescription>
 	</parameter>
 	<parameter name="Id Supervisor" class="java.lang.Integer">
 		<parameterDescription><![CDATA[Id del supervisor a cargo de la reunión]]></parameterDescription>
@@ -24,8 +24,7 @@
 		<![CDATA[SELECT e.num_expediente,
 	e.num_cedula,
 		CONCAT(e.primer_nombre, ' ', COALESCE(e.segundo_nombre, ''), ' ', e.primer_apellido, ' ', COALESCE(e.segundo_apellido, '')) as nombre,
-		COALESCE(to_char(i.fecha_hora, 'TMDAY DD "DE" TMMONTH "DE" YYYY'),
-		to_char( $P{fecha de la reunion} ::date, 'TMDAY DD "DE" TMMONTH "DE" YYYY')) fecha_hora,
+		to_char(i.fecha_hora, 'TMDAY DD "DE" TMMONTH "DE" YYYY') fecha_hora,
 	  CASE 
 	    WHEN i.num_expediente IS NULL THEN 'ASISTENTES'
 	    ELSE 'INASISTENTES'
@@ -33,8 +32,8 @@
    e.supervisor
 FROM inasistencia i
 RIGHT OUTER JOIN empleado e 
-ON  i.num_expediente = e.num_expediente AND i.fecha_hora = $P{fecha de la reunion} 
-WHERE e.supervisor =  $P{Id Supervisor} 
+ON  i.num_expediente = e.num_expediente AND i.num_expediente_supervisor = e.supervisor AND i.fecha_hora =  $P{fecha de la reunion} 
+WHERE e.supervisor = $P{Id Supervisor} 
 ORDER BY asistencia ASC;]]>
 	</queryString>
 	<field name="num_expediente" class="java.math.BigDecimal">
@@ -72,8 +71,11 @@ ORDER BY asistencia ASC;]]>
 		<groupHeader>
 			<band height="30">
 				<textField>
-					<reportElement style="isInasistente" x="0" y="0" width="360" height="30" backcolor="#0B6233" uuid="c2588ecc-a1b3-4591-bdd2-69a0a191b201"/>
+					<reportElement style="isInasistente" x="0" y="0" width="571" height="30" uuid="48481c3c-8578-45b0-800f-400fd4744185">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
 					<box topPadding="5" leftPadding="13" bottomPadding="5" rightPadding="5"/>
+					<textElement textAlignment="Center"/>
 					<textFieldExpression><![CDATA[$F{asistencia}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -124,7 +126,7 @@ ORDER BY asistencia ASC;]]>
 				</textElement>
 				<text><![CDATA[MINUTA DE LA REUNIÓN DEL]]></text>
 			</staticText>
-			<textField pattern="MMMMM &apos;de&apos; yyyy" isBlankWhenNull="true">
+			<textField pattern="EEEE dd MMMM &apos;de &apos; yyyy" isBlankWhenNull="true">
 				<reportElement x="134" y="80" width="312" height="31" uuid="a74dc4bf-4556-4cc9-abbc-c29850825fc6"/>
 				<box padding="4">
 					<pen lineColor="#7DA44E"/>
@@ -134,22 +136,21 @@ ORDER BY asistencia ASC;]]>
 				<textElement textAlignment="Center">
 					<font fontName="Poppins Medium" size="15" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{fecha_hora}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[UPPER(DATEFORMAT($P{fecha de la reunion},"EEEE dd MMMM 'de ' yyyy" ))]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="127" splitType="Stretch">
+		<band height="110" splitType="Stretch">
 			<subreport>
-				<reportElement x="0" y="20" width="360" height="100" uuid="9f044266-c6cf-4602-ba85-d4ce4ebe1fdc">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement x="0" y="10" width="570" height="100" uuid="1fc1c719-8bd2-49e1-8e5e-ac59a7c492e9">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<subreportParameter name="Id Supervisor">
 					<subreportParameterExpression><![CDATA[$P{Id Supervisor}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="id departamento">
-					<subreportParameterExpression><![CDATA[$P{id departamento}]]></subreportParameterExpression>
+				<subreportParameter name="nombre departamento">
+					<subreportParameterExpression><![CDATA[$P{nombre departamento}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["subrep_supervisor.jasper"]]></subreportExpression>
@@ -157,9 +158,9 @@ ORDER BY asistencia ASC;]]>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="30" splitType="Stretch">
+		<band height="130" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="360" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="cd3e93c7-8882-474c-8147-e641e5c5a77c">
+				<reportElement mode="Opaque" x="0" y="100" width="571" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="cd3e93c7-8882-474c-8147-e641e5c5a77c">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -170,17 +171,31 @@ ORDER BY asistencia ASC;]]>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Center">
 					<font fontName="Poppins Medium" size="13" isBold="true"/>
 				</textElement>
 				<text><![CDATA[OPERARIOS GENERALES]]></text>
 			</staticText>
+			<subreport isUsingCache="true">
+				<reportElement x="0" y="0" width="570" height="100" uuid="7f5319cc-81f3-4877-a803-07beeb8b4108">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="Id Supervisor">
+					<subreportParameterExpression><![CDATA[$P{Id Supervisor}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fecha de la reunion">
+					<subreportParameterExpression><![CDATA[$P{fecha de la reunion}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subrep_minuta.jrxml"]]></subreportExpression>
+			</subreport>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="30" splitType="Stretch">
 			<textField>
-				<reportElement x="220" y="0" width="140" height="30" uuid="33d45409-5bc5-468e-b01a-2792bdfa1c0f"/>
+				<reportElement x="430" y="0" width="140" height="30" uuid="33d45409-5bc5-468e-b01a-2792bdfa1c0f"/>
 				<box padding="5">
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="0.0"/>
@@ -191,7 +206,7 @@ ORDER BY asistencia ASC;]]>
 				<textFieldExpression><![CDATA[$F{num_cedula}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="0" width="220" height="30" uuid="31e49cd3-bd79-42c7-ae4d-7eef30ce5d37"/>
+				<reportElement x="0" y="0" width="350" height="30" uuid="31e49cd3-bd79-42c7-ae4d-7eef30ce5d37"/>
 				<box topPadding="5" leftPadding="15" bottomPadding="5" rightPadding="5">
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="0.0"/>
@@ -200,6 +215,17 @@ ORDER BY asistencia ASC;]]>
 					<font fontName="Poppins" size="13"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="0" width="80" height="30" uuid="572746ff-1f76-4ed4-8755-955a795f79eb"/>
+				<box padding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA["#"+$F{num_expediente}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -220,22 +246,4 @@ ORDER BY asistencia ASC;]]>
 			</textField>
 		</band>
 	</pageFooter>
-	<summary>
-		<band height="100" splitType="Stretch">
-			<subreport isUsingCache="true">
-				<reportElement x="0" y="0" width="360" height="100" uuid="7f5319cc-81f3-4877-a803-07beeb8b4108">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<subreportParameter name="Id Supervisor">
-					<subreportParameterExpression><![CDATA[$P{Id Supervisor}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="fecha de la reunion">
-					<subreportParameterExpression><![CDATA[$P{fecha de la reunion}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["subrep_minuta.jrxml"]]></subreportExpression>
-			</subreport>
-		</band>
-	</summary>
 </jasperReport>

@@ -5,8 +5,11 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="230"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="758"/>
-	<parameter name="Mes" class="java.sql.Date">
+	<parameter name="Numero_mes" class="java.lang.String">
 		<parameterDescription><![CDATA[Mes del horario de los horneros]]></parameterDescription>
+	</parameter>
+	<parameter name="Año" class="java.lang.String">
+		<parameterDescription><![CDATA[año del cual se quiere el horario]]></parameterDescription>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT e.num_expediente, 
@@ -19,7 +22,7 @@
 			 WHEN h.turno = 3 THEN '11:00 pm a 7:00 am'
 		END AS horario
 FROM empleado e, hist_turno h
-WHERE h.num_expediente = e.num_expediente AND  h.mesano = date_trunc('month',$P{Mes}::timestamp) 
+WHERE h.num_expediente = e.num_expediente AND  h.mesano = date_trunc('month',to_date(CONCAT( $P{Año},'-',$P{Numero_mes} ,'-','01'),'YYYY MM DD')::timestamp) 
 ORDER BY h.turno;]]>
 	</queryString>
 	<field name="num_expediente" class="java.math.BigDecimal">
@@ -59,15 +62,15 @@ ORDER BY h.turno;]]>
 		<groupHeader>
 			<band height="30">
 				<textField isBlankWhenNull="true">
-					<reportElement mode="Opaque" x="0" y="0" width="490" height="30" forecolor="#FFFFFF" backcolor="#0B6233" uuid="14c121bb-3c8f-480d-a346-519241adf244"/>
-					<box topPadding="5" leftPadding="120" bottomPadding="5" rightPadding="5">
+					<reportElement mode="Opaque" x="0" y="0" width="570" height="30" forecolor="#FFFFFF" backcolor="#0B6233" uuid="14c121bb-3c8f-480d-a346-519241adf244"/>
+					<box topPadding="5" leftPadding="0" bottomPadding="5" rightPadding="5">
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement textAlignment="Left">
+					<textElement textAlignment="Center">
 						<font fontName="Poppins" size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA["TURNO  "+$F{turno} +"   "+ $F{horario}]]></textFieldExpression>
@@ -137,7 +140,7 @@ ORDER BY h.turno;]]>
 	<columnHeader>
 		<band height="40" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="90" y="0" width="210" height="40" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="776424c5-a3f8-4e16-a22a-4e8c053ab532">
+				<reportElement mode="Opaque" x="90" y="0" width="290" height="40" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="776424c5-a3f8-4e16-a22a-4e8c053ab532">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -154,7 +157,7 @@ ORDER BY h.turno;]]>
 				<text><![CDATA[NOMBRE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="300" y="0" width="190" height="40" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="c480d8d8-9082-4f32-a878-259c55621cba">
+				<reportElement mode="Opaque" x="380" y="0" width="190" height="40" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="c480d8d8-9082-4f32-a878-259c55621cba">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -194,13 +197,13 @@ EXPEDIENTE]]></text>
 	<detail>
 		<band height="30" splitType="Stretch">
 			<textField>
-				<reportElement x="90" y="0" width="210" height="30" uuid="9957dcec-f36f-483d-8afa-7e9d0b90cc54"/>
+				<reportElement x="90" y="0" width="290" height="30" uuid="9957dcec-f36f-483d-8afa-7e9d0b90cc54"/>
 				<box topPadding="5" leftPadding="33" bottomPadding="5" rightPadding="5">
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Left">
-					<font fontName="Poppins" size="12"/>
+					<font fontName="Poppins" size="13"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
 			</textField>
@@ -211,18 +214,18 @@ EXPEDIENTE]]></text>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement>
-					<font fontName="Poppins" size="12"/>
+					<font fontName="Poppins" size="13"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{num_expediente}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="300" y="0" width="190" height="30" uuid="cf3b4dd3-56a3-483c-ae1c-5d66edb9bbc7"/>
+				<reportElement x="380" y="0" width="190" height="30" uuid="cf3b4dd3-56a3-483c-ae1c-5d66edb9bbc7"/>
 				<box padding="5">
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font fontName="Poppins" size="12"/>
+					<font fontName="Poppins" size="13"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{num_cedula}]]></textFieldExpression>
 			</textField>

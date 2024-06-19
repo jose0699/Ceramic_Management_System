@@ -6,8 +6,11 @@
 	<parameter name="id supervisor" class="java.lang.Integer">
 		<parameterDescription><![CDATA[id del supervisor que requiere el informe]]></parameterDescription>
 	</parameter>
-	<parameter name="mes" class="java.sql.Date">
-		<parameterDescription><![CDATA[mes del que se requiere el reporte de asistencia]]></parameterDescription>
+	<parameter name="Numero_mes" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Mes del horario de los horneros]]></parameterDescription>
+	</parameter>
+	<parameter name="Año" class="java.lang.Integer">
+		<parameterDescription><![CDATA[año del cual se quiere el horario]]></parameterDescription>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT e.num_expediente,
@@ -18,7 +21,8 @@
 		   e.supervisor,
 		   upper(CONCAT(s.primer_nombre, ' ', COALESCE(s.segundo_nombre, ''), ' ', s.primer_apellido, ' ', COALESCE(s.segundo_apellido, ''))) as nombre_supervisor,
 		   s.num_cedula,
-		   porcentaje_inasistencia_empleado(e.num_expediente, $P{mes}  ) pinac
+		   contar_inasistencias(e.num_expediente,to_date(CONCAT(to_char($P{Año},'9999'),'-',to_char( $P{Numero_mes}  ,'9999'),'-','01'),'YYYY MM DD')) inasistencias,
+		   porcentaje_inasistencia_empleado(e.num_expediente, to_date(CONCAT(to_char($P{Año},'9999'),'-',to_char( $P{Numero_mes}  ,'9999'),'-','01'),'YYYY MM DD')) pinac
 	FROM departamento d, empleado s, empleado e
 	WHERE s.num_expediente = e.supervisor
 	AND d.uid_departamento = s.trabaja
@@ -62,6 +66,10 @@
 		<property name="com.jaspersoft.studio.field.name" value="num_cedula"/>
 		<property name="com.jaspersoft.studio.field.label" value="num_cedula"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="empleado"/>
+	</field>
+	<field name="inasistencias" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="inasistencias"/>
+		<property name="com.jaspersoft.studio.field.label" value="inasistencias"/>
 	</field>
 	<field name="pinac" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="pinac"/>
@@ -139,9 +147,9 @@
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Poppins" size="12" isBold="true"/>
+					<font fontName="Poppins" size="13" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[UPPER(DATEFORMAT($P{mes},"MMMM-yyyy"))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[UPPER(DATEFORMAT(DATE($P{Año},$P{Numero_mes},1),"MMMM-yyyy"))]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -165,7 +173,7 @@
 				<text><![CDATA[OPERARIOS SUPERSIVADOS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="210" y="29" width="170" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="12e18f4d-7c83-412e-814f-6d7ae3c9b779">
+				<reportElement mode="Opaque" x="210" y="29" width="90" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="12e18f4d-7c83-412e-814f-6d7ae3c9b779">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -199,7 +207,7 @@
 				<text><![CDATA[NOMBRE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="380" y="29" width="188" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="664fd1b4-aecd-42fa-ace9-235c74ffc06d">
+				<reportElement mode="Opaque" x="450" y="29" width="118" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="664fd1b4-aecd-42fa-ace9-235c74ffc06d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -214,6 +222,23 @@
 					<font fontName="Poppins Medium" size="13" isBold="true"/>
 				</textElement>
 				<text><![CDATA[%ASISTENCIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="300" y="29" width="150" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="305439b6-4183-4c6a-9d75-00b76e6a60dc">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<pen lineStyle="Dashed" lineColor="#75FFA5"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins Medium" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INASISTENCIAS]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -231,7 +256,7 @@
 				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="210" y="0" width="170" height="30" uuid="0fa60ac3-0e81-420d-a967-0402b11b648f"/>
+				<reportElement x="210" y="0" width="90" height="30" uuid="0fa60ac3-0e81-420d-a967-0402b11b648f"/>
 				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="0.0"/>
@@ -242,7 +267,7 @@
 				<textFieldExpression><![CDATA[$F{num_cedula}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="380" y="0" width="187" height="30" uuid="0cc1f2a8-af7f-404e-aec3-5cf1a1f25c75"/>
+				<reportElement x="450" y="0" width="117" height="30" uuid="0cc1f2a8-af7f-404e-aec3-5cf1a1f25c75"/>
 				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="0.0"/>
@@ -251,6 +276,17 @@
 					<font fontName="Poppins" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pinac} +"%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="150" height="30" uuid="c501055a-b68f-492e-a57c-8eb57ef04a2f"/>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inasistencias}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -272,9 +308,9 @@
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<textField>
-				<reportElement x="380" y="-1" width="187" height="30" forecolor="#0B6233" uuid="53bb9e4f-f4dc-4c94-8266-e9ad246c26a7"/>
+				<reportElement x="450" y="-1" width="117" height="30" forecolor="#0B6233" uuid="53bb9e4f-f4dc-4c94-8266-e9ad246c26a7"/>
 				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="0.0"/>
@@ -285,7 +321,7 @@
 				<textFieldExpression><![CDATA[$V{por_asisTotal} +"%"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="380" height="30" forecolor="#FFFFFF" backcolor="#0B6233" uuid="4cb151ef-0ba7-47cd-a925-d1fd90d7d05d">
+				<reportElement mode="Opaque" x="0" y="0" width="450" height="30" forecolor="#FFFFFF" backcolor="#0B6233" uuid="4cb151ef-0ba7-47cd-a925-d1fd90d7d05d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>

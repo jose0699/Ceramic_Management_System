@@ -12,8 +12,9 @@ triggers e índices del sistema.
 --                                           Function                                                --
 --------------------------------------------------------------------------------------------------------
 --Proceso Venta
-	--EMPLEADO
-	--Numero 1
+--EMPLEADO
+--Numero 1	
+BEGIN;
 	CREATE OR REPLACE FUNCTION GERENCIA_EMPLEADO() RETURNS TRIGGER AS $$ BEGIN
 		IF (NEW.cargo = 'ge') AND (new.titulo = 'ba') THEN
 			RAISE EXCEPTION 'Error: Para ocupar el cargo de "Gerencia" debe tener la mención de Ingenieros Químicos, Mecánicos, de Producción, Industriales o Geólogos.';
@@ -30,8 +31,10 @@ triggers e índices del sistema.
 		RETURN NEW;
 	END;
 	$$ LANGUAGE plpgsql;
-	
+COMMIT;
+
 	-- Numero 2
+BEGIN;
 	CREATE OR REPLACE FUNCTION DEPARTAMENTO_EMPLEADO() RETURNS TRIGGER AS $$ 
 	DECLARE 
 		tipo_departamento varchar(2);
@@ -47,9 +50,11 @@ triggers e índices del sistema.
 		END IF;
 		RAISE EXCEPTION 'Error: Cargo no compatible con el Departamento.';
 	END;
-	$$ LANGUAGE plpgsql;	
-
+	$$ LANGUAGE plpgsql;
+COMMIT;	
+	
 	--Numero 3
+BEGIN;
 	CREATE OR REPLACE FUNCTION SUPERVISOR_DEPARTAMENTO() RETURNS TRIGGER AS $$ 
 	DECLARE
 		supervisor numeric(4);
@@ -65,8 +70,10 @@ triggers e índices del sistema.
 		RAISE EXCEPTION 'Error: El supervisor y el Operario General, pertenecen a distintos departamentos.';		
 	END;
 	$$ LANGUAGE plpgsql;
-	
+COMMIT;
+
 	--Numero 4
+BEGIN;
 	CREATE OR REPLACE FUNCTION NO_SUPERVISION() RETURNS TRIGGER AS $$ 
 	Declare 
 		cant_supervisados numeric (2);
@@ -82,10 +89,11 @@ triggers e índices del sistema.
 		RAISE EXCEPTION 'Error: El empleado no puede tener supervisor.';
 	END;
 	$$ LANGUAGE plpgsql;
-	
+COMMIT;
 	
 	--RESUMEN_REUNION
 	--Numero 6
+BEGIN;
 	CREATE OR REPLACE FUNCTION REUNION_SUPERVISOR() RETURNS TRIGGER AS $$ 
 	DECLARE
 		supervisor numeric(4);
@@ -99,9 +107,11 @@ triggers e índices del sistema.
 		RAISE EXCEPTION 'Error: El empleado no es un supervisor.';
 	END;
 	$$ LANGUAGE plpgsql;
-	
+COMMIT;
+
 	--INASISTENCIA 
-	--Numero 7
+	--Numero 7	
+BEGIN;
 	CREATE OR REPLACE FUNCTION SUPERVISION_CONGRUENTE() RETURNS TRIGGER AS $$
 	DECLARE
 		cantidad numeric(1);
@@ -114,20 +124,25 @@ triggers e índices del sistema.
 		RETURN NEW;
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
+
 	
 	/*
 		Cuando se registre un id_empleado en la tabla, debe crearse un registro de inasistencia en la tabla de det_expediente.
 	*/
 	--Numero 8
+BEGIN;
 	CREATE OR REPLACE FUNCTION INASISTENCIA_REGISTRADA() RETURNS TRIGGER AS $$
 	BEGIN
 		INSERT INTO det_exp VALUES (NEW.num_expediente, nextval('det_exp_uid_seq'), NEW.fecha_hora, 'in', NULL, NULL, NULL, 'Falto a la ruenión semanal.');
 		RETURN NEW;
 	END;
 	$$ LANGUAGE plpgsql;
-	
+COMMIT;
+
 	--DET_EXP
 	--Numero 9
+BEGIN;
 	CREATE OR REPLACE FUNCTION DET_EXP_CAMPOS() RETURNS  TRIGGER AS $$
 	DECLARE
 	BEGIN
@@ -140,8 +155,11 @@ triggers e índices del sistema.
 		RAISE EXCEPTION 'Error: Está ingresando información en un campo que no corresponde al motivo..';
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
+
 	
 		--Numero 11
+BEGIN;
 	CREATE OR REPLACE FUNCTION LH_TARDE_EXTRA() RETURNS TRIGGER AS $$
 		DECLARE
 		existe numeric(1);
@@ -160,9 +178,12 @@ triggers e índices del sistema.
 		RAISE EXCEPTION 'Error: Motivo invalida, porque el empleado no es un Hornero.';
 		END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
+
 		
 	--HIST_TURNO
 	--Numero 12
+BEGIN;
 	CREATE OR REPLACE FUNCTION HORNERO_CARGO() RETURNS TRIGGER AS $$
 	DECLARE
 		existe numeric(1);
@@ -175,100 +196,102 @@ triggers e índices del sistema.
 		RAISE EXCEPTION 'Error: El empleado no es un Hornero.';
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
+
 --------------------------------------------------------------------------------------------------------
 --                                           Trigger                                                  --
 --------------------------------------------------------------------------------------------------------
 --Proceso Venta
 	--EMPLEADO
-	CREATE OR REPLACE TRIGGER GERENTE_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION GERENCIA_EMPLEADO(); --1
-	CREATE OR REPLACE TRIGGER DEPARTAMENTO_CARGO_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION DEPARTAMENTO_EMPLEADO(); --2 
-	CREATE OR REPLACE TRIGGER SUPERVISOR_DEPARTAMENTO_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION SUPERVISOR_DEPARTAMENTO(); --3
-	CREATE OR REPLACE TRIGGER NO_SUPERVISION_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION NO_SUPERVISION(); --4	
+	BEGIN; CREATE OR REPLACE TRIGGER GERENTE_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION GERENCIA_EMPLEADO();	COMMIT; --1
+	BEGIN; CREATE OR REPLACE TRIGGER DEPARTAMENTO_CARGO_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION DEPARTAMENTO_EMPLEADO();	COMMIT; --2 
+	BEGIN; CREATE OR REPLACE TRIGGER SUPERVISOR_DEPARTAMENTO_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION SUPERVISOR_DEPARTAMENTO();	COMMIT; --3
+	BEGIN; CREATE OR REPLACE TRIGGER NO_SUPERVISION_EMPLEADO BEFORE INSERT OR UPDATE ON EMPLEADO FOR EACH ROW EXECUTE FUNCTION NO_SUPERVISION();	COMMIT; --4	
 	
 	--RESUMEN_REUNION
-	CREATE OR REPLACE TRIGGER REUNION_SUPERVISOR BEFORE INSERT OR UPDATE ON REUNION FOR EACH ROW EXECUTE FUNCTION REUNION_SUPERVISOR(); --6
+	BEGIN; CREATE OR REPLACE TRIGGER REUNION_SUPERVISOR BEFORE INSERT OR UPDATE ON REUNION FOR EACH ROW EXECUTE FUNCTION REUNION_SUPERVISOR();	COMMIT; --6
 	
 	--INASISTENCIA 
-	CREATE OR REPLACE TRIGGER SUPERVISION_CONGRUENTE_INASISTENCIA BEFORE INSERT OR UPDATE ON REUNION FOR EACH ROW EXECUTE FUNCTION REUNION_SUPERVISOR(); --7
-	CREATE OR REPLACE TRIGGER inasistencia_registrada AFTER INSERT ON inasistencia FOR EACH ROW EXECUTE FUNCTION INASISTENCIA_REGISTRADA();--8
+	BEGIN; CREATE OR REPLACE TRIGGER SUPERVISION_CONGRUENTE_INASISTENCIA BEFORE INSERT OR UPDATE ON REUNION FOR EACH ROW EXECUTE FUNCTION REUNION_SUPERVISOR();	COMMIT; --7
+	BEGIN; CREATE OR REPLACE TRIGGER inasistencia_registrada AFTER INSERT ON inasistencia FOR EACH ROW EXECUTE FUNCTION INASISTENCIA_REGISTRADA();	COMMIT;--8
 	--DET_EXP
-	CREATE OR REPLACE TRIGGER CAMPO_DET_EXP BEFORE INSERT ON DET_EXP FOR EACH ROW EXECUTE FUNCTION DET_EXP_CAMPOS(); --9
-	CREATE OR REPLACE TRIGGER  LLEGADA_TARDE_HORAS_EXTRAS_DET_EXP BEFORE INSERT ON DET_EXP FOR EACH ROW EXECUTE FUNCTION LH_TARDE_EXTRA(); --11
+	BEGIN; CREATE OR REPLACE TRIGGER CAMPO_DET_EXP BEFORE INSERT ON DET_EXP FOR EACH ROW EXECUTE FUNCTION DET_EXP_CAMPOS();	COMMIT; --9
+	BEGIN; CREATE OR REPLACE TRIGGER  LLEGADA_TARDE_HORAS_EXTRAS_DET_EXP BEFORE INSERT ON DET_EXP FOR EACH ROW EXECUTE FUNCTION LH_TARDE_EXTRA();	COMMIT; --11
 
 	--HIST_TURNO
-	CREATE OR REPLACE TRIGGER HORNERO_CARGO_HIST_TURNO BEFORE INSERT ON HIST_TURNO FOR EACH ROW EXECUTE FUNCTION HORNERO_CARGO(); --12
+	BEGIN; CREATE OR REPLACE TRIGGER HORNERO_CARGO_HIST_TURNO BEFORE INSERT ON HIST_TURNO FOR EACH ROW EXECUTE FUNCTION HORNERO_CARGO();	COMMIT; --12
 
 --------------------------------------------------------------------------------------------------------
 --                                           INDEX                                                    --
 --------------------------------------------------------------------------------------------------------
 --Proceso Catalogo
-	CREATE INDEX PIE_MOLDE ON PIEZA(uid_molde);
+	BEGIN; CREATE INDEX PIE_MOLDE ON PIEZA(uid_molde);	COMMIT;
 
 --Proceso Empleado
-	CREATE INDEX EMP_SUPERVISOR ON EMPLEADO (supervisor);
-	CREATE INDEX EMP_DEP ON EMPLEADO(trabaja);
-	CREATE INDEX DEP_PADRE ON DEPARTAMENTO(uid_dep_padre);
+	BEGIN; CREATE INDEX EMP_SUPERVISOR ON EMPLEADO (supervisor);	COMMIT;
+	BEGIN; CREATE INDEX EMP_DEP ON EMPLEADO(trabaja);	COMMIT;
+	BEGIN; CREATE INDEX DEP_PADRE ON DEPARTAMENTO(uid_dep_padre);	COMMIT;
 
 --Proceso Venta
-	CREATE INDEX CLI_PAIS ON CLIENTE(uid_pais);
-	CREATE INDEX FAC_PEDIDO ON FACTURA (uid_cliente);
-	CREATE INDEX DET_PED_PIE_JUEGO ON DETALLE_PEDIDO_PIEZA(uid_juego);
-	CREATE INDEX DET_PED_PIE_PIEZA ON DETALLE_PEDIDO_PIEZA(uid_pieza, uid_coleccion);
+	BEGIN; CREATE INDEX CLI_PAIS ON CLIENTE(uid_pais);	COMMIT;
+	BEGIN; CREATE INDEX FAC_PEDIDO ON FACTURA (uid_cliente);	COMMIT;
+	BEGIN; CREATE INDEX DET_PED_PIE_JUEGO ON DETALLE_PEDIDO_PIEZA(uid_juego);	COMMIT;
+	BEGIN; CREATE INDEX DET_PED_PIE_PIEZA ON DETALLE_PEDIDO_PIEZA(uid_pieza, uid_coleccion);	COMMIT;
 
 --------------------------------------------------------------------------------------------------------
 --                                           VIEW                                                     --
 --------------------------------------------------------------------------------------------------------
+BEGIN;
+	CREATE OR REPLACE VIEW nombres_moldes AS
+		SELECT m.uid_molde, 
+			CASE WHEN m.tipo = 'JA' THEN 'Jarra'
+				WHEN m.tipo = 'TT' THEN 'Tetera'
+				WHEN m.tipo = 'LE' THEN 'Lechera'
+				WHEN m.tipo = 'AZ' THEN 'Azucarero'
+				WHEN m.tipo = 'CA' THEN 'Cazuela'
+				WHEN m.tipo = 'BD' THEN 'Bandeja'
+				WHEN m.tipo = 'PL' THEN 'Plato'
+				WHEN m.tipo = 'TA' THEN 'Taza'
+				WHEN m.tipo = 'EN' THEN 'Ensaladera'
+			END 
 
-CREATE OR REPLACE VIEW nombres_moldes AS
-	SELECT m.uid_molde, 
-		CASE WHEN m.tipo = 'JA' THEN 'Jarra'
-			WHEN m.tipo = 'TT' THEN 'Tetera'
-			WHEN m.tipo = 'LE' THEN 'Lechera'
-			WHEN m.tipo = 'AZ' THEN 'Azucarero'
-			WHEN m.tipo = 'CA' THEN 'Cazuela'
-			WHEN m.tipo = 'BD' THEN 'Bandeja'
-			WHEN m.tipo = 'PL' THEN 'Plato'
-			WHEN m.tipo = 'TA' THEN 'Taza'
-			WHEN m.tipo = 'EN' THEN 'Ensaladera'
-		END 
+			||''||
 
-		||''||
+			CASE WHEN m.tipo_plato = 'HO' THEN ' Hondo'
+				WHEN m.tipo_plato = 'LL' THEN ' llano'
+				WHEN m.tipo_plato = 'TT' THEN ' taza té'
+				WHEN m.tipo_plato = 'TC' THEN ' taza café'
+				WHEN m.tipo_plato = 'TM' THEN ' taza moka'
+				WHEN m.tipo_plato = 'PO' THEN ' postre'
+				WHEN m.tipo_plato = 'PR' THEN ' presentación'
+				WHEN m.tipo_plato = 'PA' THEN ' pasta'
+				ELSE ''
+			END
 
-		CASE WHEN m.tipo_plato = 'HO' THEN ' Hondo'
-			WHEN m.tipo_plato = 'LL' THEN ' llano'
-			WHEN m.tipo_plato = 'TT' THEN ' taza té'
-			WHEN m.tipo_plato = 'TC' THEN ' taza café'
-			WHEN m.tipo_plato = 'TM' THEN ' taza moka'
-			WHEN m.tipo_plato = 'PO' THEN ' postre'
-			WHEN m.tipo_plato = 'PR' THEN ' presentación'
-			WHEN m.tipo_plato = 'PA' THEN ' pasta'
-			ELSE ''
-		END
+			||''||
 
-		||''||
+			CASE WHEN m.tipo_taza = 'CS' THEN ' café sin plato'
+				WHEN m.tipo_taza = 'CC' THEN ' café con plato'
+				WHEN m.tipo_taza = 'TS' THEN ' té sin plato'
+				WHEN m.tipo_taza = 'TC' THEN ' té con plato'
+				WHEN m.tipo_taza = 'MS' THEN ' moka sin plato'
+				WHEN m.tipo_taza = 'MC' THEN ' moka sin plato'
+				ELSE ''
+			END
 
-		CASE WHEN m.tipo_taza = 'CS' THEN ' café sin plato'
-			WHEN m.tipo_taza = 'CC' THEN ' café con plato'
-			WHEN m.tipo_taza = 'TS' THEN ' té sin plato'
-			WHEN m.tipo_taza = 'TC' THEN ' té con plato'
-			WHEN m.tipo_taza = 'MS' THEN ' moka sin plato'
-			WHEN m.tipo_taza = 'MC' THEN ' moka sin plato'
-			ELSE ''
-		END
+			||''||
 
-		||''||
+			CASE WHEN m.forma = 'ova' THEN ' ovalado'
+				 WHEN m.forma = 'rec' THEN ' rectangular'
+				 WHEN m.forma = 'cua' THEN ' cuadrado'
+				 WHEN m.forma = 'red' THEN ' redondo'
+				 ELSE ''
+			END
 
-		CASE WHEN m.forma = 'ova' THEN ' ovalado'
-			 WHEN m.forma = 'rec' THEN ' rectangular'
-			 WHEN m.forma = 'cua' THEN ' cuadrado'
-			 WHEN m.forma = 'red' THEN ' redondo'
-			 ELSE ''
-		END
+			||' '|| m.tamaño
+			||''|| COALESCE(to_char(m.volumen,'9.9') || 'lts','')
+			||''|| COALESCE(to_char(m.cant_persona,'9') || 'pers','')
 
-		||' '|| m.tamaño
-		||''|| COALESCE(to_char(m.volumen,'9.9') || 'lts','')
-		||''|| COALESCE(to_char(m.cant_persona,'9') || 'pers','')
-
-		AS molde
-	FROM molde m;  
-
+			AS molde
+		FROM molde m;  
+COMMIT;

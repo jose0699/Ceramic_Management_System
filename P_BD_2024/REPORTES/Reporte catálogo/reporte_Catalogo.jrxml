@@ -9,11 +9,8 @@
 	<parameter name="Tasa $" class="java.math.BigDecimal">
 		<parameterDescription><![CDATA[Tasa para ejecutar la conversión a Bs]]></parameterDescription>
 	</parameter>
-	<parameter name="fecha_inicio" class="java.sql.Date">
-		<parameterDescription><![CDATA[fecha desde la cual se quiere buscar los precios]]></parameterDescription>
-	</parameter>
-	<parameter name="fecha_fin" class="java.sql.Date">
-		<parameterDescription><![CDATA[fecha hasta la cual se quiere buscar los precios]]></parameterDescription>
+	<parameter name="fecha_precios" class="java.sql.Date">
+		<parameterDescription><![CDATA[fecha para la cual se quiere buscar los precios]]></parameterDescription>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT 
@@ -116,29 +113,12 @@ WHERE c.uid_coleccion =  $P{id coleccion}]]>
 				<textElement textAlignment="Right">
 					<font fontName="Poppins" size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Precios del: " + DATEFORMAT($P{fecha_inicio},"dd-MM-yyyy") + " al "+ DATEFORMAT($P{fecha_fin},"dd-MM-yyyy")]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Precios del: " + DATEFORMAT($P{fecha_precios},"dd-MM-yyyy")]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="240" splitType="Stretch">
-			<subreport>
-				<reportElement x="0" y="40" width="571" height="190" uuid="ccfc32d5-ebf2-497f-9633-0acaf6031020"/>
-				<subreportParameter name="id coleccion">
-					<subreportParameterExpression><![CDATA[$P{id coleccion}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="Tasa $">
-					<subreportParameterExpression><![CDATA[$P{Tasa $}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="fecha_inicio">
-					<subreportParameterExpression><![CDATA[$P{fecha_inicio}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="fecha_fin">
-					<subreportParameterExpression><![CDATA[$P{fecha_fin}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["subrPiezas.jasper"]]></subreportExpression>
-			</subreport>
+		<band height="272" splitType="Stretch">
 			<textField>
 				<reportElement x="80" y="0" width="180" height="39" uuid="e78bb72c-03ff-4d21-ad2e-624dbf4cfe60">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -199,69 +179,42 @@ WHERE c.uid_coleccion =  $P{id coleccion}]]>
 				</textElement>
 				<text><![CDATA[CATEGORÍA:]]></text>
 			</staticText>
-		</band>
-		<band height="186">
 			<subreport>
-				<reportElement positionType="Float" x="0" y="0" width="571" height="170" isRemoveLineWhenBlank="true" uuid="e3e50d79-9b3f-45c6-a9ab-aecf46cf46f9"/>
+				<reportElement x="0" y="40" width="571" height="220" uuid="d346b2c2-f9f7-4c30-a30c-49eba4c63ac0"/>
 				<subreportParameter name="id coleccion">
 					<subreportParameterExpression><![CDATA[$P{id coleccion}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="Tasa $">
 					<subreportParameterExpression><![CDATA[$P{Tasa $}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="fecha_inicio">
-					<subreportParameterExpression><![CDATA[$P{fecha_inicio}]]></subreportParameterExpression>
+				<subreportParameter name="fecha_precios">
+					<subreportParameterExpression><![CDATA[$P{fecha_precios}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="fecha_fin">
-					<subreportParameterExpression><![CDATA[$P{fecha_fin}]]></subreportParameterExpression>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subrPiezas.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="210">
+			<subreport>
+				<reportElement x="0" y="0" width="571" height="210" uuid="f41d7717-af9e-4d92-bd1b-a8efd630d157"/>
+				<subreportParameter name="id coleccion">
+					<subreportParameterExpression><![CDATA[$P{id coleccion}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Tasa $">
+					<subreportParameterExpression><![CDATA[$P{Tasa $}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fecha_precios">
+					<subreportParameterExpression><![CDATA[$P{fecha_precios}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["subrVaj.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
-		<band height="120" splitType="Immediate">
-			<subreport>
-				<reportElement positionType="Float" x="0" y="0" width="572" height="120" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="ab156eeb-4d3a-4e41-9520-c91f28ccc675"/>
-				<subreportParameter name="id coleccion">
-					<subreportParameterExpression><![CDATA[$P{id coleccion}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="Tasa $">
-					<subreportParameterExpression><![CDATA[$P{Tasa $}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="fecha_inicio">
-					<subreportParameterExpression><![CDATA[$P{fecha_inicio}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="fecha_fin">
-					<subreportParameterExpression><![CDATA[$P{fecha_fin}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["fichaPieza.jasper"]]></subreportExpression>
-			</subreport>
-		</band>
-		<band height="157" splitType="Immediate">
-			<subreport>
-				<reportElement positionType="Float" x="0" y="10" width="571" height="140" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="ef6f37a2-b994-4ace-b61d-7b60dd55fdcd"/>
-				<subreportParameter name="id coleccion">
-					<subreportParameterExpression><![CDATA[$P{id coleccion}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="Tasa $">
-					<subreportParameterExpression><![CDATA[$P{Tasa $}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="fecha_inicio">
-					<subreportParameterExpression><![CDATA[$P{fecha_inicio}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="fecha_fin">
-					<subreportParameterExpression><![CDATA[$P{fecha_fin}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["subrFichaVaj.jasper"]]></subreportExpression>
-			</subreport>
-		</band>
 	</detail>
 	<pageFooter>
-		<band height="30" splitType="Stretch">
+		<band height="69" splitType="Stretch">
 			<textField>
-				<reportElement x="1" y="0" width="570" height="30" uuid="463cd668-217b-484c-b725-4006471bcb46"/>
+				<reportElement x="1" y="39" width="570" height="30" uuid="463cd668-217b-484c-b725-4006471bcb46"/>
 				<box>
 					<topPen lineWidth="1.25"/>
 				</box>
@@ -269,6 +222,20 @@ WHERE c.uid_coleccion =  $P{id coleccion}]]>
 					<font fontName="Poppins Medium" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="571" height="39" uuid="cf721b3b-a6b6-44dd-80c9-4055ab96c76d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{linea}.equals("Familiar")]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="11" leftPadding="5" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="0.0" lineColor="#4E9171"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" markup="html">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Precios en Bs.S Sujetos a la tasa de conversión Bs.S/$: "+$P{Tasa $}+"Bs.S"]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

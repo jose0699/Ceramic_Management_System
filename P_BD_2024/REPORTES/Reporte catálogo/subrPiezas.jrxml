@@ -18,14 +18,11 @@
 	<parameter name="Tasa $" class="java.math.BigDecimal">
 		<parameterDescription><![CDATA[Tasa para ejecutar la conversión a Bs]]></parameterDescription>
 	</parameter>
-	<parameter name="fecha_inicio" class="java.sql.Date">
-		<parameterDescription><![CDATA[fecha desde la cual se quiere buscar los precios]]></parameterDescription>
-	</parameter>
-	<parameter name="fecha_fin" class="java.sql.Date">
-		<parameterDescription><![CDATA[fecha hasta la cual se quiere buscar los precios]]></parameterDescription>
+	<parameter name="fecha_precios" class="java.sql.Date">
+		<parameterDescription><![CDATA[fecha para la cual se quiere buscar los precios]]></parameterDescription>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[SELECT * FROM datos_piezas_coleccion($P{id coleccion}, $P{fecha_inicio}, $P{fecha_fin} );]]>
+		<![CDATA[SELECT * FROM datos_piezas_coleccion($P{id coleccion}, $P{fecha_precios});]]>
 	</queryString>
 	<field name="uid_pieza" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="uid_pieza"/>
@@ -43,10 +40,6 @@
 		<property name="com.jaspersoft.studio.field.name" value="precio"/>
 		<property name="com.jaspersoft.studio.field.label" value="precio"/>
 	</field>
-	<field name="forma" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="forma"/>
-		<property name="com.jaspersoft.studio.field.label" value="forma"/>
-	</field>
 	<field name="linea" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="linea"/>
 		<property name="com.jaspersoft.studio.field.label" value="linea"/>
@@ -54,10 +47,6 @@
 	<field name="categoria" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="categoria"/>
 		<property name="com.jaspersoft.studio.field.label" value="categoria"/>
-	</field>
-	<field name="descripcion" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="descripcion"/>
-		<property name="com.jaspersoft.studio.field.label" value="descripcion"/>
 	</field>
 	<background>
 		<band splitType="Stretch"/>

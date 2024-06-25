@@ -187,7 +187,11 @@ BEGIN;
 		uid_coleccion numeric(2) not null,
 		nombre varchar(40) not null UNIQUE,
 		fecha_lanzamiento date not null, 
+<<<<<<< Updated upstream
 		linea varchar(1) not null,
+=======
+		linea varchar(20) not null,
+>>>>>>> Stashed changes
 		categoria varchar(3) not null,
 		descripcion_mot_color varchar (512) not null,
 		CONSTRAINT check_linea_coleccion CHECK(linea in ('I', 'F')),

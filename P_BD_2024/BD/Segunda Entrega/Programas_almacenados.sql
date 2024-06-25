@@ -53,7 +53,8 @@ Este archivo tiene la función de contener toda la información relacionada con 
 --Fin Programa 1
 
 --Programa 2
-CREATE OR REPLACE PROCEDURE rotacion_turnos_horneros() AS $$
+BEGIN;
+	CREATE OR REPLACE PROCEDURE rotacion_turnos_horneros() AS $$
 	DECLARE
 		  h record;
 			mes_anterior date;
@@ -73,8 +74,10 @@ CREATE OR REPLACE PROCEDURE rotacion_turnos_horneros() AS $$
 		  END LOOP;
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 	
 --Programa 3
+BEGIN;
 	CREATE OR REPLACE PROCEDURE division_operarios_departamento(ndept IN departamento.nombre%TYPE) AS $$
 		DECLARE
 			num_operarios numeric(4);
@@ -106,8 +109,11 @@ CREATE OR REPLACE PROCEDURE rotacion_turnos_horneros() AS $$
 			END CASE;
 		END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
+	
 	
 --Programa 4
+BEGIN;
 	CREATE OR REPLACE PROCEDURE actualizar_precio_coleccion (coleccion numeric(2), tasa_vieja numeric(8,2), tasa_nueva numeric(8,2)) AS $$
 	BEGIN
 		IF tasa_vieja > tasa_nueva THEN 
@@ -117,7 +123,9 @@ CREATE OR REPLACE PROCEDURE rotacion_turnos_horneros() AS $$
 		END IF;
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 
+BEGIN;
 	CREATE OR REPLACE PROCEDURE actualizar_precio(pieza numeric(3), tasa_vieja numeric(8,2), tasa_nueva numeric(8,2)) AS $$
 	BEGIN
 		IF tasa_vieja > tasa_nueva THEN 
@@ -128,44 +136,32 @@ CREATE OR REPLACE PROCEDURE rotacion_turnos_horneros() AS $$
 		END IF;
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 --Fin Programa 4
 
 --Programa 5
-CREATE OR REPLACE PROCEDURE chequear_despedido(expediente numeric(4), registro_fecha date) 
-	AS $$
-	DECLARE
-	  contador numeric(2);
-	BEGIN
-		SELECT count(*) INTO contador FROM DET_EXP d WHERE d.num_exp = 28 
-		AND d.motivo = 'am' 
-		AND d.fecha BETWEEN (registro_fecha::date - INTERVAL '3 month') AND registro_fecha;
+BEGIN;
+	CREATE OR REPLACE PROCEDURE chequear_despedido(expediente numeric(4), registro_fecha date) 
+		AS $$
+		DECLARE
+		  contador numeric(2);
+		BEGIN
+			SELECT count(*) INTO contador FROM DET_EXP d WHERE d.num_exp = 28 
+			AND d.motivo = 'am' 
+			AND d.fecha BETWEEN (registro_fecha::date - INTERVAL '3 month') AND registro_fecha;
 
-	  IF contador >= 3 THEN 
-		RAISE EXCEPTION 'Nota: El empleado posee la cantidad de amonestaciones para su despido.';
-	  ELSE
-		RAISE NOTICE 'Nota: El empleado no posee la cantidad de amonestaciones para su despido.';
-	  END IF;
-	END;
-$$ LANGUAGE plpgsql;
+		  IF contador >= 3 THEN 
+			RAISE EXCEPTION 'Nota: El empleado posee la cantidad de amonestaciones para su despido.';
+		  ELSE
+			RAISE NOTICE 'Nota: El empleado no posee la cantidad de amonestaciones para su despido.';
+		  END IF;
+		END;
+	$$ LANGUAGE plpgsql;
+COMMIT;
+
 
 --Programa 9
-    select * from empleado where supervisor is null and cargo = 'og'
-
-    select * from empleado where supervisor = 4
-    -- 21, 21
-    select * from det_exp where num_exp = 21 or num_exp = 22
-    select * from det_exp where num_exp = 22
-
-    delete from det_exp where num_exp = 21 or num_exp = 22;
-
-    insert into det_exp values(21,nextval('det_exp_uid_seq'),'2024-05-15','in',null);
-    insert into det_exp values(21,nextval('det_exp_uid_seq'),'2024-05-16','in',null);
-    insert into det_exp values(21,nextval('det_exp_uid_seq'),'2024-05-17','in',null);
-    insert into det_exp values(22,nextval('det_exp_uid_seq'),'2024-05-16','in',null);
-    insert into det_exp values(22,nextval('det_exp_uid_seq'),'2024-05-17','in',null);
-
-	  call insertar_amonestacion_supervisor(4, '2024-06-5')
-
+BEGIN;
 	CREATE OR REPLACE PROCEDURE insertar_amonestacion_supervisor(expediente_supervisor numeric(4), chequeo_supervisor date) AS $$
 	DECLARE 
 	  expediente RECORD;
@@ -175,23 +171,28 @@ $$ LANGUAGE plpgsql;
 	  END LOOP;
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 
-
+BEGIN;
 	CREATE OR REPLACE PROCEDURE insertar_amonestaciones_basico(expediente numeric(4), chequeo date) AS $$ 
 	DECLARE
 	  num_inasistencias numeric(1);
-	  ultima_amonestacion date;
 	BEGIN
-
+		num_inasistencias := contar_inasistencias(expediente, chequeo);
 		
+		IF num_inasistencias >= 3 THEN
+			insert into det_exp values(expediente, nextval('det_exp_uid_seq'), CURRENT_DATE ,'am',null,null,null,'faltó 3 o más dias al trabajo en el mes');
+		END IF;
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 
 --------------------------------------------------------------------------------------------------------
 --                                            Function                                                --
 --------------------------------------------------------------------------------------------------------
 
 --Programa 6
+BEGIN;
 	CREATE OR REPLACE FUNCTION calcular_precio_vajilla(v_id_vaj IN detalle_pieza_vajilla.uid_juego%TYPE, v_id_col IN detalle_pieza_vajilla.uid_coleccion%TYPE, finc date) RETURNS numeric(8,2) AS $$
 	DECLARE
 		v record;
@@ -220,8 +221,10 @@ $$ LANGUAGE plpgsql;
 		  RETURN precio_vaj - (precio_vaj * 0.15);
 	  END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 
 --Programa 7
+BEGIN;
 	CREATE OR REPLACE FUNCTION obtener_dias_no_laborales() RETURNS numeric(2) AS $$
 	DECLARE
 		dias_no_laborales numeric(2);
@@ -248,7 +251,9 @@ $$ LANGUAGE plpgsql;
 		  RETURN dias_no_laborales;
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 
+BEGIN;
 	CREATE OR REPLACE FUNCTION obtener_dias_laborales(v_cargo varchar(2), v_departamento numeric(2)) RETURNS numeric(2) AS $$
 	DECLARE
 		dias_laborales numeric;
@@ -262,8 +267,10 @@ $$ LANGUAGE plpgsql;
 		RETURN dias_laborales;
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 
 
+BEGIN;
 	CREATE OR REPLACE FUNCTION contar_inasistencias(v_id_empleado IN empleado.num_expediente%TYPE, mes_inicio date) RETURNS numeric(4) AS $$
 	DECLARE
 		mes_fin date;
@@ -274,7 +281,9 @@ $$ LANGUAGE plpgsql;
 		  RETURN n_inasistencias;
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 
+BEGIN;
 	CREATE OR REPLACE FUNCTION porcentaje_inasistencia_empleado(v_id_empleado IN empleado.num_expediente%TYPE, mes_inicio date) RETURNS numeric(5,2) AS $$
 	DECLARE
 		dias_laborales numeric(2);
@@ -292,7 +301,9 @@ $$ LANGUAGE plpgsql;
 		  RETURN porcentaje_inac;
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 
+BEGIN;
 	CREATE OR REPLACE FUNCTION porcentaje_ina_supervisor(v_id_supervisor IN empleado.num_expediente%TYPE, mes_inicio date) RETURNS numeric(5,2) AS $$
 	DECLARE
 		porcentaje_inac numeric(5,2);
@@ -302,9 +313,10 @@ $$ LANGUAGE plpgsql;
 		  RETURN porcentaje_inac;
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 --Fin del programa 7
-
 --Programa 8
+BEGIN;
 	CREATE OR REPLACE FUNCTION mostrar_empleados_departamento(nom_dept IN departamento.nombre%TYPE) RETURNS
 			TABLE (	id_departamento numeric(2)
 							, nombre_departamento text 
@@ -329,7 +341,9 @@ $$ LANGUAGE plpgsql;
 								FROM empleado e, departamento d	WHERE  d.uid_departamento = e.trabaja AND	 UPPER(d.nombre) = UPPER(nom_dept);
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 
+BEGIN;
 	CREATE OR REPLACE FUNCTION mostrar_supervisores_departamento(nom_dept IN departamento.nombre%TYPE) RETURNS
 			TABLE (	id_departamento numeric(2)
 							, nombre_departamento text 
@@ -360,7 +374,9 @@ $$ LANGUAGE plpgsql;
 				  AND  (d.nivel = 4 AND e.supervisor is NULL AND e.cargo = 'og') AND UPPER(d.nombre) = UPPER(nom_dept);
 	END;
 	$$ LANGUAGE plpgsql;
-
+COMMIT;
+	
+BEGIN;
 	CREATE OR REPLACE FUNCTION mostrar_supervisados_supervisor(v_uid_supervisor IN empleado.num_expediente%TYPE) RETURNS
 			TABLE (	id_departamento numeric(2)
 							, nombre_departamento text 
@@ -401,8 +417,11 @@ $$ LANGUAGE plpgsql;
 					WHERE  d.uid_departamento = e.trabaja AND  e.supervisor = v_uid_supervisor;
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
+
 
 	---Mostrar Catalogo
+BEGIN;
 	CREATE OR REPLACE FUNCTION mostrar_colecciones(tipo_linea varchar(20)) RETURNS
 			TABLE (	id_coleccion numeric(2)
 							, nombre_coleccion varchar(40) 
@@ -421,8 +440,9 @@ $$ LANGUAGE plpgsql;
 					FROM coleccion c WHERE  c.linea = tipo_linea;
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 
-
+BEGIN;
 	CREATE OR REPLACE FUNCTION mostrar_piezas_coleccion(v_id_coleccion IN coleccion.uid_coleccion%TYPE) RETURNS
 			TABLE (	  nombre_coleccion varchar(40) 
 				, uid_pieza  numeric(3) 
@@ -447,6 +467,7 @@ $$ LANGUAGE plpgsql;
 				WHERE c.uid_coleccion = d.uid_coleccion AND v.uid_juego = d.uid_juego AND c.uid_coleccion = v_id_coleccion;
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 --Fin de Programa 8
 
 --------------------------------------------------------------------------------------------------------
@@ -454,13 +475,17 @@ $$ LANGUAGE plpgsql;
 --------------------------------------------------------------------------------------------------------
 
 --Se utiliza en el BACK
+BEGIN;
 	CREATE OR REPLACE FUNCTION insertar_vajilla(nombre varchar(60), capacidad numeric(1), descripcion varchar(256)) returns numeric(3) AS $$ 
 	BEGIN
 		INSERT INTO vajilla values(nextval ('vajilla_uid_seq'),nombre, capacidad, descripcion);
 		return lastval();
 	END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 
+
+BEGIN;
 	CREATE OR REPLACE PROCEDURE insert_pieza(coleccion numeric(2), descripcion varchar(256), precio numeric(8,2), uid_molde numeric(2)) AS $$
 	DECLARE
 		linea_coleccion varchar(1);
@@ -477,9 +502,12 @@ $$ LANGUAGE plpgsql;
 			INSERT INTO pieza VALUES (coleccion,nextval ('pieza_uid_seq'),descripcion,precio,uid_molde);		
 		END IF;
 	END;
-	$$ LANGUAGE plpgsql;	
+	$$ LANGUAGE plpgsql;
+COMMIT;
+	
 --	Fin de programas que se utilizan en el back
 --Utilizado en reporte
+BEGIN;
 	CREATE OR REPLACE FUNCTION obtener_fecha_historico(v_id_pieza IN pieza.uid_pieza%TYPE,ffinc date) RETURNS date AS $$
 	DECLARE
 		fecha_hist date;
@@ -491,7 +519,9 @@ $$ LANGUAGE plpgsql;
 		RETURN fecha_hist;
 	END;
 	$$ LANGUAGE plpgsql;
-	
+COMMIT;
+
+BEGIN;
 	CREATE OR REPLACE FUNCTION datos_piezas_coleccion(v_id_coleccion IN coleccion.uid_coleccion%TYPE, finc date) RETURNS 
   TABLE 
                (uid_pieza  numeric(3)   
@@ -556,99 +586,101 @@ AS $$
             ORDER BY c.uid_coleccion, p.uid_pieza ASC;
         END IF;
   END;
-	$$ LANGUAGE plpgsql;	
-
-CREATE OR REPLACE FUNCTION datos_pieza(v_id_pieza IN pieza.uid_pieza%TYPE,v_id_coleccion IN coleccion.uid_coleccion%TYPE, finc date) RETURNS 
-  TABLE 
-               (uid_pieza  numeric(3)   
-               , coleccion varchar(40)
-               , molde text
-               , precio numeric(8,2)
-               , linea text
-               , categoria text
-               , forma text
-               , descripcion varchar(256))
-AS $$
-  DECLARE
-    linea varchar(10);
-  BEGIN
-        SELECT	c.linea INTO linea
-        FROM coleccion c
-        WHERE c.uid_coleccion = v_id_coleccion;
-
-
-    		IF linea = 'F' THEN
-          RETURN QUERY
-            SELECT p.uid_pieza, 
-                c.nombre coleccion, 
-                m.molde, 
-                f.precio,
-                CASE
-                  WHEN c.linea = 'F' THEN 'Familiar'
-                  WHEN c.linea = 'I' THEN 'Institucional'
-                END linea,
-                CASE
-                  WHEN c.categoria = 'cou' THEN 'Country'
-                  WHEN c.categoria = 'cla' THEN 'Clásica'
-                  WHEN c.categoria = 'mod' THEN 'Moderna'
-                END categoria,
-                CASE 
-                  WHEN mo.forma = 'ova' THEN 'Ovalada'
-                  WHEN mo.forma = 'rec' THEN 'Rectangular'
-                  WHEN mo.forma = 'cua' THEN 'Cuadrado'
-                  WHEN mo.forma = 'red' THEN 'Redondo'
-                  ELSE ''
-                END forma,
-                p.descripcion
-            FROM coleccion c, molde mo, nombres_moldes m, familiar_historico_precio f, pieza p
-            WHERE c.uid_coleccion = p.uid_coleccion
-            AND p.uid_pieza = v_id_pieza
-            AND m.uid_molde = p.uid_molde
-            AND mo.uid_molde = p.uid_molde
-            AND c.uid_coleccion = f.uid_coleccion AND f.uid_pieza = p.uid_pieza
-            AND f.fecha_inicio::date = obtener_fecha_historico(p.uid_pieza,finc)
-            AND c.uid_coleccion = v_id_coleccion
-            ORDER BY c.uid_coleccion, p.uid_pieza ASC;
-            
-        ELSE
-
-          RETURN QUERY
-            SELECT p.uid_pieza, 
-                c.nombre coleccion, 
-                m.molde, 
-                p.precio,
-                CASE
-                  WHEN c.linea = 'F' THEN 'Familiar'
-                  WHEN c.linea = 'I' THEN 'Institucional'
-                END linea,
-                
-                CASE
-                  WHEN c.categoria = 'cou' THEN 'Country'
-                  WHEN c.categoria = 'cla' THEN 'Clásica'
-                  WHEN c.categoria = 'mod' THEN 'Moderna'
-                END categoria,
-
-                CASE 
-                  WHEN mo.forma = 'ova' THEN 'Ovalada'
-                  WHEN mo.forma = 'rec' THEN 'Rectangular'
-                  WHEN mo.forma = 'cua' THEN 'Cuadrado'
-                  WHEN mo.forma = 'red' THEN 'Redondo'
-                  ELSE ''
-                END forma,
-                p.descripcion
-            FROM coleccion c, molde mo, nombres_moldes m, pieza p
-            WHERE c.uid_coleccion = p.uid_coleccion
-            AND p.uid_pieza = v_id_pieza
-            AND m.uid_molde = p.uid_molde
-            AND mo.uid_molde = p.uid_molde
-            AND c.uid_coleccion = v_id_coleccion
-            ORDER BY c.uid_coleccion, p.uid_pieza ASC;
-        END IF;
-  END;
-$$ LANGUAGE plpgsql;	
+	$$ LANGUAGE plpgsql;
+COMMIT;
+	
+COMMIT;
+	CREATE OR REPLACE FUNCTION datos_pieza(v_id_pieza IN pieza.uid_pieza%TYPE,v_id_coleccion IN coleccion.uid_coleccion%TYPE, finc date) RETURNS 
+	  TABLE 
+				   (uid_pieza  numeric(3)   
+				   , coleccion varchar(40)
+				   , molde text
+				   , precio numeric(8,2)
+				   , linea text
+				   , categoria text
+				   , forma text
+				   , descripcion varchar(256))
+	AS $$
+	  DECLARE
+		linea varchar(10);
+	  BEGIN
+			SELECT	c.linea INTO linea
+			FROM coleccion c
+			WHERE c.uid_coleccion = v_id_coleccion;
 
 
+				IF linea = 'F' THEN
+			  RETURN QUERY
+				SELECT p.uid_pieza, 
+					c.nombre coleccion, 
+					m.molde, 
+					f.precio,
+					CASE
+					  WHEN c.linea = 'F' THEN 'Familiar'
+					  WHEN c.linea = 'I' THEN 'Institucional'
+					END linea,
+					CASE
+					  WHEN c.categoria = 'cou' THEN 'Country'
+					  WHEN c.categoria = 'cla' THEN 'Clásica'
+					  WHEN c.categoria = 'mod' THEN 'Moderna'
+					END categoria,
+					CASE 
+					  WHEN mo.forma = 'ova' THEN 'Ovalada'
+					  WHEN mo.forma = 'rec' THEN 'Rectangular'
+					  WHEN mo.forma = 'cua' THEN 'Cuadrado'
+					  WHEN mo.forma = 'red' THEN 'Redondo'
+					  ELSE ''
+					END forma,
+					p.descripcion
+				FROM coleccion c, molde mo, nombres_moldes m, familiar_historico_precio f, pieza p
+				WHERE c.uid_coleccion = p.uid_coleccion
+				AND p.uid_pieza = v_id_pieza
+				AND m.uid_molde = p.uid_molde
+				AND mo.uid_molde = p.uid_molde
+				AND c.uid_coleccion = f.uid_coleccion AND f.uid_pieza = p.uid_pieza
+				AND f.fecha_inicio::date = obtener_fecha_historico(p.uid_pieza,finc)
+				AND c.uid_coleccion = v_id_coleccion
+				ORDER BY c.uid_coleccion, p.uid_pieza ASC;
+
+			ELSE
+
+			  RETURN QUERY
+				SELECT p.uid_pieza, 
+					c.nombre coleccion, 
+					m.molde, 
+					p.precio,
+					CASE
+					  WHEN c.linea = 'F' THEN 'Familiar'
+					  WHEN c.linea = 'I' THEN 'Institucional'
+					END linea,
+
+					CASE
+					  WHEN c.categoria = 'cou' THEN 'Country'
+					  WHEN c.categoria = 'cla' THEN 'Clásica'
+					  WHEN c.categoria = 'mod' THEN 'Moderna'
+					END categoria,
+
+					CASE 
+					  WHEN mo.forma = 'ova' THEN 'Ovalada'
+					  WHEN mo.forma = 'rec' THEN 'Rectangular'
+					  WHEN mo.forma = 'cua' THEN 'Cuadrado'
+					  WHEN mo.forma = 'red' THEN 'Redondo'
+					  ELSE ''
+					END forma,
+					p.descripcion
+				FROM coleccion c, molde mo, nombres_moldes m, pieza p
+				WHERE c.uid_coleccion = p.uid_coleccion
+				AND p.uid_pieza = v_id_pieza
+				AND m.uid_molde = p.uid_molde
+				AND mo.uid_molde = p.uid_molde
+				AND c.uid_coleccion = v_id_coleccion
+				ORDER BY c.uid_coleccion, p.uid_pieza ASC;
+			END IF;
+	  END;
+	$$ LANGUAGE plpgsql;
+BEGIN;
 --Fin de utilizado en reporte
+
 
 
 

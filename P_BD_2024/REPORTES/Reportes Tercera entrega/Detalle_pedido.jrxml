@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Detalle_pedido" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="376eac70-7161-485f-8dce-25ef74ee17c0">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Proyecto_BD"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<queryString>
+		<![CDATA[SELECT * FROM datos_basico_pedido(1);]]>
+	</queryString>
+	<field name="uid_pedido" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="uid_pedido"/>
+		<property name="com.jaspersoft.studio.field.label" value="uid_pedido"/>
+	</field>
+	<field name="fecha_emision" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_emision"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_emision"/>
+	</field>
+	<field name="fecha_entrega" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_entrega"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_entrega"/>
+	</field>
+	<field name="fecha_entrega_deseada" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_entrega_deseada"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_entrega_deseada"/>
+	</field>
+	<field name="nombre_pais" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre_pais"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre_pais"/>
+	</field>
+	<field name="nombre_cliente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre_cliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre_cliente"/>
+	</field>
+	<field name="telefono_cliente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="telefono_cliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="telefono_cliente"/>
+	</field>
+	<field name="email_cliente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="email_cliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="email_cliente"/>
+	</field>
+	<field name="estado_pedido" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="estado_pedido"/>
+		<property name="com.jaspersoft.studio.field.label" value="estado_pedido"/>
+	</field>
+	<field name="tipo_pedido" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="tipo_pedido"/>
+		<property name="com.jaspersoft.studio.field.label" value="tipo_pedido"/>
+	</field>
+	<field name="monto_total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="monto_total"/>
+		<property name="com.jaspersoft.studio.field.label" value="monto_total"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="91" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="1" width="567" height="90" forecolor="#778C43" uuid="95b3d3f3-4bb2-41e8-946b-d24dd2fb2b6d"/>
+				<box topPadding="8" leftPadding="2" bottomPadding="6" rightPadding="6">
+					<pen lineStyle="Solid" lineColor="#0B6233"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#0B6233"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Poppins SemiBold" size="26"/>
+				</textElement>
+				<text><![CDATA[CERÁMICA REAL]]></text>
+			</staticText>
+			<image vAlign="Middle" onErrorType="Icon">
+				<reportElement x="210" y="-10" width="90" height="75" uuid="dd9cf973-1490-4718-bb05-bc646e617737"/>
+				<imageExpression><![CDATA["logo_emp.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="440" y="10" width="128" height="30" uuid="1fab036f-52f9-4149-ac85-d478bc4e3ad4"/>
+				<box padding="4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Poppins" size="10"/>
+				</textElement>
+				<text><![CDATA[Grupo #2]]></text>
+			</staticText>
+			<textField pattern="MMMMM &apos;de&apos; yyyy" isBlankWhenNull="true">
+				<reportElement x="20" y="60" width="547" height="31" uuid="26812844-8bef-43d2-b163-443abdfedf1d"/>
+				<box padding="4">
+					<pen lineColor="#7DA44E"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins Medium" size="15" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PEDIDO #"+ $F{uid_pedido} +" DE " +UPPER($F{nombre_cliente})]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

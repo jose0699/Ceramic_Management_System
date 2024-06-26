@@ -3,9 +3,10 @@
 --Pedido Completo
 CREATE OR REPLACE FUNCTION DATOS_BASICO_PEDIDO (num_pedido numeric(6))
 	RETURNS TABLE (
-		fecha_emision timestamp,
-		fecha_entrega timestamp,
-		fecha_entrega_deseada timestamp,
+		uid_pedido numeric(6),
+		fecha_emision date,
+		fecha_entrega date,
+		fecha_entrega_deseada date,
 		nombre_pais varchar(40),
 		nombre_cliente  varchar(50),
 		telefono_cliente varchar(15),
@@ -20,7 +21,9 @@ DECLARE
 BEGIN
     SELECT CALCULAR_MONTO_FACTURA(num_pedido) INTO monto_total;
 	RETURN QUERY
-	SELECT p.fecha_emision,
+	SELECT 
+			 p.uid_pedido,
+			 p.fecha_emision,
 		   p.fecha_entrega,
 		   p.fecha_entrega_deseada,
 		   pa.nombre,
@@ -55,7 +58,7 @@ CALL INFORME_MENSUAL_VENTA('2024-03-10');
 select * from cliente c, pais p where p.uid_pais = c.uid_pais and uid_cliente = 9
 
 select * from factura  f 
-where f.fecha_emision = '2024-09-10 10:50:00'
+where f.fecha_emision = '2024-09-10'
 
 SELECT * /*COALESCE ((SUM(dp.cantidad * pi.precio)), 0)*/ FROM factura f
 		INNER JOIN PEDIDO p ON f.uid_pedido = p.uid_pedido

@@ -185,11 +185,7 @@ BEGIN;
 		uid_coleccion numeric(2) not null,
 		nombre varchar(40) not null UNIQUE,
 		fecha_lanzamiento date not null, 
-<<<<<<< Updated upstream
 		linea varchar(1) not null,
-=======
-		linea varchar(20) not null,
->>>>>>> Stashed changes
 		categoria varchar(3) not null,
 		descripcion_mot_color varchar (512) not null,
 		CONSTRAINT check_linea_coleccion CHECK(linea in ('I', 'F')),
@@ -336,9 +332,9 @@ BEGIN;
 	CREATE TABLE PEDIDO(
 		uid_cliente numeric(3) not null,
 		uid_pedido numeric(6) not null,
-		fecha_emision timestamp not null,
-		fecha_entrega timestamp,
-		fecha_entrega_deseada timestamp not null,
+		fecha_emision date not null,
+		fecha_entrega date,
+		fecha_entrega_deseada date not null,
 		estado varchar(1) not null,
 		tipo_pedido varchar(1) not null,
 		CONSTRAINT check_estado_pedido CHECK(estado in ('A', 'C', 'E')),
@@ -364,7 +360,7 @@ BEGIN;
 		uid_cliente numeric(3) not null,
 		uid_pedido numeric(6) not null,
 		numero_factura numeric(6) not null,
-		fecha_emision timestamp not null,
+		fecha_emision date not null,
 		monto_total numeric(8,2) not null,
 		CONSTRAINT fk_pedido FOREIGN KEY ( uid_cliente, uid_pedido) REFERENCES PEDIDO ( uid_cliente, uid_pedido),
 		CONSTRAINT pk_factura PRIMARY KEY ( uid_cliente, uid_pedido, numero_factura)
@@ -1296,7 +1292,7 @@ AS $$
 	$$ LANGUAGE plpgsql;
 COMMIT;
 	
-COMMIT;
+BEGIN;
 	CREATE OR REPLACE FUNCTION datos_pieza(v_id_pieza IN pieza.uid_pieza%TYPE,v_id_coleccion IN coleccion.uid_coleccion%TYPE, finc date) RETURNS 
 	  TABLE 
 				   (uid_pieza  numeric(3)   
@@ -1385,7 +1381,7 @@ COMMIT;
 			END IF;
 	  END;
 	$$ LANGUAGE plpgsql;
-BEGIN;
+COMMIT;
 --Fin de utilizado en reporte
 
 --------------------------------------------------------------------------------------------------------
@@ -1779,34 +1775,34 @@ BEGIN;	insert into cliente values( nextval('cliente_uid_seq'), 'Zanzibar',' 56 2
 --Tabla Intermedias
 
 /*Contratos*/
-BEGIN;	insert into contrato values (1,nextval('contrato_uid_seq') ,15 ,'2022-04-10 08:51:00' );	COMMIT;--1
-BEGIN;	insert into contrato values (2,nextval('contrato_uid_seq')  ,20 ,'2021-05-01 14:57:00' );	COMMIT;--2
-BEGIN;	insert into contrato values (3,nextval('contrato_uid_seq') ,30 ,'2019-06-08 15:49:00'  );	COMMIT;--3
-BEGIN;	insert into contrato values (4,nextval('contrato_uid_seq') ,15 , '2018-07-14 16:25:00' );	COMMIT;--4
-BEGIN;	insert into contrato values ( 5,nextval('contrato_uid_seq'), 10, '2020-10-16 09:21:00' );	COMMIT;--5
-BEGIN;	insert into contrato values (6,nextval('contrato_uid_seq') , 5, '2018-02-12 10:30:00');	COMMIT;--6
-BEGIN;	insert into contrato values (7,nextval('contrato_uid_seq') , 10, '2019-04-24 11:12:00' );	COMMIT;--7
-BEGIN;	insert into contrato values ( 8,nextval('contrato_uid_seq'), 15, '2023-03-31 17:45:00');	COMMIT;--8
-BEGIN;	insert into contrato values ( 9,nextval('contrato_uid_seq'), 20, '2024-01-02 10:50:00');	COMMIT;--9
+BEGIN;	insert into contrato values (1,nextval('contrato_uid_seq') ,15 ,'2022-04-10' );	COMMIT;--1
+BEGIN;	insert into contrato values (2,nextval('contrato_uid_seq')  ,20 ,'2021-05-01' );	COMMIT;--2
+BEGIN;	insert into contrato values (3,nextval('contrato_uid_seq') ,30 ,'2019-06-08'  );	COMMIT;--3
+BEGIN;	insert into contrato values (4,nextval('contrato_uid_seq') ,15 , '2018-07-14' );	COMMIT;--4
+BEGIN;	insert into contrato values ( 5,nextval('contrato_uid_seq'), 10, '2020-10-16' );	COMMIT;--5
+BEGIN;	insert into contrato values (6,nextval('contrato_uid_seq') , 5, '2018-02-12');	COMMIT;--6
+BEGIN;	insert into contrato values (7,nextval('contrato_uid_seq') , 10, '2019-04-24' );	COMMIT;--7
+BEGIN;	insert into contrato values ( 8,nextval('contrato_uid_seq'), 15, '2023-03-31');	COMMIT;--8
+BEGIN;	insert into contrato values ( 9,nextval('contrato_uid_seq'), 20, '2024-01-02');	COMMIT;--9
 
 /*pedido*/
-BEGIN;	insert into pedido values(1,nextval('pedido_uid_seq') ,'2024-01-18 10:50:00' ,null,'2024-03-18 10:50:00' , 'A','F' );	COMMIT;--1
-BEGIN;  insert into pedido values(2,nextval('pedido_uid_seq') ,'2024-02-17 10:50:00' ,null,'2024-04-17 10:50:00'  , 'E','I' );	COMMIT;--2
-BEGIN;	insert into pedido values(3,nextval('pedido_uid_seq') ,'2024-03-16 10:50:00' ,null,'2024-05-16 10:50:00'  , 'A','I' );	COMMIT;--3
-BEGIN;	insert into pedido values(4,nextval('pedido_uid_seq') ,'2024-04-15 10:50:00' ,null,'2024-06-15 10:50:00'  , 'E','I' );	COMMIT;--4
-BEGIN;	insert into pedido values(5,nextval('pedido_uid_seq') ,'2024-05-14 10:50:00' ,null,'2024-07-14 10:50:00'  , 'A','I' );	COMMIT;--5
-BEGIN;	insert into pedido values(6,nextval('pedido_uid_seq') ,'2024-06-13 10:50:00' ,null,'2024-08-13 10:50:00' , 'E','I' );	COMMIT;--6
-BEGIN;	insert into pedido values(7,nextval('pedido_uid_seq') ,'2024-07-12 10:50:00' ,null,'2024-09-12 10:50:00'  , 'E','I' );	COMMIT;--7
-BEGIN;	insert into pedido values(8,nextval('pedido_uid_seq') ,'2024-08-11 10:50:00' ,null,'2024-10-11 10:50:00'  , 'A','I' );	COMMIT;--8
-BEGIN;	insert into pedido values(9,nextval('pedido_uid_seq') ,'2024-09-10 10:50:00' ,null,'2024-11-10 10:50:00' , 'A','I' );	COMMIT;--9
+BEGIN;	insert into pedido values(1,nextval('pedido_uid_seq') ,'2024-01-18' ,null,'2024-03-18' , 'A','F' );	COMMIT;--1
+BEGIN;  insert into pedido values(2,nextval('pedido_uid_seq') ,'2024-02-17' ,null,'2024-04-17'  , 'E','I' );	COMMIT;--2
+BEGIN;	insert into pedido values(3,nextval('pedido_uid_seq') ,'2024-03-16' ,null,'2024-05-16'  , 'A','I' );	COMMIT;--3
+BEGIN;	insert into pedido values(4,nextval('pedido_uid_seq') ,'2024-04-15' ,null,'2024-06-15'  , 'E','I' );	COMMIT;--4
+BEGIN;	insert into pedido values(5,nextval('pedido_uid_seq') ,'2024-05-14' ,null,'2024-07-14'  , 'A','I' );	COMMIT;--5
+BEGIN;	insert into pedido values(6,nextval('pedido_uid_seq') ,'2024-06-13' ,null,'2024-08-13' , 'E','I' );	COMMIT;--6
+BEGIN;	insert into pedido values(7,nextval('pedido_uid_seq') ,'2024-07-12' ,null,'2024-09-12'  , 'E','I' );	COMMIT;--7
+BEGIN;	insert into pedido values(8,nextval('pedido_uid_seq') ,'2024-08-11' ,null,'2024-10-11'  , 'A','I' );	COMMIT;--8
+BEGIN;	insert into pedido values(9,nextval('pedido_uid_seq') ,'2024-09-10' ,null,'2024-11-10' , 'A','I' );	COMMIT;--9
 --Tablas Intercepcion
 
 /*Factura*/
-BEGIN;	insert into factura values( 1,1,nextval('factura_uid_seq') ,'2024-01-18 10:50:00' , 943.5 );	COMMIT;--1
-BEGIN;	insert into factura values( 9,9,nextval('factura_uid_seq') ,'2024-09-10 10:50:00', 186.4 );	COMMIT; --5 
-BEGIN;	insert into factura values( 3,3,nextval('factura_uid_seq') ,'2024-03-16 10:50:00' , 420 );	COMMIT;--2
-BEGIN;	insert into factura values( 5,5,nextval('factura_uid_seq') ,'2024-05-14 10:50:00' , 324 );	COMMIT; --3
-BEGIN;	insert into factura values( 8,8,nextval('factura_uid_seq') ,'2024-08-11 10:50:00', 1107.25 );	COMMIT; --4
+BEGIN;	insert into factura values( 1,1,nextval('factura_uid_seq') ,'2024-01-18' , 943.5 );	COMMIT;--1
+BEGIN;	insert into factura values( 9,9,nextval('factura_uid_seq') ,'2024-09-10', 186.4 );	COMMIT; --5 
+BEGIN;	insert into factura values( 3,3,nextval('factura_uid_seq') ,'2024-03-16' , 420 );	COMMIT;--2
+BEGIN;	insert into factura values( 5,5,nextval('factura_uid_seq') ,'2024-05-14' , 324 );	COMMIT; --3
+BEGIN;	insert into factura values( 8,8,nextval('factura_uid_seq') ,'2024-08-11', 1107.25 );	COMMIT; --4
 
 /*Detalle pedido Pieza*/	
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1,1 , 1,1 ,1);	COMMIT;
@@ -1814,20 +1810,22 @@ BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1,1 , 2,1 ,null,1,1);	COMMIT;
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1,1 , 3,1 ,null,1,2);	COMMIT;
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1,1 , 4,1 ,null,1,3);	COMMIT;
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1,1 , 5,1 ,null,1,4);	COMMIT;
-BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 3, 3, 7,24 , null, 1, 10);	COMMIT;
-BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 5, 5, 8,30 ,null , 2,19);	COMMIT;
-BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 9,15 ,2 );	COMMIT;
-BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 10,15 ,null,1,5);	COMMIT;
-BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 11,15 ,null,1,6);	COMMIT;
-BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 12,15 ,null,1,7 );	COMMIT;
-BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 13,15 ,null,1,8 );	COMMIT;
-BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 14,15 ,null,1,9);	COMMIT;
-BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 15,15 ,null,1,10 );	COMMIT;
-BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 9, 9, 5,18 ,null , 3,27);	COMMIT;
+BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 3, 3, 1,24 , null, 1, 10);	COMMIT;
+BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 5, 5, 1,30 ,null , 2,19);	COMMIT;
+BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 1,15 ,2 );	COMMIT;
+BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 2,15 ,null,1,5);	COMMIT;
+BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 3,15 ,null,1,6);	COMMIT;
+BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 4,15 ,null,1,7 );	COMMIT;
+BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 5,15 ,null,1,8 );	COMMIT;
+BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 6,15 ,null,1,9);	COMMIT;
+BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 8, 8, 7,15 ,null,1,10 );	COMMIT;
+BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 9, 9, 1,18 ,null , 3,27);	COMMIT;
 
 --------------------------------------------------------------------------------------------------------
 --                                      CONSULTAS REPORTES                                            --
 --------------------------------------------------------------------------------------------------------
+
+/*
 
 -- REPORTE HORARIO MENSUAL DE HORNEROS
 
@@ -2075,6 +2073,7 @@ AND d.uid_pieza = p.uid_pieza
 AND m.uid_molde = p.uid_molde
 AND d.uid_coleccion = $P{id coleccion} 
 
+*/
 
 
 

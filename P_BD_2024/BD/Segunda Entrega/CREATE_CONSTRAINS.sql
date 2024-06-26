@@ -187,11 +187,7 @@ BEGIN;
 		uid_coleccion numeric(2) not null,
 		nombre varchar(40) not null UNIQUE,
 		fecha_lanzamiento date not null, 
-<<<<<<< Updated upstream
 		linea varchar(1) not null,
-=======
-		linea varchar(20) not null,
->>>>>>> Stashed changes
 		categoria varchar(3) not null,
 		descripcion_mot_color varchar (512) not null,
 		CONSTRAINT check_linea_coleccion CHECK(linea in ('I', 'F')),
@@ -338,9 +334,9 @@ BEGIN;
 	CREATE TABLE PEDIDO(
 		uid_cliente numeric(3) not null,
 		uid_pedido numeric(6) not null,
-		fecha_emision timestamp not null,
-		fecha_entrega timestamp,
-		fecha_entrega_deseada timestamp not null,
+		fecha_emision date not null,
+		fecha_entrega date,
+		fecha_entrega_deseada date not null,
 		estado varchar(1) not null,
 		tipo_pedido varchar(1) not null,
 		CONSTRAINT check_estado_pedido CHECK(estado in ('A', 'C', 'E')),
@@ -366,7 +362,7 @@ BEGIN;
 		uid_cliente numeric(3) not null,
 		uid_pedido numeric(6) not null,
 		numero_factura numeric(6) not null,
-		fecha_emision timestamp not null,
+		fecha_emision date not null,
 		monto_total numeric(8,2) not null,
 		CONSTRAINT fk_pedido FOREIGN KEY ( uid_cliente, uid_pedido) REFERENCES PEDIDO ( uid_cliente, uid_pedido),
 		CONSTRAINT pk_factura PRIMARY KEY ( uid_cliente, uid_pedido, numero_factura)

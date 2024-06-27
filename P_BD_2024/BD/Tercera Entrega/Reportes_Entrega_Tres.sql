@@ -4,9 +4,9 @@
 CREATE OR REPLACE FUNCTION DATOS_BASICO_PEDIDO (num_pedido numeric(6))
 	RETURNS TABLE (
 		uid_pedido numeric(6),
-		fecha_emision date,
-		fecha_entrega date,
-		fecha_entrega_deseada date,
+		fecha_emision text,
+		fecha_entrega text,
+		fecha_entrega_deseada text,
 		nombre_pais varchar(40),
 		nombre_cliente  varchar(50),
 		telefono_cliente varchar(15),
@@ -23,9 +23,9 @@ BEGIN
 	RETURN QUERY
 	SELECT 
 			 p.uid_pedido,
-			 p.fecha_emision,
-		   p.fecha_entrega,
-		   p.fecha_entrega_deseada,
+			 to_char(p.fecha_emision, 'DD "de" TMMonth "de" YYYY'),
+		   to_char(p.fecha_entrega,'DD "de" TMMonth "de" YYYY'),
+		   to_char(p.fecha_entrega_deseada, 'DD "de" TMMonth "de" YYYY'),
 		   pa.nombre,
 		   c.nombre,
 		   c.telefono,
@@ -46,6 +46,42 @@ BEGIN
 	WHERE p.uid_pedido = num_pedido; 
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+--Subreporte Piezas del pedido
+SELECT 
+	d.uid_detalle,
+	p.uid_pieza,
+	c.nombre AS nombre_col,
+	m.molde,
+	d.cantidad,
+	p.precio * d.cantidad AS p_inst,
+	f.precio * d.cantidad AS p_fami
+FROM detalle_pedido_pieza d
+JOIN pedido x ON x.uid_pedido = d.uid_pedido
+JOIN pieza p ON p.uid_pieza = d.uid_pieza
+LEFT JOIN familiar_historico_precio f ON p.uid_pieza = f.uid_pieza AND f.fecha_inicio::date = obtener_fecha_historico(p.uid_pieza,x.fecha_entrega)
+JOIN nombres_moldes m ON m.uid_molde = p.uid_molde
+JOIN coleccion c ON c.uid_coleccion = p.uid_coleccion
+WHERE d.uid_pedido = $P{id_Pedido} 
+ORDER BY uid_detalle DESC;
+
+--Subreporte Vajillas del pedido
+SELECT DISTINCT
+	d.uid_detalle,
+	v.uid_juego,
+	c.nombre AS nombre_col,
+	v.nombre AS nombre_vaj,
+	d.cantidad,
+	calcular_precio_vajilla(v.uid_juego, x.uid_coleccion, p.fecha_entrega) precio
+FROM detalle_pedido_pieza d
+JOIN pedido p ON p.uid_pedido = d.uid_pedido
+JOIN vajilla v ON v.uid_juego = d.uid_juego
+JOIN detalle_pieza_vajilla x ON v.uid_juego = x.uid_juego
+JOIN coleccion c ON c.uid_coleccion = x.uid_coleccion
+WHERE d.uid_pedido = $P{id_Pedido} 
+ORDER BY uid_detalle DESC;
 
 
 --Factura completa 

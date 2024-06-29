@@ -1799,10 +1799,11 @@ BEGIN;	insert into pedido values(9,nextval('pedido_uid_seq') ,'2024-09-10' ,'202
 
 /*Factura*/
 BEGIN;	insert into factura values( 1,1,nextval('factura_uid_seq') ,'2024-01-18' , 943.5 );	COMMIT;--1
-BEGIN;	insert into factura values( 9,9,nextval('factura_uid_seq') ,'2024-09-10', 186.4 );	COMMIT; --5 
-BEGIN;	insert into factura values( 3,3,nextval('factura_uid_seq') ,'2024-03-16' , 420 );	COMMIT;--2
-BEGIN;	insert into factura values( 5,5,nextval('factura_uid_seq') ,'2024-05-14' , 324 );	COMMIT; --3
-BEGIN;	insert into factura values( 8,8,nextval('factura_uid_seq') ,'2024-08-11', 1107.25 );	COMMIT; --4
+BEGIN;	insert into factura values( 9,9,nextval('factura_uid_seq') ,'2024-09-10', 186.4 );	COMMIT; --2 
+BEGIN;	insert into factura values( 3,3,nextval('factura_uid_seq') ,'2024-03-16' , 420 );	COMMIT;--3
+BEGIN;	insert into factura values( 5,5,nextval('factura_uid_seq') ,'2024-05-14' , 324 );	COMMIT; --4
+BEGIN;	insert into factura values( 8,8,nextval('factura_uid_seq') ,'2024-08-11', 1107.25 );	COMMIT; --5
+BEGIN;	insert into factura values( 4,4,nextval('factura_uid_seq') ,'2024-08-15', 1107.25 );	COMMIT; --6
 
 /*Detalle pedido Pieza*/	
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1,1 , 1,2 ,1);	COMMIT;
@@ -1823,8 +1824,10 @@ BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 9, 9, 1,18 ,null, 3,27);	COMMIT;
 
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 4, 4, 1,15 ,null,4,35 );	COMMIT;
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 4, 4, 2,15 ,null, 4,38);	COMMIT;
-BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1, 1, 7,8 ,null,2,20 );	COMMIT;
+BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 4, 4, 3,2,7);	COMMIT;
+BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 4, 4, 4,2,8);	COMMIT;
 
+BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1, 1, 7,8 ,null,2,20 );	COMMIT;
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1, 1, 6,8 ,null, 2,16);	COMMIT;
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1, 1, 7,8 ,null,2,20 );	COMMIT;
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1, 1, 8,3,3);	COMMIT;

@@ -139,7 +139,7 @@ BEGIN
 		   monto_sin_descuento,
 		   Descuento,
 			 --LEER: mira este nuevo valor lo agregué porque en la factura necesito el monto del descuento como tal, si quieres cambia el lugar en donde se hace el calculo, pero de ser posible deja el Alias como monto_descontado
-			 round(monto*(Descuento/100), 2)::Numeric(8,2) AS monto_descontado,
+			 round(monto_sin_descuento*(Descuento/100), 2)::Numeric(8,2) AS monto_descontado,
 		   monto
 	FROM CLIENTE c
 		INNER JOIN PEDIDO p ON c.uid_cliente = p.uid_cliente
@@ -149,7 +149,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
---Subreporte Piezas del pedido
+--Subreporte Piezas de la factura
 	SELECT 
 		d.uid_detalle, 	
 		p.uid_pieza, 
@@ -162,23 +162,23 @@ $$ LANGUAGE plpgsql;
 		p.precio AS p_inst,
 		f.precio AS p_fami,
 		CASE
-		  WHEN p.precio IS NOT NULL THEN round(p.precio * (con.porcentaje_descuento/100),2)
-		  WHEN f.precio IS NOT NULL THEN round(f.precio * (con.porcentaje_descuento/100),2)
+		  WHEN p.precio IS NOT NULL THEN round(p.precio * (COALESCE(con.porcentaje_descuento,0)/100),2)
+		  WHEN f.precio IS NOT NULL THEN round(f.precio * (COALESCE(con.porcentaje_descuento,0)/100),2)
 		END descuento,
 		CASE
-		  WHEN p.precio IS NOT NULL THEN (d.cantidad*p.precio)-round(p.precio * (con.porcentaje_descuento/100),2)
-		  WHEN f.precio IS NOT NULL THEN (d.cantidad*f.precio)-round(f.precio * (con.porcentaje_descuento/100),2)
+		  WHEN p.precio IS NOT NULL THEN (d.cantidad*p.precio)-(d.cantidad*round(p.precio * (COALESCE(con.porcentaje_descuento,0)/100),2))
+		  WHEN f.precio IS NOT NULL THEN (d.cantidad*f.precio)-(d.cantidad*round(f.precio * (COALESCE(con.porcentaje_descuento,0)/100),2))
 		END total
 	FROM detalle_pedido_pieza d
 		JOIN pedido x ON x.uid_pedido = d.uid_pedido
-		LEFT JOIN contrato con ON con.uid_cliente = x.uid_cliente
+		LEFT JOIN contrato con ON con.uid_cliente = x.uid_cliente AND con.fecha_hora_fin IS NULL
 		JOIN pieza p ON p.uid_pieza = d.uid_pieza
 		LEFT JOIN familiar_historico_precio f ON p.uid_pieza = f.uid_pieza AND f.fecha_inicio::date = obtener_fecha_historico(p.uid_pieza,x.fecha_entrega)
 		JOIN nombres_moldes m ON m.uid_molde = p.uid_molde
 		JOIN coleccion c ON c.uid_coleccion = p.uid_coleccion
 	WHERE d.uid_pedido in (SELECT fr.uid_pedido FROM FACTURA fr WHERE fr.numero_factura = $P{id_factura})ORDER BY uid_detalle DESC;
 
---Subreporte Vajillas del pedido
+--Subreporte Vajillas de la factura
 WITH precios_vaj AS(
 	SELECT DISTINCT
 	v.uid_juego, 
@@ -206,12 +206,12 @@ SELECT DISTINCT
 		v.nombre AS nombre_vaj, 
 		d.cantidad, 
 		prv.precio AS precio,
-		round(prv.precio * (con.porcentaje_descuento/100),2) descuento,
-		d.cantidad*round(prv.precio * (con.porcentaje_descuento/100),2) descuento_total,
-		(d.cantidad*prv.precio)-round(prv.precio * (con.porcentaje_descuento/100),2) total
+		round(prv.precio * (COALESCE(con.porcentaje_descuento,0)/100),2) descuento,
+		d.cantidad*round(prv.precio * (COALESCE(con.porcentaje_descuento,0)/100),2) descuento_total,
+		(d.cantidad*prv.precio)-(d.cantidad*round(prv.precio * (COALESCE(con.porcentaje_descuento,0)/100),2)) total
 	FROM detalle_pedido_pieza d
 		JOIN pedido p ON p.uid_pedido = d.uid_pedido
-		LEFT JOIN contrato con ON con.uid_cliente = p.uid_cliente
+		LEFT JOIN contrato con ON con.uid_cliente = p.uid_cliente AND con.fecha_hora_fin IS NULL
 		JOIN vajilla v ON v.uid_juego = d.uid_juego
 		JOIN precios_vaj prv ON prv.uid_juego = v.uid_juego 
 		JOIN detalle_pieza_vajilla x ON v.uid_juego = x.uid_juego
@@ -221,6 +221,92 @@ SELECT DISTINCT
 --------------------------------------------------------------------------------------------------------------------
 -----                                    Informe mensual de Venta                                           --------
 --------------------------------------------------------------------------------------------------------------------
+
+
+--Reporte ventas de PIEZAS por linea y coleccion
+	SELECT 
+		p.uid_pieza, 
+		CASE
+      WHEN c.categoria = 'cou' THEN 'Country'
+      WHEN c.categoria = 'cla' THEN 'Clásica'
+      WHEN c.categoria = 'mod' THEN 'Moderna'
+    END categoria,
+		c.nombre AS nombre_col, 
+		m.molde, 
+		SUM(d.cantidad) cantidad,
+		p.precio AS p_inst,
+		f.precio AS p_fami,
+		SUM(CASE
+		  WHEN p.precio IS NOT NULL THEN round(p.precio * (COALESCE(con.porcentaje_descuento,0)/100),2)
+		  WHEN f.precio IS NOT NULL THEN round(f.precio * (COALESCE(con.porcentaje_descuento,0)/100),2)
+		END) descuento,
+		SUM(CASE
+		  WHEN p.precio IS NOT NULL THEN (d.cantidad*p.precio)-(d.cantidad*round(p.precio * (COALESCE(con.porcentaje_descuento,0)/100),2))
+		  WHEN f.precio IS NOT NULL THEN (d.cantidad*f.precio)-(d.cantidad*round(f.precio * (COALESCE(con.porcentaje_descuento,0)/100),2))
+		END) total
+	FROM detalle_pedido_pieza d
+		JOIN pedido x ON x.uid_pedido = d.uid_pedido AND ((x.fecha_entrega 
+																												BETWEEN to_date(CONCAT(to_char($P{Año},'9999'),' ',to_char( $P{Numero_mes} ,'9999'),' ','01'),'YYYY MM DD') 
+																												AND to_date(CONCAT(to_char($P{Año},'9999'),' ',to_char( $P{Numero_mes}  ,'9999'),' ','01'),'YYYY MM DD')+interval'1 month'-interval'1 day') 
+																												AND x.estado = 'A')
+		LEFT JOIN contrato con ON con.uid_cliente = x.uid_cliente AND con.fecha_hora_fin IS NULL
+		JOIN pieza p ON p.uid_pieza = d.uid_pieza
+		LEFT JOIN familiar_historico_precio f ON p.uid_pieza = f.uid_pieza AND f.fecha_inicio::date = obtener_fecha_historico(p.uid_pieza,x.fecha_entrega)
+		JOIN nombres_moldes m ON m.uid_molde = p.uid_molde
+		JOIN coleccion c ON c.uid_coleccion = p.uid_coleccion
+	WHERE c.uid_coleccion in (SELECT uid_coleccion FROM coleccion col WHERE col.linea = upper(substring($P{Linea},1,1)) )
+	GROUP BY p.uid_pieza, categoria, nombre_col, m.molde, p_inst, p_fami
+	ORDER BY nombre_col ASC;
+
+
+--Subreporte ventas de VAJILLAS por linea y coleccion
+
+WITH precios_vaj AS(
+	SELECT DISTINCT
+	v.uid_juego, 
+	round(calcular_precio_vajilla(v.uid_juego, x.uid_coleccion, p.fecha_entrega),2) AS precio
+	FROM detalle_pedido_pieza d
+		JOIN pedido p ON p.uid_pedido = d.uid_pedido
+		JOIN vajilla v ON v.uid_juego = d.uid_juego
+		JOIN detalle_pieza_vajilla x ON v.uid_juego = x.uid_juego
+		JOIN coleccion c ON c.uid_coleccion = x.uid_coleccion
+	WHERE c.uid_coleccion in (SELECT uid_coleccion FROM coleccion col WHERE col.linea = $P{Linea})
+)
+
+
+
+SELECT 
+		v.uid_juego,
+	    CASE
+	      WHEN c.categoria = 'cou' THEN 'Country'
+	      WHEN c.categoria = 'cla' THEN 'Clásica'
+	      WHEN c.categoria = 'mod' THEN 'Moderna'
+	    END categoria,
+	    c.nombre nombre_col, 
+		v.nombre AS nombre_vaj, 
+		SUM(d.cantidad) cantidad, 
+		prv.precio AS precio,
+		SUM(round(prv.precio * (COALESCE(con.porcentaje_descuento,0)/100),2)) descuento,
+		SUM((d.cantidad*prv.precio)-(d.cantidad*round(prv.precio * (COALESCE(con.porcentaje_descuento,0)/100),2))) total
+	FROM detalle_pedido_pieza d
+		JOIN pedido p ON p.uid_pedido = d.uid_pedido AND ((p.fecha_entrega 
+																												BETWEEN to_date(CONCAT(to_char($P{Año},'9999'),' ',to_char( $P{Numero_mes} ,'9999'),' ','01'),'YYYY MM DD') 
+																												AND to_date(CONCAT(to_char($P{Año},'9999'),' ',to_char( $P{Numero_mes}  ,'9999'),' ','01'),'YYYY MM DD')+interval'1 month'-interval'1 day') 
+																												AND p.estado = 'A')
+		LEFT JOIN contrato con ON con.uid_cliente = p.uid_cliente AND con.fecha_hora_fin IS NULL
+		JOIN vajilla v ON v.uid_juego = d.uid_juego
+		JOIN precios_vaj prv ON prv.uid_juego = v.uid_juego 
+		JOIN (SELECT DISTINCT uid_juego, uid_coleccion FROM detalle_pieza_vajilla ORDER BY uid_juego, uid_coleccion ASC) AS x ON v.uid_juego = x.uid_juego
+		JOIN coleccion c ON c.uid_coleccion = x.uid_coleccion
+	WHERE c.uid_coleccion in (SELECT uid_coleccion FROM coleccion col WHERE col.linea = upper(substring($P{Linea},1,1))) 
+	GROUP BY v.uid_juego, categoria, nombre_col, nombre_vaj, precio
+	ORDER BY nombre_col ASC;
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------
+--NOTAS: De aquí no usé nada Mil perdones
 SELECT * FROM FACTURA
 
 CALL INFORME_MENSUAL_VENTA('2024-03-10');

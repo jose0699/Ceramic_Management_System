@@ -17,33 +17,33 @@
 		<parameterDescription><![CDATA[Tasa para ejecutar la conversión a Bs]]></parameterDescription>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[SELECT 
+		<![CDATA[	SELECT 
 		d.uid_detalle, 	
 		p.uid_pieza, 
 		CASE 
 		 WHEN position(' ' in c.nombre) != 0 THEN CONCAT(substring(c.nombre,1,1),'. ',substring(c.nombre,strpos(c.nombre, ' ')))
 		 ELSE c.nombre
-		END nombre_col, 
+		END nombre_col,
 		m.molde, 
 		d.cantidad,
 		p.precio AS p_inst,
 		f.precio AS p_fami,
 		CASE
-		  WHEN p.precio IS NOT NULL THEN round(p.precio * (con.porcentaje_descuento/100),2)
-		  WHEN f.precio IS NOT NULL THEN round(f.precio * (con.porcentaje_descuento/100),2)
+		  WHEN p.precio IS NOT NULL THEN round(p.precio * (COALESCE(con.porcentaje_descuento,0)/100),2)
+		  WHEN f.precio IS NOT NULL THEN round(f.precio * (COALESCE(con.porcentaje_descuento,0)/100),2)
 		END descuento,
 		CASE
-		  WHEN p.precio IS NOT NULL THEN (d.cantidad*p.precio)-round(p.precio * (con.porcentaje_descuento/100),2)
-		  WHEN f.precio IS NOT NULL THEN (d.cantidad*f.precio)-round(f.precio * (con.porcentaje_descuento/100),2)
+		  WHEN p.precio IS NOT NULL THEN (d.cantidad*p.precio)-(d.cantidad*round(p.precio * (COALESCE(con.porcentaje_descuento,0)/100),2))
+		  WHEN f.precio IS NOT NULL THEN (d.cantidad*f.precio)-(d.cantidad*round(f.precio * (COALESCE(con.porcentaje_descuento,0)/100),2))
 		END total
 	FROM detalle_pedido_pieza d
 		JOIN pedido x ON x.uid_pedido = d.uid_pedido
-		LEFT JOIN contrato con ON con.uid_cliente = x.uid_cliente
+		LEFT JOIN contrato con ON con.uid_cliente = x.uid_cliente AND con.fecha_hora_fin IS NULL
 		JOIN pieza p ON p.uid_pieza = d.uid_pieza
 		LEFT JOIN familiar_historico_precio f ON p.uid_pieza = f.uid_pieza AND f.fecha_inicio::date = obtener_fecha_historico(p.uid_pieza,x.fecha_entrega)
 		JOIN nombres_moldes m ON m.uid_molde = p.uid_molde
 		JOIN coleccion c ON c.uid_coleccion = p.uid_coleccion
-	WHERE d.uid_pedido in (SELECT fr.uid_pedido FROM FACTURA fr WHERE fr.numero_factura =  $P{id_factura} )ORDER BY uid_detalle DESC;]]>
+	WHERE d.uid_pedido in (SELECT fr.uid_pedido FROM FACTURA fr WHERE fr.numero_factura = $P{id_factura})ORDER BY uid_detalle DESC;]]>
 	</queryString>
 	<field name="uid_detalle" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="uid_detalle"/>

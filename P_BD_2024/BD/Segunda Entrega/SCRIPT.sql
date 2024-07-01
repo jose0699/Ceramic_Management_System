@@ -1789,7 +1789,7 @@ BEGIN;	insert into contrato values ( 9,nextval('contrato_uid_seq'), 20, '2024-01
 BEGIN;	insert into pedido values(1,nextval('pedido_uid_seq') ,'2024-01-18' ,'2024-03-18','2024-03-18' , 'A','F' );	COMMIT;--1
 BEGIN;  insert into pedido values(2,nextval('pedido_uid_seq') ,'2024-02-17' ,'2024-04-17','2024-04-17'  , 'E','I' );	COMMIT;--2
 BEGIN;	insert into pedido values(3,nextval('pedido_uid_seq') ,'2024-03-16' ,'2024-05-16','2024-05-16'  , 'A','I' );	COMMIT;--3
-BEGIN;	insert into pedido values(4,nextval('pedido_uid_seq') ,'2024-04-15' ,'2024-06-15','2024-06-15'  , 'E','I' );	COMMIT;--4
+BEGIN;	insert into pedido values(4,nextval('pedido_uid_seq') ,'2024-04-15' ,'2024-06-15','2024-06-15'  , 'A','I' );	COMMIT;--4
 BEGIN;	insert into pedido values(5,nextval('pedido_uid_seq') ,'2024-05-14' ,'2024-07-14','2024-07-14'  , 'A','I' );	COMMIT;--5
 BEGIN;	insert into pedido values(6,nextval('pedido_uid_seq') ,'2024-06-13' ,'2024-08-13','2024-08-13' , 'E','I' );	COMMIT;--6
 BEGIN;	insert into pedido values(7,nextval('pedido_uid_seq') ,'2024-07-12' ,'2024-09-12','2024-09-12'  , 'E','I' );	COMMIT;--7
@@ -1827,7 +1827,6 @@ BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 4, 4, 2,15 ,null, 4,38);	COMMIT;
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 4, 4, 3,2,7);	COMMIT;
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 4, 4, 4,2,8);	COMMIT;
 
-BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1, 1, 7,8 ,null,2,20 );	COMMIT;
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1, 1, 6,8 ,null, 2,16);	COMMIT;
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1, 1, 7,8 ,null,2,20 );	COMMIT;
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1, 1, 8,3,3);	COMMIT;

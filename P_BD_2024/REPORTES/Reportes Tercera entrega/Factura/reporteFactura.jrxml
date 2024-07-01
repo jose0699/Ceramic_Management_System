@@ -164,6 +164,20 @@
 				</textElement>
 				<textFieldExpression><![CDATA["DESCUENTO APLICADO: "+ROUND_DOWN($F{descuento},0)+"%"]]></textFieldExpression>
 			</textField>
+			<textField pattern="#,##0.##">
+				<reportElement x="280" y="35" width="287" height="29" uuid="85f0736e-fd2e-43a0-9764-95e3dd7fac3e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{tipo_pedido}.equalsIgnoreCase("F")]]></printWhenExpression>
+				</reportElement>
+				<box padding="5">
+					<bottomPen lineWidth="0.0" lineColor="#4E9171"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["TASA BCV: "+$P{Tasa $}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<detail>

@@ -44,17 +44,17 @@ SELECT DISTINCT
 		v.nombre AS nombre_vaj, 
 		d.cantidad, 
 		prv.precio AS precio,
-		round(prv.precio * (con.porcentaje_descuento/100),2) descuento,
-		d.cantidad*round(prv.precio * (con.porcentaje_descuento/100),2) descuento_total,
-		(d.cantidad*prv.precio)-round(prv.precio * (con.porcentaje_descuento/100),2) total
+		round(prv.precio * (COALESCE(con.porcentaje_descuento,0)/100),2) descuento,
+		d.cantidad*round(prv.precio * (COALESCE(con.porcentaje_descuento,0)/100),2) descuento_total,
+		(d.cantidad*prv.precio)-(d.cantidad*round(prv.precio * (COALESCE(con.porcentaje_descuento,0)/100),2)) total
 	FROM detalle_pedido_pieza d
 		JOIN pedido p ON p.uid_pedido = d.uid_pedido
-		LEFT JOIN contrato con ON con.uid_cliente = p.uid_cliente
+		LEFT JOIN contrato con ON con.uid_cliente = p.uid_cliente AND con.fecha_hora_fin IS NULL
 		JOIN vajilla v ON v.uid_juego = d.uid_juego
 		JOIN precios_vaj prv ON prv.uid_juego = v.uid_juego 
 		JOIN detalle_pieza_vajilla x ON v.uid_juego = x.uid_juego
 		JOIN coleccion c ON c.uid_coleccion = x.uid_coleccion
-	WHERE d.uid_pedido in (SELECT fr.uid_pedido FROM FACTURA fr WHERE fr.numero_factura = $P{id_factura} ) ORDER BY uid_detalle DESC;]]>
+	WHERE d.uid_pedido in (SELECT fr.uid_pedido FROM FACTURA fr WHERE fr.numero_factura = $P{id_factura}) ORDER BY uid_detalle DESC;]]>
 	</queryString>
 	<field name="uid_detalle" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="uid_detalle"/>

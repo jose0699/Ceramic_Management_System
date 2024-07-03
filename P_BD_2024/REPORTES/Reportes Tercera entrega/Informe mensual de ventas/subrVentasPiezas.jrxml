@@ -210,7 +210,7 @@
 					<textElement textAlignment="Center">
 						<font fontName="Poppins Medium" size="10" isBold="true"/>
 					</textElement>
-					<text><![CDATA[PRECIO $ unitario]]></text>
+					<text><![CDATA[PRECIO $]]></text>
 				</staticText>
 				<staticText>
 					<reportElement mode="Opaque" x="250" y="30" width="80" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="48d5b8ef-eacb-4665-967b-92b9aa4248da">
@@ -245,7 +245,7 @@
 					<textElement textAlignment="Center">
 						<font fontName="Poppins Medium" size="10" isBold="true"/>
 					</textElement>
-					<text><![CDATA[PRECIO Bs.S unitario]]></text>
+					<text><![CDATA[PRECIO Bs.S ]]></text>
 				</staticText>
 			</band>
 		</groupHeader>

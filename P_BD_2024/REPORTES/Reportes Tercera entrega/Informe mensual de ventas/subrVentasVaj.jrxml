@@ -207,7 +207,7 @@ SELECT
 					<textElement textAlignment="Center">
 						<font fontName="Poppins Medium" size="10" isBold="true"/>
 					</textElement>
-					<text><![CDATA[PRECIO $ unitario]]></text>
+					<text><![CDATA[PRECIO $ ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement mode="Opaque" x="447" y="30" width="122" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="83303eac-d4b3-4a5f-bb27-7304fb403c89">
@@ -225,7 +225,7 @@ SELECT
 					<textElement textAlignment="Center">
 						<font fontName="Poppins Medium" size="10" isBold="true"/>
 					</textElement>
-					<text><![CDATA[PRECIO Bs.S unitario]]></text>
+					<text><![CDATA[PRECIO Bs.S ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement mode="Opaque" x="250" y="30" width="80" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="c1f4d78c-3976-415b-ae33-0b06b2b901c0">

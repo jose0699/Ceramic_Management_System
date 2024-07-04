@@ -118,7 +118,7 @@
 				<subreportExpression><![CDATA["subrVentasPiezas.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
-		<band height="157">
+		<band height="121">
 			<subreport>
 				<reportElement x="0" y="11" width="568" height="110" isPrintInFirstWholeBand="true" uuid="e4f1d355-b1d1-4976-9fdb-2cb03fffebc8">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>

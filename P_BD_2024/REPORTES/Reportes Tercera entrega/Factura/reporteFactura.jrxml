@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteFactura" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="72541820-9049-4e05-bff6-b093860778c8">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteFactura" pageWidth="568" pageHeight="792" columnWidth="568" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="72541820-9049-4e05-bff6-b093860778c8">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Proyecto_BD"/>
-	<parameter name="id_factura" class="java.lang.Integer">
-		<parameterDescription><![CDATA[id de la factura]]></parameterDescription>
+	<parameter name="id_Pedido" class="java.lang.Integer">
+		<parameterDescription><![CDATA[id del pedido del cual se quiere la factura]]></parameterDescription>
 	</parameter>
 	<parameter name="Tasa $" class="java.math.BigDecimal">
 		<parameterDescription><![CDATA[Tasa para ejecutar la conversión a Bs]]></parameterDescription>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[SELECT * FROM datos_basico_factura($P{id_factura});]]>
+		<![CDATA[WITH x AS(
+	SELECT f.numero_factura FROM factura f, pedido p 
+	WHERE p.uid_pedido = f.uid_pedido
+	AND f.uid_pedido = $P{id_Pedido} 
+)
+
+
+SELECT * FROM x, datos_basico_factura(x.numero_factura)]]>
 	</queryString>
-	<field name="uid_pedido" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="uid_pedido"/>
-		<property name="com.jaspersoft.studio.field.label" value="uid_pedido"/>
-	</field>
 	<field name="numero_factura" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="numero_factura"/>
 		<property name="com.jaspersoft.studio.field.label" value="numero_factura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="factura"/>
+	</field>
+	<field name="uid_pedido" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="uid_pedido"/>
+		<property name="com.jaspersoft.studio.field.label" value="uid_pedido"/>
 	</field>
 	<field name="fecha_emision" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="fecha_emision"/>
@@ -28,21 +36,9 @@
 		<property name="com.jaspersoft.studio.field.name" value="nombre_cliente"/>
 		<property name="com.jaspersoft.studio.field.label" value="nombre_cliente"/>
 	</field>
-	<field name="telefono_cliente" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="telefono_cliente"/>
-		<property name="com.jaspersoft.studio.field.label" value="telefono_cliente"/>
-	</field>
-	<field name="email_cliente" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="email_cliente"/>
-		<property name="com.jaspersoft.studio.field.label" value="email_cliente"/>
-	</field>
 	<field name="tipo_pedido" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="tipo_pedido"/>
 		<property name="com.jaspersoft.studio.field.label" value="tipo_pedido"/>
-	</field>
-	<field name="pais_cliente" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="pais_cliente"/>
-		<property name="com.jaspersoft.studio.field.label" value="pais_cliente"/>
 	</field>
 	<field name="monto_sin_descuento" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="monto_sin_descuento"/>
@@ -64,9 +60,9 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="91" splitType="Stretch">
+		<band height="66" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="1" width="567" height="90" forecolor="#778C43" uuid="153bdd2b-d357-445c-bb7e-cb78a95b2127"/>
+				<reportElement x="0" y="1" width="567" height="65" forecolor="#778C43" uuid="153bdd2b-d357-445c-bb7e-cb78a95b2127"/>
 				<box topPadding="8" leftPadding="2" bottomPadding="6" rightPadding="6">
 					<pen lineStyle="Solid" lineColor="#0B6233"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -77,14 +73,10 @@
 				<textElement>
 					<font fontName="Poppins SemiBold" size="26"/>
 				</textElement>
-				<text><![CDATA[CERÁMICA REAL]]></text>
+				<text><![CDATA[]]></text>
 			</staticText>
-			<image vAlign="Middle" onErrorType="Icon">
-				<reportElement x="210" y="-10" width="90" height="75" uuid="7d874b68-84d5-46d3-88d7-8665d802dc2a"/>
-				<imageExpression><![CDATA["logo_emp.png"]]></imageExpression>
-			</image>
 			<textField pattern="MMMMM &apos;de&apos; yyyy" isBlankWhenNull="true">
-				<reportElement x="20" y="60" width="547" height="31" forecolor="#000000" uuid="9d36a4d4-145e-426d-a8b6-a51f6c05afd3"/>
+				<reportElement x="20" y="35" width="547" height="31" forecolor="#000000" uuid="9d36a4d4-145e-426d-a8b6-a51f6c05afd3"/>
 				<box padding="4">
 					<pen lineColor="#7DA44E"/>
 					<bottomPen lineWidth="0.0"/>
@@ -96,7 +88,19 @@
 				<textFieldExpression><![CDATA["FACTURA"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="325" y="10" width="242" height="30" uuid="93d50ff7-7d01-4ed4-85d1-67f1fe408a1d"/>
+				<reportElement x="0" y="5" width="242" height="30" uuid="93d50ff7-7d01-4ed4-85d1-67f1fe408a1d"/>
+				<box padding="4">
+					<pen lineColor="#7DA44E"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Poppins" size="13" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fecha: " + $F{fecha_emision}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="325" y="5" width="242" height="30" uuid="ed85dddd-cb16-48c3-a31d-b74d590ae3ca"/>
 				<box padding="4">
 					<pen lineColor="#7DA44E"/>
 					<bottomPen lineWidth="0.0"/>
@@ -105,24 +109,12 @@
 				<textElement textAlignment="Right">
 					<font fontName="Poppins" size="13" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Fecha: " + $F{fecha_emision}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="325" y="35" width="242" height="30" uuid="ed85dddd-cb16-48c3-a31d-b74d590ae3ca"/>
-				<box padding="4">
-					<pen lineColor="#7DA44E"/>
-					<bottomPen lineWidth="0.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="Poppins" size="11" isBold="false"/>
-				</textElement>
 				<textFieldExpression><![CDATA["Factura N° " +$F{numero_factura}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="64" splitType="Stretch">
+		<band height="87" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="10" width="280" height="29" uuid="42e63061-a90f-4e0e-9942-6324d5fe70bd">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -134,24 +126,10 @@
 				<textElement textAlignment="Left" markup="html">
 					<font fontName="Poppins" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["NOMBRE: "+$F{nombre_cliente}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="0" y="35" width="280" height="29" uuid="52e4aef2-1250-4114-b51f-6b7d88526214">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box padding="5">
-					<pen lineWidth="0.0"/>
-					<bottomPen lineWidth="0.0" lineColor="#4E9171"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Left" markup="html">
-					<font fontName="Poppins" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA["PAÍS DEL CLIENTE: "+$F{pais_cliente}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["NOMBRE O RAZÓN SOCIAL: "+$F{nombre_cliente}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##%">
-				<reportElement x="280" y="10" width="287" height="29" uuid="40da92fa-e9de-4159-a0d7-d6b9c05d36f8">
+				<reportElement x="0" y="40" width="287" height="29" uuid="40da92fa-e9de-4159-a0d7-d6b9c05d36f8">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<printWhenExpression><![CDATA[$F{descuento} != new BigDecimal(0)]]></printWhenExpression>
 				</reportElement>
@@ -159,13 +137,13 @@
 					<bottomPen lineWidth="0.0" lineColor="#4E9171"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement textAlignment="Right" markup="html">
+				<textElement markup="html">
 					<font fontName="Poppins" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA["DESCUENTO APLICADO: "+ROUND_DOWN($F{descuento},0)+"%"]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##">
-				<reportElement x="280" y="35" width="287" height="29" uuid="85f0736e-fd2e-43a0-9764-95e3dd7fac3e">
+				<reportElement x="287" y="10" width="275" height="29" uuid="85f0736e-fd2e-43a0-9764-95e3dd7fac3e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<printWhenExpression><![CDATA[$F{tipo_pedido}.equalsIgnoreCase("F")]]></printWhenExpression>
 				</reportElement>
@@ -181,144 +159,13 @@
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="70" splitType="Stretch">
-			<subreport>
-				<reportElement positionType="Float" x="0" y="32" width="567" height="38" isRemoveLineWhenBlank="true" uuid="44659864-e8c2-4e09-acd0-bbb564b37241">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<subreportParameter name="id_factura">
-					<subreportParameterExpression><![CDATA[$P{id_factura}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="Tasa $">
-					<subreportParameterExpression><![CDATA[$P{Tasa $}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["subrPiezasFactura.jasper"]]></subreportExpression>
-			</subreport>
+		<band height="135" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="240" y="0" width="70" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="5fa6d50a-0ff6-445b-aa4a-60e3910510e9">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<box padding="7">
-					<pen lineStyle="Dashed" lineColor="#75FFA5"/>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Poppins Medium" size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[CANTIDAD]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="400" y="0" width="80" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="3faedb67-3c0e-473b-8195-99ad3154671f">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<box padding="7">
-					<pen lineStyle="Dashed" lineColor="#75FFA5"/>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Poppins Medium" size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[DESCUENTO]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="240" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="cb2a6051-9815-4680-b8e7-7e76b21fb66d">
+				<reportElement positionType="Float" mode="Opaque" x="5" y="72" width="175" height="30" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="cc8902d3-8760-4c7b-b2f0-eb64e5418355">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
-					<pen lineStyle="Dashed" lineColor="#75FFA5"/>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left">
-					<font fontName="Poppins Medium" size="13" isBold="true"/>
-				</textElement>
-				<text><![CDATA[NOMBRE]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="310" y="0" width="90" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="c349e604-7750-4139-b644-edb5465ee7c6">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<box padding="7">
-					<pen lineStyle="Dashed" lineColor="#75FFA5"/>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Poppins Medium" size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[PRECIO UNIT.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="480" y="0" width="88" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="3113abcc-9d56-41a5-a5bb-0091da515107">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<box padding="7">
-					<pen lineStyle="Dashed" lineColor="#75FFA5"/>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Poppins Medium" size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[TOTAL]]></text>
-			</staticText>
-		</band>
-		<band height="101">
-			<subreport>
-				<reportElement x="0" y="0" width="567" height="40" isRemoveLineWhenBlank="true" uuid="c73b7e61-a077-49e6-b7f5-714368f837e4">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<subreportParameter name="id_factura">
-					<subreportParameterExpression><![CDATA[$P{id_factura}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="Tasa $">
-					<subreportParameterExpression><![CDATA[$P{Tasa $}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["subrVajsFactura.jasper"]]></subreportExpression>
-			</subreport>
-		</band>
-	</detail>
-	<pageFooter>
-		<band height="30" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="0" width="570" height="30" uuid="97561f41-8aec-43fe-8803-9d150e63076b"/>
-				<box>
-					<topPen lineWidth="1.25"/>
-				</box>
-				<textElement>
-					<font fontName="Poppins Medium" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-		</band>
-	</pageFooter>
-	<summary>
-		<band height="130">
-			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="0" y="67" width="160" height="30" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="d949b829-2851-4f1d-8d1b-83d296be4623">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<box topPadding="6" leftPadding="11" bottomPadding="6" rightPadding="6">
 					<pen lineStyle="Dashed" lineColor="#0B6233"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -326,29 +173,46 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left">
-					<font fontName="Poppins Medium" size="11" isBold="true"/>
+					<font fontName="Poppins Medium" size="13" isBold="true"/>
 				</textElement>
 				<text><![CDATA[TOTAL SIN DESCUENTO:]]></text>
 			</staticText>
-			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="0" y="100" width="160" height="30" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#0B6233" uuid="d55c56ea-2fee-4463-9b1e-007cc50d850b">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<textField pattern="#,##0.00¤;#,##0.00 ¤">
+				<reportElement positionType="Float" x="165" y="105" width="402" height="29" isRemoveLineWhenBlank="true" uuid="1bf64821-a397-40b1-8493-070addcaa008">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{tipo_pedido}.equalsIgnoreCase("F")]]></printWhenExpression>
 				</reportElement>
-				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
-					<pen lineStyle="Dashed" lineColor="#0B6233"/>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<box topPadding="5" leftPadding="10" bottomPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineColor="#7DA44E"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement textAlignment="Left">
-					<font fontName="Poppins Medium" size="13" isBold="true"/>
+				<textElement textAlignment="Right">
+					<font fontName="Poppins" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[TOTAL A PAGAR:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$F{monto_total}.add($F{monto_sin_descuento}.multiply(new BigDecimal(0.16))).multiply($P{Tasa $})]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00¤;#,##0.00 ¤">
+				<reportElement positionType="Float" x="180" y="5" width="387" height="29" isRemoveLineWhenBlank="true" uuid="0d345ee0-4dc8-4297-b4ea-2a0774a3ddce">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{tipo_pedido}.equalsIgnoreCase("F")]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="5" leftPadding="10" bottomPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineColor="#7DA44E"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{monto_sin_descuento}.multiply(new BigDecimal(0.16)).multiply($P{Tasa $})]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="160" height="30" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="777ed330-1735-4c70-a878-1d34f37f36a7">
+				<reportElement positionType="Float" mode="Opaque" x="5" y="5" width="175" height="30" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="bb2cb1c1-f722-43ce-a4ad-27c72f68334b">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[$F{tipo_pedido}.equalsIgnoreCase("F")]]></printWhenExpression>
@@ -366,7 +230,41 @@
 				<text><![CDATA[IVA (16%):]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="0" y="33" width="160" height="30" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="267f6712-a985-4f2b-b696-b5dcf1fa7331">
+				<reportElement positionType="Float" mode="Opaque" x="5" y="105" width="175" height="30" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#0B6233" uuid="6ba7ed50-323b-4c20-a115-dca68901f38b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<pen lineStyle="Dashed" lineColor="#0B6233"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Poppins Medium" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL A PAGAR:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00¤;#,##0.00 ¤">
+				<reportElement positionType="Float" x="165" y="38" width="402" height="29" isRemoveLineWhenBlank="true" uuid="888aecca-5b0c-48b0-ad37-35ddf9d5a961">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{descuento} != new BigDecimal(0) && $F{tipo_pedido}.equalsIgnoreCase("F")]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="5" leftPadding="10" bottomPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineColor="#7DA44E"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{monto_descontado}.multiply($P{Tasa $})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="5" y="38" width="175" height="30" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="fdb6a9cd-91d0-4a2b-b641-2d326f49ab70">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e44ceea-9097-4c52-9017-e03b508a6695"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[$F{descuento} != new BigDecimal(0)]]></printWhenExpression>
@@ -383,93 +281,8 @@
 				</textElement>
 				<text><![CDATA[DESCUENTO TOTAL:]]></text>
 			</staticText>
-			<textField pattern="#,##0.00¤;#,##0.00 ¤">
-				<reportElement positionType="Float" x="160" y="0" width="410" height="29" isRemoveLineWhenBlank="true" uuid="23fb84dc-ebcd-42ca-8a13-5f23901e5884">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{tipo_pedido}.equalsIgnoreCase("F")]]></printWhenExpression>
-				</reportElement>
-				<box topPadding="5" leftPadding="10" bottomPadding="5" rightPadding="5">
-					<pen lineWidth="1.0" lineColor="#7DA44E"/>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="Poppins" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{monto_sin_descuento}.multiply(new BigDecimal(0.16)).multiply($P{Tasa $})]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00¤;#,##0.00 ¤">
-				<reportElement positionType="Float" x="160" y="33" width="410" height="29" isRemoveLineWhenBlank="true" uuid="06333d9f-bd87-47a8-ac48-d2118766229d">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{descuento} != new BigDecimal(0) && $F{tipo_pedido}.equalsIgnoreCase("F")]]></printWhenExpression>
-				</reportElement>
-				<box topPadding="5" leftPadding="10" bottomPadding="5" rightPadding="5">
-					<pen lineWidth="1.0" lineColor="#7DA44E"/>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="Poppins" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{monto_descontado}.multiply($P{Tasa $})]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00¤;#,##0.00 ¤">
-				<reportElement positionType="Float" x="160" y="67" width="410" height="29" isRemoveLineWhenBlank="true" uuid="85db824e-e511-45bd-a70a-ca9d70351ad7">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{tipo_pedido}.equalsIgnoreCase("F")]]></printWhenExpression>
-				</reportElement>
-				<box padding="8" topPadding="5" leftPadding="10" bottomPadding="5" rightPadding="5">
-					<pen lineWidth="1.0" lineColor="#7DA44E"/>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="Poppins" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{monto_sin_descuento}.multiply($P{Tasa $})]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00¤;#,##0.00 ¤">
-				<reportElement positionType="Float" x="160" y="100" width="410" height="29" isRemoveLineWhenBlank="true" uuid="3573c51f-1464-40fc-81cc-f1cb9672221e">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{tipo_pedido}.equalsIgnoreCase("F")]]></printWhenExpression>
-				</reportElement>
-				<box topPadding="5" leftPadding="10" bottomPadding="5" rightPadding="5">
-					<pen lineWidth="1.0" lineColor="#7DA44E"/>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="Poppins" size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{monto_total}.add($F{monto_sin_descuento}.multiply(new BigDecimal(0.16))).multiply($P{Tasa $})]]></textFieldExpression>
-			</textField>
 			<textField pattern="$#,##0.00;#,##0.00">
-				<reportElement positionType="Float" x="160" y="33" width="410" height="29" isRemoveLineWhenBlank="true" uuid="4c089e31-f2a0-4b88-939c-3bfeef29cc04">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{descuento} != new BigDecimal(0) && $F{tipo_pedido}.equalsIgnoreCase("I")]]></printWhenExpression>
-				</reportElement>
-				<box topPadding="5" leftPadding="10" bottomPadding="5" rightPadding="5">
-					<pen lineWidth="1.0" lineColor="#7DA44E"/>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="Poppins" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{monto_descontado}]]></textFieldExpression>
-			</textField>
-			<textField pattern="$#,##0.00;#,##0.00">
-				<reportElement positionType="Float" x="160" y="67" width="410" height="29" isRemoveLineWhenBlank="true" uuid="db050241-3887-440a-9c56-f70a2c5c8a6e">
+				<reportElement positionType="Float" x="165" y="72" width="403" height="29" isRemoveLineWhenBlank="true" uuid="0976565f-6d1a-4457-924f-c5ef0153bfb8">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<printWhenExpression><![CDATA[$F{tipo_pedido}.equalsIgnoreCase("I")]]></printWhenExpression>
 				</reportElement>
@@ -486,7 +299,41 @@
 				<textFieldExpression><![CDATA[$F{monto_sin_descuento}]]></textFieldExpression>
 			</textField>
 			<textField pattern="$#,##0.00;#,##0.00">
-				<reportElement positionType="Float" x="160" y="100" width="410" height="29" isRemoveLineWhenBlank="true" uuid="22b1a465-27ef-4ea0-bc93-78eb054c096c">
+				<reportElement positionType="Float" x="180" y="38" width="387" height="29" isRemoveLineWhenBlank="true" uuid="4c5a51fb-402b-4eb2-b0a7-3919b18c7ee3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{descuento} != new BigDecimal(0) && $F{tipo_pedido}.equalsIgnoreCase("I")]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="5" leftPadding="10" bottomPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineColor="#7DA44E"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{monto_descontado}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00¤;#,##0.00 ¤">
+				<reportElement positionType="Float" x="180" y="72" width="388" height="29" isRemoveLineWhenBlank="true" uuid="aa8519e4-60f8-4928-9e04-455f93df5a2b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{tipo_pedido}.equalsIgnoreCase("F")]]></printWhenExpression>
+				</reportElement>
+				<box padding="8" topPadding="5" leftPadding="10" bottomPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineColor="#7DA44E"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{monto_sin_descuento}.multiply($P{Tasa $})]]></textFieldExpression>
+			</textField>
+			<textField pattern="$#,##0.00;#,##0.00">
+				<reportElement positionType="Float" x="180" y="105" width="387" height="29" isRemoveLineWhenBlank="true" uuid="109b80c7-9479-408a-908f-60945135ab90">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<printWhenExpression><![CDATA[$F{tipo_pedido}.equalsIgnoreCase("I")]]></printWhenExpression>
 				</reportElement>
@@ -503,5 +350,5 @@
 				<textFieldExpression><![CDATA[$F{monto_total}]]></textFieldExpression>
 			</textField>
 		</band>
-	</summary>
+	</detail>
 </jasperReport>

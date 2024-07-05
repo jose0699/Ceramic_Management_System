@@ -161,8 +161,78 @@ SELECT * FROM x, datos_basico_factura(x.numero_factura)
 -----                                    Informe mensual de Venta                                           --------
 --------------------------------------------------------------------------------------------------------------------
 
+--REPORTE VENTAS POR LÍNEA Y COLECCIÓN
+WITH ventas_vaj AS(
 
---Reporte ventas de PIEZAS por linea y coleccion
+	 WITH precios_vaj AS(
+		SELECT DISTINCT
+		v.uid_juego, 
+		round(calcular_precio_vajilla(v.uid_juego, x.uid_coleccion, p.fecha_entrega),2) AS precio
+		FROM detalle_pedido_pieza d
+			JOIN pedido p ON p.uid_pedido = d.uid_pedido
+			JOIN vajilla v ON v.uid_juego = d.uid_juego
+			JOIN detalle_pieza_vajilla x ON v.uid_juego = x.uid_juego
+			JOIN coleccion c ON c.uid_coleccion = x.uid_coleccion
+		WHERE c.uid_coleccion in (SELECT uid_coleccion FROM coleccion col WHERE col.linea = upper(substring($P{Linea},1,1)))
+	 )
+	
+	SELECT 
+		c.uid_coleccion,
+		SUM((d.cantidad*prv.precio)-(d.cantidad*round(prv.precio * (COALESCE(con.porcentaje_descuento,0)/100),2))) total_vajs
+	FROM detalle_pedido_pieza d
+		JOIN pedido p ON p.uid_pedido = d.uid_pedido AND ((p.fecha_entrega 
+															BETWEEN to_date(CONCAT(to_char($P{Año},'9999'),' ',to_char( $P{Numero_mes} ,'9999'),' ','01'),'YYYY MM DD') 
+															AND to_date(CONCAT(to_char($P{Año},'9999'),' ',to_char( $P{Numero_mes}  ,'9999'),' ','01'),'YYYY MM DD')+interval'1 month'-interval'1 day') 
+															AND p.estado = 'A')
+		LEFT JOIN contrato con ON con.uid_cliente = p.uid_cliente AND con.fecha_hora_fin IS NULL
+		JOIN vajilla v ON v.uid_juego = d.uid_juego
+		JOIN precios_vaj prv ON prv.uid_juego = v.uid_juego 
+		JOIN (SELECT DISTINCT uid_juego, uid_coleccion FROM detalle_pieza_vajilla ORDER BY uid_juego, uid_coleccion ASC) AS x ON v.uid_juego = x.uid_juego
+		JOIN coleccion c ON c.uid_coleccion = x.uid_coleccion
+	WHERE c.uid_coleccion in (SELECT uid_coleccion FROM coleccion col WHERE col.linea = upper(substring($P{Linea},1,1))) 
+	GROUP BY c.uid_coleccion
+	ORDER BY c.uid_coleccion ASC
+	
+)
+
+	SELECT 
+		c.linea,
+
+		CASE
+	      WHEN c.categoria = 'cou' THEN 'Country'
+	      WHEN c.categoria = 'cla' THEN 'Clásica'
+	      WHEN c.categoria = 'mod' THEN 'Moderna'
+	    END categoria,
+	
+		c.nombre AS nombre_col, 
+		
+		SUM(CASE
+		  WHEN p.precio IS NOT NULL THEN (d.cantidad*p.precio)-(d.cantidad*round(p.precio * (COALESCE(con.porcentaje_descuento,0)/100),2))
+		  WHEN f.precio IS NOT NULL THEN (d.cantidad*f.precio)-(d.cantidad*round(f.precio * (COALESCE(con.porcentaje_descuento,0)/100),2))
+		END) total_piezas,
+
+		COALESCE(v.total_vajs,0) AS total_vajs
+		
+	FROM detalle_pedido_pieza d
+		JOIN pedido x ON x.uid_pedido = d.uid_pedido AND ((x.fecha_entrega 
+															BETWEEN to_date(CONCAT(to_char($P{Año},'9999'),' ',to_char( $P{Numero_mes} ,'9999'),' ','01'),'YYYY MM DD') 
+															AND to_date(CONCAT(to_char($P{Año},'9999'),' ',to_char( $P{Numero_mes}  ,'9999'),' ','01'),'YYYY MM DD')+interval'1 month'-interval'1 day') 
+															AND x.estado = 'A')
+		LEFT JOIN contrato con ON con.uid_cliente = x.uid_cliente AND con.fecha_hora_fin IS NULL
+		JOIN pieza p ON p.uid_pieza = d.uid_pieza
+		LEFT JOIN familiar_historico_precio f ON p.uid_pieza = f.uid_pieza AND f.fecha_inicio::date = obtener_fecha_historico(p.uid_pieza,x.fecha_entrega)
+		JOIN coleccion c ON c.uid_coleccion = p.uid_coleccion
+		LEFT JOIN ventas_vaj v ON v.uid_coleccion = p.uid_coleccion
+	WHERE c.uid_coleccion in (SELECT uid_coleccion FROM coleccion col WHERE col.linea = upper(substring($P{Linea},1,1)) )
+	GROUP BY c.uid_coleccion,c.nombre, categoria,v.total_vajs
+	ORDER BY 1 ASC, 2 ASC;
+
+
+
+
+
+
+--Subreporte ventas de PIEZAS por linea y coleccion
 	SELECT 
 		p.uid_pieza, 
 		CASE
@@ -209,7 +279,7 @@ WITH precios_vaj AS(
 		JOIN vajilla v ON v.uid_juego = d.uid_juego
 		JOIN detalle_pieza_vajilla x ON v.uid_juego = x.uid_juego
 		JOIN coleccion c ON c.uid_coleccion = x.uid_coleccion
-	WHERE c.uid_coleccion in (SELECT uid_coleccion FROM coleccion col WHERE col.linea = $P{Linea})
+	WHERE c.uid_coleccion in (SELECT uid_coleccion FROM coleccion col WHERE col.linea =  upper(substring($P{Linea},1,1))
 )
 
 

@@ -318,7 +318,7 @@
 				<reportElement x="0" y="0" width="567" height="30" forecolor="#3C7AD6" uuid="3dafef49-9ffb-48e4-8cf1-f03c2c337ba9"/>
 				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
 					<pen lineColor="#7DA44E"/>
-					<bottomPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Left">

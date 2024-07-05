@@ -117,11 +117,11 @@ SELECT
 	</variable>
 	<variable name="total_descuentos" class="java.lang.Float" resetType="Group" resetGroup="grColeccion" calculation="Sum">
 		<variableDescription><![CDATA[total_descuentos de ventas por contrato]]></variableDescription>
-		<variableExpression><![CDATA[$F{descuento}]]></variableExpression>
+		<variableExpression><![CDATA[$F{descuento}.multiply($F{cantidad})]]></variableExpression>
 	</variable>
 	<variable name="total_descuentos_Bs" class="java.lang.Float" resetType="Group" resetGroup="grColeccion" calculation="Sum">
 		<variableDescription><![CDATA[total_descuentos de ventas por contrato]]></variableDescription>
-		<variableExpression><![CDATA[$F{descuento}.multiply($P{Tasa $})]]></variableExpression>
+		<variableExpression><![CDATA[$F{descuento}.multiply($P{Tasa $}).multiply($F{cantidad})]]></variableExpression>
 	</variable>
 	<variable name="total_ventas_$" class="java.lang.Float" resetType="Group" resetGroup="grColeccion">
 		<variableExpression><![CDATA[$V{total_coleccion_$}-$V{total_descuentos}]]></variableExpression>

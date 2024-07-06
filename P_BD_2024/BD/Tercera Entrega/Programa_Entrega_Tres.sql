@@ -264,15 +264,17 @@ DECLARE
 BEGIN
 	--Posible fecha de entrega
 	emision := emision + interval '2 months';
-					
+
 	--Se busca si existe alguien con la misma fecha, si no hay nadie es la fecha de entrego sino, se buscara posibles fecha de entrega.
 	SELECT COUNT(*) INTO aux FROM PEDIDO pe WHERE pe.fecha_entrega_deseada = emision AND pe.estado IN ('E', 'A');
 	
 	IF aux = 0 THEN
-		RAISE NOTICE 'La posible fecha de entrega es: %', emision;	
+		RAISE NOTICE 'La posible fecha de entrega es: %', emision;
+		RETURN emision;
 	ELSE
-	SELECT * INTO emision FROM CONFLICTO_FECHA(emision, cliente);
-		RAISE NOTICE 'La posible fecha de entrega 2 es: %', emision;	
+		SELECT * INTO emision FROM CONFLICTO_FECHA(emision, cliente);
+		RAISE NOTICE 'La posible fecha de entrega 2 es: %', emision;
+		RETURN emision;
 	END IF;
 END;
 $$ LANGUAGE plpgsql;

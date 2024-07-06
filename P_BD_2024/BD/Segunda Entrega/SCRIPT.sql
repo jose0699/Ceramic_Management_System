@@ -358,10 +358,11 @@ COMMIT;
 BEGIN;	
 	CREATE TABLE FACTURA (
 		uid_cliente numeric(3) not null,
-		uid_pedido numeric(6) not null,
+		uid_pedido numeric(6) not null UNIQUE,
 		numero_factura numeric(6) not null,
 		fecha_emision date not null,
 		monto_total numeric(8,2) not null,
+		CONSTRAINT unique_pedido UNIQUE (uid_pedido),
 		CONSTRAINT fk_pedido FOREIGN KEY ( uid_cliente, uid_pedido) REFERENCES PEDIDO ( uid_cliente, uid_pedido),
 		CONSTRAINT pk_factura PRIMARY KEY ( uid_cliente, uid_pedido, numero_factura)
 	);
@@ -1798,12 +1799,12 @@ BEGIN;	insert into pedido values(9,nextval('pedido_uid_seq') ,'2024-09-10' ,'202
 --Tablas Intercepcion
 
 /*Factura*/
-BEGIN;	insert into factura values( 1,1,nextval('factura_uid_seq') ,'2024-01-18' , 943.5 );	COMMIT;--1
-BEGIN;	insert into factura values( 9,9,nextval('factura_uid_seq') ,'2024-09-10', 186.4 );	COMMIT; --2 
+BEGIN;	insert into factura values( 1,1,nextval('factura_uid_seq') ,'2024-01-18' , 509.83 );	COMMIT;--1
+BEGIN;	insert into factura values( 9,9,nextval('factura_uid_seq') ,'2024-09-10', 43.20 );	COMMIT; --2 
 BEGIN;	insert into factura values( 3,3,nextval('factura_uid_seq') ,'2024-03-16' , 420 );	COMMIT;--3
-BEGIN;	insert into factura values( 5,5,nextval('factura_uid_seq') ,'2024-05-14' , 324 );	COMMIT; --4
-BEGIN;	insert into factura values( 8,8,nextval('factura_uid_seq') ,'2024-08-11', 1107.25 );	COMMIT; --5
-BEGIN;	insert into factura values( 4,4,nextval('factura_uid_seq') ,'2024-08-15', 1107.25 );	COMMIT; --6
+BEGIN;	insert into factura values( 5,5,nextval('factura_uid_seq') ,'2024-05-14' , 324);	COMMIT; --4
+BEGIN;	insert into factura values( 8,8,nextval('factura_uid_seq') ,'2024-08-11', 1621.80 );	COMMIT; --5
+BEGIN;	insert into factura values( 4,4,nextval('factura_uid_seq') ,'2024-08-15', 160.40 );	COMMIT; --6
 
 /*Detalle pedido Pieza*/	
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1,1 , 1,2 ,1);	COMMIT;

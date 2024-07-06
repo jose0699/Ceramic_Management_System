@@ -364,6 +364,7 @@ BEGIN;
 		numero_factura numeric(6) not null,
 		fecha_emision date not null,
 		monto_total numeric(8,2) not null,
+		CONSTRAINT unique_pedido UNIQUE (uid_pedido),
 		CONSTRAINT fk_pedido FOREIGN KEY ( uid_cliente, uid_pedido) REFERENCES PEDIDO ( uid_cliente, uid_pedido),
 		CONSTRAINT pk_factura PRIMARY KEY ( uid_cliente, uid_pedido, numero_factura)
 	);

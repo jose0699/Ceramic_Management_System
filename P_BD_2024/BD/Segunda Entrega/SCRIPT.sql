@@ -1799,12 +1799,12 @@ BEGIN;	insert into pedido values(9,nextval('pedido_uid_seq') ,'2024-09-10' ,'202
 --Tablas Intercepcion
 
 /*Factura*/
-BEGIN;	insert into factura values( 1,1,nextval('factura_uid_seq') ,'2024-01-18' , 509.83 );	COMMIT;--1
+BEGIN;	insert into factura values( 1,1,nextval('factura_uid_seq') ,'2024-01-18' , 605.8 );	COMMIT;--1
 BEGIN;	insert into factura values( 9,9,nextval('factura_uid_seq') ,'2024-09-10', 43.20 );	COMMIT; --2 
 BEGIN;	insert into factura values( 3,3,nextval('factura_uid_seq') ,'2024-03-16' , 420 );	COMMIT;--3
 BEGIN;	insert into factura values( 5,5,nextval('factura_uid_seq') ,'2024-05-14' , 324);	COMMIT; --4
 BEGIN;	insert into factura values( 8,8,nextval('factura_uid_seq') ,'2024-08-11', 1621.80 );	COMMIT; --5
-BEGIN;	insert into factura values( 4,4,nextval('factura_uid_seq') ,'2024-08-15', 160.40 );	COMMIT; --6
+BEGIN;	insert into factura values( 4,4,nextval('factura_uid_seq') ,'2024-08-15', 249.65 );	COMMIT; --6
 
 /*Detalle pedido Pieza*/	
 BEGIN;	insert into DETALLE_PEDIDO_PIEZA values( 1,1 , 1,2 ,1);	COMMIT;

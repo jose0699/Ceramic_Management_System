@@ -181,3 +181,94 @@ SELECT DISTINCT
 		JOIN detalle_pieza_vajilla x ON v.uid_juego = x.uid_juego
 		JOIN coleccion c ON c.uid_coleccion = x.uid_coleccion
 	WHERE d.uid_pedido in (SELECT fr.uid_pedido FROM FACTURA fr WHERE fr.numero_factura = $P{id_factura}) ORDER BY uid_detalle DESC;
+
+
+
+CREATE OR REPLACE PROCEDURE INSERTAR_DETALLE_PEDIDO(
+	pedido numeric(6), 
+	producto numeric(3), 
+	cantidad numeric(3), 
+	tipo_pedido numeric(1)) 
+AS $$
+DECLARE
+	num_detalle numeric(3);
+	cliente numeric(3);
+	coleccion numeric(3);
+	tipo varchar(1);
+	tipo_producto varchar(1);
+BEGIN
+	--Se busca la cantidad de detalle existente del pedido.
+		select count(*) into num_detalle FROM detalle_pedido_pieza dpp WHERE dpp.uid_pedido = pedido; 
+	
+	--Incrementa el número del detalle.
+		num_detalle := num_detalle + 1;
+		
+	--Se busca la pk del cliente y el tipo de pedido (F o I).
+		SELECT p.uid_cliente, p.tipo_pedido INTO cliente, tipo FROM PEDIDO p WHERE p.uid_pedido = pedido;
+	
+	--Si tipo = 1 entonces estamos manejando una Vajilla.
+	IF tipo_pedido = 1 THEN
+		--Se busca la linea de la vajilla.
+		SELECT co.linea into tipo_producto FROM COLECCION co
+			INNER JOIN DETALLE_PIEZA_VAJILLA dpv ON co.uid_coleccion = dpv.uid_coleccion 
+		WHERE uid_juego = producto Limit 1;
+		
+		--Se verifica si coincide con la linea del pedido
+		IF tipo = tipo_producto THEN
+			insert into DETALLE_PEDIDO_PIEZA values( cliente, pedido, num_detalle, cantidad , producto);
+		ELSE
+			RAISE EXCEPTION 'Error: Productos distintos';
+		END IF;
+	END IF;
+	
+	--Si tipo = 2 entonces estamos manejando una Pieza
+	IF tipo_pedido = 2 THEN
+		raise notice 'paso';
+		--Se busca la pk y linea de la coleccion de la pieza
+		SELECT pi.uid_coleccion, col.linea  into coleccion, tipo_producto FROM PIEZA pi
+			INNER JOIN COLECCION col ON col.uid_coleccion = pi.uid_coleccion
+		WHERE pi.uid_pieza = producto;
+		
+		--Se verifica si coincide con la linea del pedido
+		IF tipo = tipo_producto THEN
+			insert into DETALLE_PEDIDO_PIEZA values( cliente, pedido, num_detalle, cantidad, null, coleccion, producto);
+		ELSE
+			RAISE EXCEPTION 'Error: Productos distintos';
+		END IF;
+	END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+CREATE OR REPLACE PROCEDURE CANCELAR_CONTRATO(cliente numeric(3)) AS $$ 
+	BEGIN
+		UPDATE CONTRATO SET fecha_hora_fin = NOW() WHERE uid_cliente = cliente AND fecha_hora_fin is null;
+	END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+SELECT CAST((
+	SELECT (COALESCE(SUM(dt.cantidad * fh.precio), 0) +
+		   COALESCE(
+					   (SELECT COALESCE(SUM(d.cantidad * (f.precio * dv.cantidad)) * 0.85, 0)
+						FROM pedido p
+							INNER JOIN DETALLE_PEDIDO_PIEZA d ON p.uid_pedido = d.uid_pedido
+							INNER JOIN DETALLE_PIEZA_VAJILLA dv ON d.uid_juego = dv.uid_juego
+							INNER JOIN PIEZA pz ON pz.uid_pieza = dv.uid_pieza
+							INNER JOIN familiar_historico_precio f ON pz.uid_pieza = f.uid_pieza
+						WHERE p.uid_pedido = 1 AND d.uid_juego IS NOT NULL AND f.fecha_fin IS NULL) , 0) *
+			COALESCE ((SELECT COALESCE ( 1 - (c.porcentaje_descuento / 100 ) ,1) FROM PEDIDO ped 
+						INNER JOIN CLIENTE cl ON cl.uid_cliente = ped.uid_cliente 
+						INNER JOIN CONTRATO c ON cl.uid_cliente = c.uid_cliente 
+					  WHERE ped.uid_pedido = 1 AND c.fecha_hora_fin IS NULL) , 1)) AS Total
+	FROM PEDIDO pe
+		INNER JOIN DETALLE_PEDIDO_PIEZA dt ON pe.uid_pedido = dt.uid_pedido
+		INNER JOIN PIEZA pi ON pi.uid_pieza = dt.uid_pieza
+		INNER JOIN familiar_historico_precio fh ON pi.uid_pieza = fh.uid_pieza
+	WHERE pe.uid_pedido = 1 AND dt.uid_juego IS NULL AND fh.fecha_fin IS NULL) 
+AS DECIMAL(8,2));

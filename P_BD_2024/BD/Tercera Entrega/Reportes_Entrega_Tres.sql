@@ -104,7 +104,7 @@ BEGIN
 	WHERE fac.numero_factura = num_factura AND c.fecha_hora_fin IS NULL;
 	
 	--Monto sin el descuento
-	SELECT  COALESCE(SUM(COALESCE(dt.cantidad,pi.precio) * fh.precio), 0) + 
+	SELECT  COALESCE(SUM(dt.cantidad * COALESCE(fh.precio,pi.precio)), 0) + 
 									 COALESCE((SELECT COALESCE(SUM(d.cantidad * (COALESCE(fam.precio,pz.precio) * dv.cantidad)) * 0.85, 0) 
 															FROM FACTURA f
 																INNER JOIN pedido p ON f.uid_pedido = p.uid_pedido
@@ -138,7 +138,6 @@ BEGIN
 			 p.tipo_pedido,
 		   monto_sin_descuento,
 		   Descuento,
-			 --LEER: mira este nuevo valor lo agregué porque en la factura necesito el monto del descuento como tal, si quieres cambia el lugar en donde se hace el calculo, pero de ser posible deja el Alias como monto_descontado
 			 round(monto_sin_descuento*(Descuento/100), 2)::Numeric(8,2) AS monto_descontado,
 		   monto
 	FROM CLIENTE c

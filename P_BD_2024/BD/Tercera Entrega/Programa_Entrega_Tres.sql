@@ -1,3 +1,6 @@
+BEGIN; ALTER TABLE PEDIDO DROP  CONSTRAINT check_estado_pedido; COMMIT;
+BEGIN; ALTER TABLE PEDIDO ADD CONSTRAINT check_estado_pedido CHECK (estado in ('A', 'C', 'E', 'P')); COMMIT;
+
 BEGIN; ALTER TABLE FACTURA ADD CONSTRAINT unique_pedido UNIQUE (uid_pedido); COMMIT;
 
 ---------------------------------------------------------------------------------------------------------

@@ -3,23 +3,24 @@
 --								       CREACION ROLES   											   --
 ---------------------------------------------------------------------------------------------------------
 
-BEGIN; CREATE ROLE CLIENTE LOGIN; COMMIT;
-BEGIN; CREATE ROLE EMPLEADO LOGIN; COMMIT;
-BEGIN; CREATE ROLE OPERARIO LOGIN; COMMIT;
-BEGIN; CREATE ROLE HORNERO LOGIN; COMMIT;
-BEGIN; CREATE ROLE SUPERVISOR; COMMIT;
+	BEGIN; CREATE ROLE CLIENTE LOGIN; COMMIT;
+	
+	BEGIN; CREATE ROLE EMPLEADO LOGIN; COMMIT;
+	BEGIN; CREATE ROLE OPERARIO LOGIN; COMMIT;
+	BEGIN; CREATE ROLE HORNERO LOGIN; COMMIT;
+	BEGIN; CREATE ROLE SUPERVISOR; COMMIT;
 
-BEGIN; CREATE ROLE GERENTE LOGIN; COMMIT;
-BEGIN; CREATE ROLE GERENTE_PLANTA LOGIN; COMMIT;
-BEGIN; CREATE ROLE SECRETARIA LOGIN; COMMIT;
+	BEGIN; CREATE ROLE GERENTE LOGIN; COMMIT;
+	BEGIN; CREATE ROLE GERENTE_PLANTA LOGIN; COMMIT;
+	BEGIN; CREATE ROLE SECRETARIA LOGIN; COMMIT;
 
 ---------------------------------------------------------------------------------------------------------
 --								      OTORGAR HERENCIA   											   --
 ---------------------------------------------------------------------------------------------------------
 
-BEGIN; ALTER ROLE EMPLEADO INHERIT; COMMIT;
-BEGIN; ALTER ROLE OPERARIO INHERIT; COMMIT;
-BEGIN; ALTER ROLE GERENTE INHERIT; COMMIT;
+	BEGIN; ALTER ROLE EMPLEADO INHERIT; COMMIT;
+	BEGIN; ALTER ROLE OPERARIO INHERIT; COMMIT;
+	BEGIN; ALTER ROLE GERENTE INHERIT; COMMIT;
 
 ---------------------------------------------------------------------------------------------------------
 --								       CREACION USUARIOS   											   --
@@ -98,7 +99,7 @@ BEGIN; ALTER ROLE GERENTE INHERIT; COMMIT;
 --								 OTORGAR ROLES USUARIOS   											   --
 ---------------------------------------------------------------------------------------------------------
 
-	BEGIN; CREATE TO María_González; COMMIT;  --1 
+	BEGIN; CREATE GERENTE TO María_González; COMMIT;  --1 
 	BEGIN; CREATE GERENTE_PLANTA TO Ana_Romero_Tules; COMMIT; --2
 	BEGIN; CREATE TO Daniel_Guerrero; COMMIT; --3
 
@@ -120,14 +121,14 @@ BEGIN; ALTER ROLE GERENTE INHERIT; COMMIT;
 	BEGIN; GRANT TO Ana_Romero_Flores; COMMIT;--17
 	BEGIN; GRANT TO Pedro_González; COMMIT;--18
 
-	BEGIN; GRANT TO Ana_Romero; COMMIT; --19
-	BEGIN; GRANT TO Luis_Muñoz; COMMIT;--20
+	BEGIN; GRANT EMPLEADO TO Ana_Romero; COMMIT; --19
+	BEGIN; GRANT EMPLEADO TO Luis_Muñoz; COMMIT;--20
 
-	BEGIN; GRANT TO Ana_Romero_Turmero; COMMIT; --21
-	BEGIN; GRANT TO Carlos_Blanco_Montoya; COMMIT;--22
+	BEGIN; GRANT OPERARIO TO Ana_Romero_Turmero; COMMIT; --21
+	BEGIN; GRANT OPERARIO TO Carlos_Blanco_Montoya; COMMIT;--22
 
-	BEGIN; GRANT TO Ana_Romero_Texan; COMMIT; --23
-	BEGIN; GRANT TO María_Gómez; COMMIT;--24
+	BEGIN; GRANT OPERARIO TO Ana_Romero_Texan; COMMIT; --23
+	BEGIN; GRANT OPERARIO TO María_Gómez; COMMIT;--24
 
 	BEGIN; GRANT OPERARIO TO Pedro_López; COMMIT;--25
 	BEGIN; GRANT OPERARIO TO Gabriela_Martínez; COMMIT;--26
@@ -162,6 +163,7 @@ BEGIN; ALTER ROLE GERENTE INHERIT; COMMIT;
 	BEGIN; GRANT CLIENTE TO Vista_Cafe; COMMIT;--11
 	BEGIN; GRANT CLIENTE TO Oporto_Cafe; COMMIT;--12
 	BEGIN; GRANT CLIENTE TO Zanzibar; COMMIT;--13
+	
 ---------------------------------------------------------------------------------------------------------
 --								       PRIVILEGIOS ROLES   											   --
 ---------------------------------------------------------------------------------------------------------

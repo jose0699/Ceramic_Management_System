@@ -266,23 +266,8 @@
 				<text><![CDATA[TOTAL VENTAS DE LA COLECCIÓN:]]></text>
 			</staticText>
 			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="270" y="1" width="298" height="29" printWhenGroupChanges="grColeccion" forecolor="#1C1C1C" uuid="4e28b420-75f7-4e94-bc7c-31f9e7193495">
+				<reportElement stretchType="ElementGroupHeight" x="416" y="1" width="150" height="29" printWhenGroupChanges="grColeccion" forecolor="#1C1C1C" uuid="b44f22b3-5fc7-4d55-88e9-9f756e03f973">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("I")]]></printWhenExpression>
-				</reportElement>
-				<box padding="1">
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Poppins" size="14" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{total_piezas}]]></textFieldExpression>
-			</textField>
-			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="269" y="1" width="147" height="29" printWhenGroupChanges="grColeccion" forecolor="#1C1C1C" uuid="b44f22b3-5fc7-4d55-88e9-9f756e03f973">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("F")]]></printWhenExpression>
 				</reportElement>
 				<box padding="1">
 					<bottomPen lineWidth="1.0"/>
@@ -294,9 +279,8 @@
 				<textFieldExpression><![CDATA[$F{total_piezas}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##¤;(#,##0.##) ¤" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="417" y="1" width="150" height="29" printWhenGroupChanges="grColeccion" forecolor="#1C1C1C" uuid="ffb33b0a-4490-4fb5-8ad2-18496a7ef692">
+				<reportElement stretchType="ElementGroupHeight" x="269" y="1" width="147" height="29" printWhenGroupChanges="grColeccion" forecolor="#1C1C1C" uuid="ffb33b0a-4490-4fb5-8ad2-18496a7ef692">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("F")]]></printWhenExpression>
 				</reportElement>
 				<box padding="1">
 					<bottomPen lineWidth="1.0"/>
@@ -310,7 +294,6 @@
 			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="269" y="31" width="147" height="29" printWhenGroupChanges="grColeccion" forecolor="#1C1C1C" uuid="23de2701-441d-49d7-adeb-fb9bf67235d8">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("F")]]></printWhenExpression>
 				</reportElement>
 				<box padding="1">
 					<bottomPen lineWidth="1.0"/>
@@ -324,7 +307,6 @@
 			<textField pattern="#,##0.##¤;(#,##0.##) ¤" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="417" y="31" width="150" height="29" printWhenGroupChanges="grColeccion" forecolor="#1C1C1C" uuid="ac3968b6-d60f-4b8a-bd54-d147e3ff933a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("F")]]></printWhenExpression>
 				</reportElement>
 				<box padding="1">
 					<bottomPen lineWidth="1.0"/>
@@ -336,24 +318,8 @@
 				<textFieldExpression><![CDATA[$F{total_vajs}.multiply($P{Tasa $})]]></textFieldExpression>
 			</textField>
 			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="269" y="60" width="298" height="29" printWhenGroupChanges="grColeccion" forecolor="#1B1C1A" uuid="f6088091-464e-4fd4-b2e5-6c1101438383">
+				<reportElement stretchType="ElementGroupHeight" x="268" y="60" width="148" height="29" printWhenGroupChanges="grColeccion" forecolor="#1B1C1A" uuid="0148dcae-008e-4a01-afed-d98900bdc38e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("I")]]></printWhenExpression>
-				</reportElement>
-				<box padding="1">
-					<pen lineColor="#030303"/>
-					<bottomPen lineWidth="1.0" lineColor="#0B6233"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Poppins" size="14" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{total_piezas}.add($F{total_vajs})]]></textFieldExpression>
-			</textField>
-			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="269" y="60" width="148" height="29" printWhenGroupChanges="grColeccion" forecolor="#1B1C1A" uuid="0148dcae-008e-4a01-afed-d98900bdc38e">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("F")]]></printWhenExpression>
 				</reportElement>
 				<box padding="1">
 					<pen lineColor="#030303"/>
@@ -368,7 +334,6 @@
 			<textField pattern="#,##0.##¤;(#,##0.##) ¤" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="417" y="60" width="150" height="29" printWhenGroupChanges="grColeccion" forecolor="#1B1C1A" uuid="17a7e985-51b0-496b-b9ef-15c5319d2498">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("F")]]></printWhenExpression>
 				</reportElement>
 				<box padding="1">
 					<pen lineColor="#030303"/>
@@ -379,20 +344,6 @@
 					<font fontName="Poppins" size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_piezas}.add($F{total_vajs}).multiply($P{Tasa $})]]></textFieldExpression>
-			</textField>
-			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="269" y="31" width="299" height="29" printWhenGroupChanges="grColeccion" forecolor="#1C1C1C" uuid="84f7fe7e-e141-42ab-a8eb-2a44f9fc7b0d">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("I")]]></printWhenExpression>
-				</reportElement>
-				<box padding="1">
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Poppins" size="14" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{total_vajs}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -491,51 +442,8 @@
 				<textFieldExpression><![CDATA["RESUMEN DE VENTAS"]]></textFieldExpression>
 			</textField>
 			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="269" y="31" width="298" height="29" forecolor="#1C1C1C" uuid="1e4ba801-236b-4049-9d88-d7f6ff99158a">
+				<reportElement stretchType="ElementGroupHeight" x="417" y="32" width="148" height="29" forecolor="#1C1C1C" uuid="a360ee1f-1857-4bda-b00d-7a6f6415e0fc">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("I")]]></printWhenExpression>
-				</reportElement>
-				<box padding="1">
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Poppins" size="14" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{total_piezas$}]]></textFieldExpression>
-			</textField>
-			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="269" y="61" width="298" height="29" forecolor="#1C1C1C" uuid="ecb8ca28-9ab1-4405-b8ba-cb0d81dbaa95">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("I")]]></printWhenExpression>
-				</reportElement>
-				<box padding="1">
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Poppins" size="14" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{total_vajs$}]]></textFieldExpression>
-			</textField>
-			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="269" y="90" width="298" height="29" forecolor="#0B6233" uuid="7b618189-1d38-410d-9ad0-b395889e962c">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("I")]]></printWhenExpression>
-				</reportElement>
-				<box padding="1">
-					<bottomPen lineWidth="1.0" lineColor="#030303"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Poppins" size="14" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{total_piezas$}+$V{total_vajs$}]]></textFieldExpression>
-			</textField>
-			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="269" y="31" width="148" height="29" forecolor="#1C1C1C" uuid="a360ee1f-1857-4bda-b00d-7a6f6415e0fc">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("F")]]></printWhenExpression>
 				</reportElement>
 				<box padding="1">
 					<bottomPen lineWidth="1.0"/>
@@ -547,9 +455,8 @@
 				<textFieldExpression><![CDATA[$V{total_piezas$}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##¤;(#,##0.##) ¤" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="417" y="31" width="148" height="29" forecolor="#1C1C1C" uuid="a39ac131-8dec-40d5-9c7c-4afb4f084a3a">
+				<reportElement stretchType="ElementGroupHeight" x="269" y="32" width="148" height="29" forecolor="#1C1C1C" uuid="a39ac131-8dec-40d5-9c7c-4afb4f084a3a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("F")]]></printWhenExpression>
 				</reportElement>
 				<box padding="1">
 					<bottomPen lineWidth="1.0"/>
@@ -563,7 +470,6 @@
 			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="269" y="61" width="148" height="29" forecolor="#1C1C1C" uuid="578119a7-0c30-466c-8500-e5067158cc26">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("F")]]></printWhenExpression>
 				</reportElement>
 				<box padding="1">
 					<bottomPen lineWidth="1.0"/>
@@ -575,9 +481,8 @@
 				<textFieldExpression><![CDATA[$V{total_vajs$}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##¤;(#,##0.##) ¤" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="418" y="61" width="148" height="29" forecolor="#1C1C1C" uuid="2e272cab-56b8-4dd5-9d75-a22829d38aec">
+				<reportElement stretchType="ElementGroupHeight" x="417" y="61" width="148" height="29" forecolor="#1C1C1C" uuid="2e272cab-56b8-4dd5-9d75-a22829d38aec">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("F")]]></printWhenExpression>
 				</reportElement>
 				<box padding="1">
 					<bottomPen lineWidth="1.0"/>
@@ -591,7 +496,6 @@
 			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="269" y="90" width="149" height="29" forecolor="#0B6233" uuid="ee5f906c-a794-4c92-93d4-df4bf273afd5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("F")]]></printWhenExpression>
 				</reportElement>
 				<box padding="1">
 					<bottomPen lineWidth="1.0" lineColor="#030303"/>
@@ -605,7 +509,6 @@
 			<textField pattern="#,##0.##¤;(#,##0.##) ¤" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="418" y="90" width="148" height="29" forecolor="#0B6233" uuid="54c6cac6-25dd-4d00-85bb-4efde84be4ca">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$F{linea}.equalsIgnoreCase("F")]]></printWhenExpression>
 				</reportElement>
 				<box padding="1">
 					<bottomPen lineWidth="1.0" lineColor="#030303"/>

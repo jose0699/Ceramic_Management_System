@@ -10,7 +10,8 @@ BEGIN;
 		CONFLICTO numeric(1);
 		cliente_conflicto numeric(3);
 	BEGIN
-		new_fecha := emision;
+		--Se agrega un dia a la fecha del pedido
+		new_fecha := emision+INTERVAL '1 DAY';
 
 		--Se crea Tabla CLIENTE_CONTRATO.
 		CREATE TEMPORARY TABLE CLIENTE_CONTRATO ( pk_cliente numeric(3));
@@ -28,7 +29,7 @@ BEGIN;
 
 		WHILE CONFLICTO > 0 LOOP
 			--Se revisa si en la fecha genera un conflicto
-			IF 0 = (SELECT COUNT(*) FROM CLIENTE_MODIFICAR cm WHERE  cm.fecha_entrega = new_fecha) THEN 
+			IF 0 = (SELECT COUNT(*) FROM CLIENTE_MODIFICAR cm WHERE  cm.old_entrega = new_fecha) THEN 
 				--Sin conflictos de fechas y actualiza el pedido.
 				UPDATE PEDIDO SET fecha_entrega = new_fecha  WHERE uid_cliente = cliente AND fecha_entrega = emision;
 				CONFLICTO:= 0;
@@ -37,7 +38,7 @@ BEGIN;
 				--Se revisa si la fecha genera un conflicto con un cliente con contrato
 				IF 1 = (SELECT COUNT(*) FROM CLIENTE_CONTRATO cc INNER JOIN 
 							CLIENTE_MODIFICAR clmo ON cc.pk_cliente = clmo.pk_cliente
-						WHERE clmo.fecha_entrega_deseada = new_fecha)
+						WHERE clmo.old_entrega = new_fecha)
 				THEN
 					--Se agrega un dia a la fecha del pedido
 					new_fecha := new_fecha + INTERVAL '1 DAY';
@@ -50,8 +51,12 @@ BEGIN;
 						--Se busca el pk del cliente (cliente_conflicto)
 						SELECT climodi.pk_cliente into cliente_conflicto FROM CLIENTE_MODIFICAR climodi WHERE climodi.old_entrega = new_fecha;
 
+						/* Esta linea es erronea: originalmente asignabas como nueva fecha la fecha de emision, y eso hacía que en una primera instancia
+							 el primer pedido mandado a esta función entrase en conflicto con sí mismo, para solucionar eso sume 1 día a new_fecha al inicio del todo
+							haciendo que esta línea ya no fuera necesaria. Además el problema que describo arriba desencadenaba en otra serie de problemas con el resto de pedidos en la cola
 						--Se agrega un dia a la fecha del pedido
 						new_fecha := new_fecha + INTERVAL '1 DAY';
+						*/
 
 						--Se elimina tablas para limpiar memoria
 						DROP TABLE IF EXISTS CLIENTE_MODIFICAR;
@@ -245,7 +250,7 @@ BEGIN;
 	CREATE OR REPLACE PROCEDURE INSERTAR_PEDIDO(cliente numeric(6), tipo varchar(1), entrega date) AS $$
 	BEGIN
 		IF tipo IN ('F', 'I') THEN
-			INSERT INTO PEIDO VALUES (cliente, nextval('pedido_uid_seq'), current_date, (SELECT * FROM ASIGNAR_FECHA_ENTREGA(current_date, cliente)), entrega, 'E', tipo);
+			INSERT INTO PEDIDO VALUES (cliente, nextval('pedido_uid_seq'), current_date, (SELECT * FROM ASIGNAR_FECHA_ENTREGA(current_date, cliente)), entrega, 'E', tipo);
 		END IF;
 	END;
 	$$ LANGUAGE plpgsql;
@@ -429,13 +434,31 @@ BEGIN; CREATE OR REPLACE TRIGGER VALIDEZ_FECHA_CIERRE_CONTRATO BEFORE UPDATE OF 
 BEGIN; CREATE OR REPLACE TRIGGER VALIDEZ_FECHA_APERTURA_CONTRATO BEFORE INSERT ON CONTRATO FOR EACH ROW EXECUTE FUNCTION VALIDAR_APERTURA_CONTRATO(); COMMIT;
 
 ---------------------------------------------------------------------------------------------------------
-BEGIN;
-	CREATE OR REPLACE PROCEDURE CANCELAR_CONTRATO(cliente numeric(3)) AS $$ 
+	
+	
+CREATE OR REPLACE FUNCTION MOSTRAR_COLA_PEDIDOS(fecha_inicio DATE) RETURNS
+			TABLE (	  
+				id_pedido numeric(3) 
+				, nombre_cliente varchar(50) 
+				, pais_del_cliente varchar(40)
+				, tipo_pedido text 
+				, fecha_entrega date)
+	AS $$
 	BEGIN
-		UPDATE CONTRATO SET fecha_hora_fin = NOW() WHERE uid_cliente = cliente AND fecha_hora_fin is null;
+		RETURN QUERY SELECT 
+									p.uid_pedido,
+									c.nombre,
+									pa.nombre,
+									CASE
+										WHEN p.tipo_pedido = 'F' THEN 'FAMILIAR'
+										WHEN p.tipo_pedido = 'I' THEN 'INSTITUCIONAL'
+									END AS tipo_pedido,
+									p.fecha_entrega
+								FROM PEDIDO p
+								JOIN CLIENTE c ON c.uid_cliente = p.uid_cliente
+								JOIN PAIS pa ON pa.uid_pais = c.uid_pais
+								WHERE p.fecha_entrega >= fecha_inicio AND p.estado = 'E'
+								ORDER BY 5;
 	END;
 	$$ LANGUAGE plpgsql;
-COMMIT;
-
-
 					

@@ -99,7 +99,7 @@ BEGIN; ALTER ROLE GERENTE INHERIT; COMMIT;
 ---------------------------------------------------------------------------------------------------------
 
 	BEGIN; CREATE TO María_González; COMMIT;  --1 
-	BEGIN; CREATE TO Ana_Romero_Tules; COMMIT; --2
+	BEGIN; CREATE GERENTE_PLANTA TO Ana_Romero_Tules; COMMIT; --2
 	BEGIN; CREATE TO Daniel_Guerrero; COMMIT; --3
 
 	BEGIN; CREATE SUPERVISOR TO Carlos_Torres; COMMIT; --4

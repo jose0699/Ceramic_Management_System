@@ -172,7 +172,7 @@ COMMIT;
 ---------------------------------------------------------------------------------------------------------
 
 BEGIN;
-	CREATE OR REPLACE FUNCTION ASIGNAR_FECHA_ENTREGA(emision DATE, cliente numeric(3)) RETURNS DATE AS $$
+	CREATE OR REPLACE FUNCTION ASIGNAR_FECHA_ENTREGA(emision DATE, cliente numeric(3), id_pedido numeric(6)) RETURNS DATE AS $$
 	DECLARE
 		aux numeric(1);
 	BEGIN
@@ -183,11 +183,11 @@ BEGIN;
 		SELECT COUNT(*) INTO aux FROM PEDIDO pe WHERE pe.fecha_entrega = emision AND pe.estado IN ('E', 'A');
 
 		IF aux = 0 THEN
-			RAISE NOTICE 'La posible fecha de entrega es: %', emision;
+			RAISE NOTICE 'Pedido #% emitido con fecha de entrega para: %', id_pedido, emision;
 			RETURN emision;
 		ELSE
 			SELECT * INTO emision FROM CONFLICTO_FECHA(emision, cliente);
-			RAISE NOTICE 'La posible fecha de entrega 2 es: %', emision;
+			RAISE NOTICE 'Pedido #% emitido con fecha de entrega para: %', id_pedido, emision;
 			RETURN emision;
 		END IF;
 	END;
@@ -253,11 +253,22 @@ BEGIN;
 	CREATE OR REPLACE PROCEDURE INSERTAR_PEDIDO(cliente numeric(6), tipo varchar(1), entrega date) AS $$
 	BEGIN
 		IF tipo IN ('F', 'I') THEN
-			INSERT INTO PEDIDO VALUES (cliente, nextval('pedido_uid_seq'), current_date, (SELECT * FROM ASIGNAR_FECHA_ENTREGA(current_date, cliente)), entrega, 'E', tipo);
+			INSERT INTO PEDIDO VALUES (cliente, nextval('pedido_uid_seq'), current_date, null, entrega, 'P', tipo);
+			RAISE NOTICE 'Pedido ingresado exitosamente para el cliente #%, ESTADO: En Proceso, Numero del pedido: #%', cliente, currval('pedido_uid_seq');
 		END IF;
 	END;
 	$$ LANGUAGE plpgsql;
 COMMIT;
+
+
+BEGIN;
+	CREATE OR REPLACE PROCEDURE EMITIR_PEDIDO(cliente numeric(6) ,id_pedido numeric(6)) AS $$
+	BEGIN
+		UPDATE PEDIDO SET estado = 'E', fecha_entrega = (SELECT * FROM ASIGNAR_FECHA_ENTREGA(current_date, cliente, id_pedido)) WHERE uid_pedido = id_pedido;
+	END;
+	$$ LANGUAGE plpgsql;
+COMMIT;
+
 
 ---------------------------------------------------------------------------------------------------------
 
@@ -439,7 +450,7 @@ BEGIN; CREATE OR REPLACE TRIGGER VALIDEZ_FECHA_APERTURA_CONTRATO BEFORE INSERT O
 ---------------------------------------------------------------------------------------------------------
 	
 	
-CREATE OR REPLACE FUNCTION MOSTRAR_COLA_PEDIDOS(fecha_inicio DATE) RETURNS
+CREATE OR REPLACE FUNCTION MOSTRAR_COLA_PEDIDOS(mes numeric(2), ano numeric(4)) RETURNS
 			TABLE (	  
 				id_pedido numeric(3) 
 				, nombre_cliente varchar(50) 
@@ -447,7 +458,13 @@ CREATE OR REPLACE FUNCTION MOSTRAR_COLA_PEDIDOS(fecha_inicio DATE) RETURNS
 				, tipo_pedido text 
 				, fecha_entrega date)
 	AS $$
+	DECLARE 
+		fecha_inicio date;
+		fecha_fin date;
 	BEGIN
+		fecha_inicio := to_date(CONCAT(to_char(ano,'9999'),' ',to_char(mes,'99'),' ', '01'),'YYYY MM DD');
+		fecha_fin := fecha_inicio + INTERVAL '1 month' - INTERVAL '1 day';
+
 		RETURN QUERY SELECT 
 									p.uid_pedido,
 									c.nombre,
@@ -460,7 +477,7 @@ CREATE OR REPLACE FUNCTION MOSTRAR_COLA_PEDIDOS(fecha_inicio DATE) RETURNS
 								FROM PEDIDO p
 								JOIN CLIENTE c ON c.uid_cliente = p.uid_cliente
 								JOIN PAIS pa ON pa.uid_pais = c.uid_pais
-								WHERE p.fecha_entrega >= fecha_inicio AND p.estado = 'E'
+								WHERE (p.fecha_entrega BETWEEN fecha_inicio AND fecha_fin) AND p.estado = 'E'
 								ORDER BY 5;
 	END;
 	$$ LANGUAGE plpgsql;

@@ -337,7 +337,7 @@ BEGIN;
 		fecha_entrega_deseada date not null,
 		estado varchar(1) not null,
 		tipo_pedido varchar(1) not null,
-		CONSTRAINT check_estado_pedido CHECK(estado in ('A', 'C', 'E')),
+		CONSTRAINT check_estado_pedido CHECK(estado in ('A', 'C', 'E','P')),
 		CONSTRAINT tipo_pedido CHECK (tipo_pedido in ('F', 'I')),
 		CONSTRAINT fk_cliente_pedido FOREIGN KEY( uid_cliente) REFERENCES CLIENTE( uid_cliente),
 		CONSTRAINT pk_pedido PRIMARY KEY( uid_cliente, uid_pedido)
@@ -348,6 +348,7 @@ COMMIT;
 	--A: Aprobado
 	--C: Cancelado
 	--E: Emitido
+	--P: en Proceso
 
 	Leyenda(tipo_pedido):
 	--F: Familiar

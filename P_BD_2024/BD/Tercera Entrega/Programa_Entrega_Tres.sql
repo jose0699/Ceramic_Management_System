@@ -32,6 +32,7 @@ BEGIN;
 				--Sin conflictos de fechas y actualiza el pedido.
 				UPDATE PEDIDO SET fecha_entrega = new_fecha  WHERE uid_cliente = cliente AND fecha_entrega = emision;
 				CONFLICTO:= 0;
+				
 			ELSE 
 				--Se revisa si la fecha genera un conflicto con un cliente con contrato
 				IF 1 = (SELECT COUNT(*) FROM CLIENTE_CONTRATO cc INNER JOIN 
@@ -64,6 +65,9 @@ BEGIN;
 					END IF;
 				END IF;
 			END IF;
+			--Se elimina tablas para limpiar memoria
+			DROP TABLE IF EXISTS CLIENTE_MODIFICAR;
+			DROP TABLE IF EXISTS CLIENTE_CONTRATO;
 		END LOOP;
 	END;
 	$$ LANGUAGE plpgsql;
@@ -95,7 +99,6 @@ BEGIN;
 
 		--Consulta si el cliente tiene contrato activo.
 		SELECT COUNT(*) into aux FROM CLIENTE_CONTRATO co WHERE co.pk_cliente = cliente;	
-
 		existe := 1;
 
 		IF aux = 0 THEN
@@ -105,6 +108,10 @@ BEGIN;
 				emision := emision + Interval '1 DAY';
 				SELECT COUNT(*) into existe FROM CLIENTE_MODIFICAR cm WHERE cm.old_entrega = emision;
 			END LOOP;
+		
+			--Se elimina tablas para limpiar memoria
+			DROP TABLE IF EXISTS CLIENTE_MODIFICAR;
+			DROP TABLE IF EXISTS CLIENTE_CONTRATO;
 
 			--Retorna la fecha sin conflicto.
 			RETURN emision;
@@ -136,9 +143,18 @@ BEGIN;
 					--Se añade un dia a la fecha de entrega
 					emision := emision + Interval '1 DAY';
 				ELSE 
+					--Se elimina tablas para limpiar memoria
+					DROP TABLE IF EXISTS CLIENTE_MODIFICAR;
+					DROP TABLE IF EXISTS CLIENTE_CONTRATO;
+
 					RETURN emision;
 				END IF;
 			END LOOP;
+
+			--Se elimina tablas para limpiar memoria
+			DROP TABLE IF EXISTS CLIENTE_MODIFICAR;
+			DROP TABLE IF EXISTS CLIENTE_CONTRATO;
+			
 			RETURN emision;
 		END IF;
 	END;

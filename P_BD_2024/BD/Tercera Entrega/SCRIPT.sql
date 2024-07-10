@@ -8,7 +8,7 @@ BEGIN; ALTER TABLE PEDIDO ADD CONSTRAINT check_estado_pedido CHECK (estado in ('
 BEGIN; ALTER TABLE FACTURA ADD CONSTRAINT unique_pedido UNIQUE (uid_pedido); COMMIT;
 
 ---------------------------------------------------------------------------------------------------------
---											HERRAMIENTAS											   --
+--							          FUNCIONES Y PROCEDIMIENTOS									   --
 ---------------------------------------------------------------------------------------------------------
 
 BEGIN;
@@ -285,47 +285,43 @@ BEGIN;
 		tipo varchar(1);
 		tipo_producto varchar(1);
 	BEGIN
-		IF (SELECT pedi.tipo_pedido FROM PEDIDO pedi WHERE pedi.uid_pedido = pedido) = 'E' THEN
-			--Se busca la cantidad de detalle existente del pedido.
-			select count(*) into num_detalle FROM detalle_pedido_pieza dpp WHERE dpp.uid_pedido = pedido; 
+		--Se busca la cantidad de detalle existente del pedido.
+		select count(*) into num_detalle FROM detalle_pedido_pieza dpp WHERE dpp.uid_pedido = pedido; 
 
-			--Incrementa el número del detalle.
-			num_detalle := num_detalle + 1;
+		--Incrementa el número del detalle.
+		num_detalle := num_detalle + 1;
 
-			--Se busca la pk del cliente y el tipo de pedido (F o I).
-			SELECT p.uid_cliente, p.tipo_pedido, p.estado INTO cliente, tipo, estado_pedido FROM PEDIDO p WHERE p.uid_pedido = pedido;
+		--Se busca la pk del cliente y el tipo de pedido (F o I).
+		SELECT p.uid_cliente, p.tipo_pedido, p.estado INTO cliente, tipo, estado_pedido FROM PEDIDO p WHERE p.uid_pedido = pedido;
 
-			--Si el estado = Emitido, puede insertar
-			IF estado_pedido = 'E' THEN
-				--Si tipo = 1 entonces estamos manejando una Vajilla.
-				IF tipo_pedido = 1 THEN
-					--Se busca la linea de la vajilla.
-					SELECT co.linea into tipo_producto FROM COLECCION co
-						INNER JOIN DETALLE_PIEZA_VAJILLA dpv ON co.uid_coleccion = dpv.uid_coleccion 
-					WHERE uid_juego = producto Limit 1;
 
-					--Se verifica si coincide con la linea del pedido
-					IF tipo = tipo_producto THEN
-						insert into DETALLE_PEDIDO_PIEZA values( cliente, pedido, num_detalle, cantidad , producto);
-					ELSE
-						RAISE EXCEPTION 'Error: Productos distintos';
-					END IF;
-				END IF;
+		--Si tipo = 1 entonces estamos manejando una Vajilla.
+		IF tipo_pedido = 1 THEN
+			--Se busca la linea de la vajilla.
+			SELECT co.linea into tipo_producto FROM COLECCION co
+				INNER JOIN DETALLE_PIEZA_VAJILLA dpv ON co.uid_coleccion = dpv.uid_coleccion 
+			WHERE uid_juego = producto Limit 1;
 
-				--Si tipo = 2 entonces estamos manejando una Pieza
-				IF tipo_pedido = 2 THEN
-					--Se busca la pk y linea de la coleccion de la pieza
-					SELECT pi.uid_coleccion, col.linea  into coleccion, tipo_producto FROM PIEZA pi
-						INNER JOIN COLECCION col ON col.uid_coleccion = pi.uid_coleccion
-					WHERE pi.uid_pieza = producto;
+			--Se verifica si coincide con la linea del pedido
+			IF tipo = tipo_producto THEN
+				insert into DETALLE_PEDIDO_PIEZA values( cliente, pedido, num_detalle, cantidad , producto);
+			ELSE
+				RAISE EXCEPTION 'Error: Productos distintos';
+			END IF;
+		END IF;
 
-					--Se verifica si coincide con la linea del pedido
-					IF tipo = tipo_producto THEN
-						insert into DETALLE_PEDIDO_PIEZA values( cliente, pedido, num_detalle, cantidad, null, coleccion, producto);
-					ELSE
-						RAISE EXCEPTION 'Error: Productos distintos';
-					END IF;
-				END IF;
+		--Si tipo = 2 entonces estamos manejando una Pieza
+		IF tipo_pedido = 2 THEN
+			--Se busca la pk y linea de la coleccion de la pieza
+			SELECT pi.uid_coleccion, col.linea  into coleccion, tipo_producto FROM PIEZA pi
+				INNER JOIN COLECCION col ON col.uid_coleccion = pi.uid_coleccion
+			WHERE pi.uid_pieza = producto;
+
+			--Se verifica si coincide con la linea del pedido
+			IF tipo = tipo_producto THEN
+				insert into DETALLE_PEDIDO_PIEZA values( cliente, pedido, num_detalle, cantidad, null, coleccion, producto);
+			ELSE
+				RAISE EXCEPTION 'Error: Productos distintos';
 			END IF;
 		END IF;
 	END;
@@ -601,10 +597,24 @@ BEGIN;
 COMMIT;
 
 ---------------------------------------------------------------------------------------------------------
-/*                                        Seguridad                                                    */
+/*                                        SEGURIDAD                                                    */
 ---------------------------------------------------------------------------------------------------------
 --								       CREACION ROLES   											   --
 ---------------------------------------------------------------------------------------------------------
+/*
+	Se han definido los siguientes roles, basados en las funciones y responsabilidades descritas en el enunciado del proyecto:
+
+	El proyecto contempla la creación de los siguientes roles:
+
+	--Cliente
+	--Empleado
+	--Operario
+	--Hornero
+	--Supervisor
+	--Gerente
+	--Gerente planta
+	--Secretaria
+*/
 
 	BEGIN; CREATE ROLE CLIENTE LOGIN; COMMIT;
 	
@@ -620,7 +630,27 @@ COMMIT;
 ---------------------------------------------------------------------------------------------------------
 --								      OTORGAR HERENCIA   											   --
 ---------------------------------------------------------------------------------------------------------
+/*
+	Según la información proporcionada, el proyecto contempla una estructura de herencia de privilegios 
+	entre los diferentes roles:
+	
+	--Empleado
+		Operario
+		Gerente
 
+	--Operario
+		Hornero
+		Supervisor
+
+	--Gerente
+		Secretaria
+		Gerente de Planta
+		Gerente Técnico (no es un rol)
+		Gerente General (no es un rol)
+		
+	En esta estructura jerárquica, los privilegios y permisos se heredan desde los roles más generales hacia 
+	los más específicos.	
+*/
 	BEGIN; ALTER ROLE EMPLEADO INHERIT; COMMIT;
 	BEGIN; ALTER ROLE OPERARIO INHERIT; COMMIT;
 	BEGIN; ALTER ROLE GERENTE INHERIT; COMMIT;
@@ -628,7 +658,10 @@ COMMIT;
 ---------------------------------------------------------------------------------------------------------
 --								       CREACION USUARIOS   											   --
 ---------------------------------------------------------------------------------------------------------
-
+/*
+	Los siguientes usuarios han sido creados siguiendo las inserciones ya existentes en la base de datos 
+	correspondientes a los de Empleados y Clientes.
+*/
 	BEGIN; CREATE USER María_González WITH PASSWORD '21474659'; COMMIT;   
 	BEGIN; CREATE USER Ana_Romero_Tules WITH PASSWORD '18934567'; COMMIT;
 	BEGIN; CREATE USER Daniel_Guerrero  WITH PASSWORD '20876543'; COMMIT;
@@ -695,9 +728,13 @@ COMMIT;
 	BEGIN; CREATE USER Zanzibar WITH PASSWORD 'cliente13'; COMMIT;
 	
 ---------------------------------------------------------------------------------------------------------
---								 OTORGAR ROLES USUARIOS   											   --
+--								     OTORGAR ROLES USUARIOS  										   --
 ---------------------------------------------------------------------------------------------------------
-
+/*
+	Se asignan a los siguientes usuarios los roles ya existente siguiendo la infomracion proporcionada por 
+	las inserciones  en la base de datos, correspondientes a los roles de Cliente, Empleadom, Operario,
+	Hornero, Supervisor, Gerente, Gerente planta y Secretaria.
+*/
 	BEGIN; GRANT GERENTE TO María_González; COMMIT;  
 	BEGIN; GRANT GERENTE_PLANTA TO Ana_Romero_Tules; COMMIT; 
 	BEGIN; GRANT GERENTE TO Daniel_Guerrero; COMMIT; 
@@ -767,6 +804,13 @@ COMMIT;
 --								       PRIVILEGIOS ROLES   											   --
 ---------------------------------------------------------------------------------------------------------
 --                                     ROLES CON HERENCIA                                              --
+---------------------------------------------------------------------------------------------------------
+/*
+	Privilegios del rol EMPLEADO:
+	Todos los empleados tienen el privilegio de visualizar la información de su propio expediente. Por lo 
+	tanto, los usuarios con el rol de Empleado deben tener permisos de SELECT sobre todas las tablas 
+	correspondientes a la información básica del Empleado.
+*/
 --EMPLEADO
 	BEGIN; GRANT SELECT ON DEPARTAMENTO TO EMPLEADO; COMMIT;
 	BEGIN; GRANT SELECT ON DET_EXP TO EMPLEADO; COMMIT; 
@@ -797,7 +841,7 @@ COMMIT;
 	BEGIN; GRANT SELECT ON DETALLE_PEDIDO_PIEZA TO GERENTE; COMMIT;
 
 	BEGIN; GRANT SELECT ON PAIS TO GERENTE; COMMIT;
-	BEGIN; GRANT SELECT ON NOMBRES_MOLDES TO GERENTE; COMMIT;
+	BEGIN; GRANT SELECT ON NOMBRES_MOLDES TO GERENTE; COMMIT;
 
 	BEGIN; GRANT GERENTE TO SECRETARIA, GERENTE_PLANTA; COMMIT;
 	
@@ -816,7 +860,7 @@ COMMIT;
 	BEGIN; GRANT SELECT ON VAJILLA TO CLIENTE; COMMIT;
 	BEGIN; GRANT SELECT ON COLECCION TO CLIENTE; COMMIT;
 	BEGIN; GRANT SELECT ON MOLDE TO CLIENTE; COMMIT;
-	BEGIN; GRANT SELECT ON NOMBRES_MOLDES TO CLIENTE; COMMIT;
+	BEGIN; GRANT SELECT ON NOMBRES_MOLDES TO CLIENTE; COMMIT;
 	
 --HORNERO
 	BEGIN; GRANT SELECT ON HIST_TURNO TO HORNERO; COMMIT;

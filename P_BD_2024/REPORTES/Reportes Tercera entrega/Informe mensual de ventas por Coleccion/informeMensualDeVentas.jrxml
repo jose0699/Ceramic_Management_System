@@ -362,7 +362,6 @@
 			<textField>
 				<reportElement x="0" y="0" width="571" height="39" uuid="1fa3a0c9-0d73-4f41-a115-708f2b553129">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$P{Linea}.equalsIgnoreCase("Familiar")]]></printWhenExpression>
 				</reportElement>
 				<box topPadding="11" leftPadding="5" bottomPadding="5" rightPadding="5">
 					<bottomPen lineWidth="0.0" lineColor="#4E9171"/>

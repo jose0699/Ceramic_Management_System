@@ -54,13 +54,6 @@ BEGIN;
 						--Se busca el pk del cliente (cliente_conflicto)
 						SELECT climodi.pk_cliente into cliente_conflicto FROM CLIENTE_MODIFICAR climodi WHERE climodi.old_entrega = new_fecha;
 
-						/* Esta linea es erronea: originalmente asignabas como nueva fecha la fecha de emision, y eso hacía que en una primera instancia
-							 el primer pedido mandado a esta función entrase en conflicto con sí mismo, para solucionar eso sume 1 día a new_fecha al inicio del todo
-							haciendo que esta línea ya no fuera necesaria. Además el problema que describo arriba desencadenaba en otra serie de problemas con el resto de pedidos en la cola
-						--Se agrega un dia a la fecha del pedido
-						new_fecha := new_fecha + INTERVAL '1 DAY';
-						*/
-
 						--Se elimina tablas para limpiar memoria
 						DROP TABLE IF EXISTS CLIENTE_MODIFICAR;
 						DROP TABLE IF EXISTS CLIENTE_CONTRATO;
@@ -449,7 +442,7 @@ BEGIN; CREATE OR REPLACE TRIGGER VALIDEZ_FECHA_APERTURA_CONTRATO BEFORE INSERT O
 
 ---------------------------------------------------------------------------------------------------------
 	
-	
+BEGIN;
 CREATE OR REPLACE FUNCTION MOSTRAR_COLA_PEDIDOS(mes numeric(2), ano numeric(4)) RETURNS
 			TABLE (	  
 				id_pedido numeric(3) 
@@ -481,4 +474,122 @@ CREATE OR REPLACE FUNCTION MOSTRAR_COLA_PEDIDOS(mes numeric(2), ano numeric(4)) 
 								ORDER BY 5;
 	END;
 	$$ LANGUAGE plpgsql;
-					
+COMMIT;			
+---------------------------------------------------------------------------------------------------------
+--																		Funciones Reportes																					     --
+---------------------------------------------------------------------------------------------------------
+
+BEGIN;
+CREATE OR REPLACE FUNCTION DATOS_BASICO_PEDIDO (num_pedido numeric(6))
+	RETURNS TABLE (
+		uid_pedido numeric(6),
+		fecha_emision text,
+		fecha_entrega text,
+		fecha_entrega_deseada text,
+		nombre_pais varchar(40),
+		nombre_cliente  varchar(50),
+		telefono_cliente varchar(15),
+		email_cliente varchar(256),
+		estado_pedido Text,
+		tipo_pedido Text
+	)
+AS $$
+BEGIN
+	RETURN QUERY
+	SELECT 
+			 p.uid_pedido,
+			 to_char(p.fecha_emision, 'DD "de" TMMonth "de" YYYY'),
+		   to_char(p.fecha_entrega,'DD "de" TMMonth "de" YYYY'),
+		   to_char(p.fecha_entrega_deseada, 'DD "de" TMMonth "de" YYYY'),
+		   pa.nombre,
+		   c.nombre,
+		   c.telefono,
+		   c.email,
+		   CASE
+			   WHEN p.estado = 'A' THEN 'Aprobado'
+			   WHEN p.estado = 'C' THEN 'Cancelado'
+			   WHEN p.estado = 'E' THEN 'Emitido'
+		   END AS estado,
+		   CASE
+			   WHEN p.tipo_pedido = 'F' THEN 'Familiar'
+			   WHEN p.tipo_pedido = 'I' THEN 'Institucional'
+		   END AS pedido
+	FROM CLIENTE c
+		INNER JOIN PAIS pa ON pa.uid_pais = c.uid_pais
+		INNER JOIN PEDIDO p ON c.uid_cliente = p.uid_cliente
+	WHERE p.uid_pedido = num_pedido; 
+END;
+$$ LANGUAGE plpgsql;
+COMMIT;
+
+BEGIN;
+CREATE OR REPLACE FUNCTION DATOS_BASICO_FACTURA (num_factura IN FACTURA.numero_factura%TYPE)
+	RETURNS TABLE (
+		uid_pedido numeric(6),
+		fecha_emision text,
+		nombre_cliente  varchar(50),
+		tipo_pedido varchar(1),
+		monto_sin_descuento numeric (8,2),
+		Descuento numeric (8,2),
+		monto_descontado numeric (8,2),
+		monto_total numeric(8,2)
+
+	)
+AS $$
+DECLARE
+	monto_sin_descuento numeric (8,2);
+	Descuento numeric (8,2);
+    monto numeric(8,2);
+BEGIN
+	--Descuento ofrecido
+	SELECT COALESCE (c.porcentaje_descuento, 0) INTO Descuento
+	FROM CLIENTE cl
+		 LEFT JOIN CONTRATO c ON cl.uid_cliente = c.uid_cliente 
+ 		 INNER JOIN PEDIDO p ON cl.uid_cliente = p.uid_cliente 
+		 INNER JOIN FACTURA fac ON fac.uid_pedido = p.uid_pedido
+	WHERE fac.numero_factura = num_factura AND c.fecha_hora_fin IS NULL;
+	
+	--Monto sin el descuento
+	SELECT  COALESCE(SUM(dt.cantidad * COALESCE(fh.precio,pi.precio)), 0) + 
+									 COALESCE((SELECT COALESCE(SUM(d.cantidad * (COALESCE(fam.precio,pz.precio) * dv.cantidad)) * 0.85, 0) 
+															FROM FACTURA f
+																INNER JOIN pedido p ON f.uid_pedido = p.uid_pedido
+																INNER JOIN DETALLE_PEDIDO_PIEZA d ON p.uid_pedido = d.uid_pedido
+																INNER JOIN DETALLE_PIEZA_VAJILLA dv ON d.uid_juego = dv.uid_juego
+																INNER JOIN PIEZA pz ON pz.uid_pieza = dv.uid_pieza
+																LEFT JOIN familiar_historico_precio fam ON pz.uid_pieza = fam.uid_pieza
+															WHERE f.numero_factura = num_factura AND 
+																	d.uid_juego IS NOT NULL AND 
+																	fam.fecha_fin IS NULL), 0) INTO  monto_sin_descuento		
+	FROM FACTURA fa
+		INNER JOIN PEDIDO pe ON fa.uid_pedido = pe.uid_pedido
+		INNER JOIN DETALLE_PEDIDO_PIEZA dt ON pe.uid_pedido = dt.uid_pedido
+		INNER JOIN PIEZA pi ON pi.uid_pieza = dt.uid_pieza
+		LEFT JOIN familiar_historico_precio fh ON pi.uid_pieza = fh.uid_pieza
+	WHERE fa.numero_factura = num_factura  AND 	
+		  dt.uid_juego IS NULL AND 
+		  fh.fecha_fin IS NULL;	
+	
+	IF Descuento <> 0 THEN
+		monto := (monto_sin_descuento * (1 -(Descuento/100))):: Numeric(8,2);
+	ELSE 
+		monto := (monto_sin_descuento)::Numeric(8,2);
+	END IF;
+	
+	RETURN QUERY
+	SELECT 
+		   p.uid_pedido,
+		   to_char(fact.fecha_emision, 'DD-TMMON-YYYY'),
+		   c.nombre,
+			 p.tipo_pedido,
+		   monto_sin_descuento,
+		   Descuento,
+			 round(monto_sin_descuento*(Descuento/100), 2)::Numeric(8,2) AS monto_descontado,
+		   monto
+	FROM CLIENTE c
+		INNER JOIN PEDIDO p ON c.uid_cliente = p.uid_cliente
+		INNER JOIN FACTURA fact ON fact.uid_pedido = p.uid_pedido
+	WHERE fact.numero_factura = num_factura; 
+END;
+$$ LANGUAGE plpgsql;
+COMMIT;

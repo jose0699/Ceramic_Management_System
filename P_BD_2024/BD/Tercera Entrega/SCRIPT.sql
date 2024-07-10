@@ -357,7 +357,8 @@ BEGIN;
 		IF 15 <= (SELECT * FROM CONTAR_PEDIDO(pedido)) THEN
 			INSERT INTO factura values((SELECT p.uid_cliente FROM PEDIDO p WHERE p.uid_pedido = pedido), pedido, nextval('factura_uid_seq'), 
 									   current_date,( SELECT * FROM CALCULAR_MONTO_FACTURA(pedido)));
-			UPDATE PEDIDO SET estado = 'A' WHERE uid_pedido = pedido;
+			UPDATE PEDIDO pe SET estado = 'A' WHERE pe.uid_pedido = pedido;
+			RAISE NOTICE 'Factura generada exitosamente';
 		ELSE
 			RAISE EXCEPTION 'Error: Cantidad de piezas insuficientes.';
 		END IF;
@@ -883,7 +884,22 @@ COMMIT;
 
 /*
 	Privilegios del rol CLIENTE:
+	Los Clientes tienen el privilegio de consultar y acceder a la siguiente información:
+
+	--Información personal del cliente:
 	
+		Los Clientes pueden consultar (SELECT) su información personal, historial 
+		de compras y Contratos.
+
+	--Pedidos:
+		Los Clientes pueden consultar (SELECT) los detalles de sus pedidos realizados, como fecha, productos, 
+		cantidades, estado del pedido, entre otros, en la tabla de PEDIDOS.
+		Adicionalmente, los Clientes tienen el privilegio de insertar (INSERT) nuevos pedidos en la tabla de 
+		PEDIDOS.
+
+	--Catálogo de productos:
+		Los Clientes pueden consultar (SELECT) la información del catálogo de productos y servicios ofrecidos por 
+		la empresa.
 */
 --CLIENTE
 	BEGIN; GRANT INSERT, SELECT ON PEDIDO TO CLIENTE; COMMIT;
@@ -898,36 +914,94 @@ COMMIT;
 	BEGIN; GRANT SELECT ON COLECCION TO CLIENTE; COMMIT;
 	BEGIN; GRANT SELECT ON MOLDE TO CLIENTE; COMMIT;
 	BEGIN; GRANT SELECT ON NOMBRES_MOLDES TO CLIENTE; COMMIT;
-	
+
+/*
+	Privilegios del rol HORNERO:
+	Los usuarios con el rol de Hornero tienen el privilegio de consultar (realizar SELECT) el horario mensual que 
+	les ha sido asignado. Esto significa que los Horneros pueden acceder a la información sobre los turnos, horarios 
+	y fechas en las que deben desempeñar sus labores en el horno.
+*/
 --HORNERO
 	BEGIN; GRANT SELECT ON HIST_TURNO TO HORNERO; COMMIT;
-	
+
+/*
+	Privilegios del rol SUPERVISOR:
+	Como parte de sus responsabilidades de supervisión, los usuarios con el rol de Supervisor tienen los siguientes 
+	privilegios:
+
+	--Insertar (INSERT) registros en la tabla de REUNION:
+		Los Supervisores pueden registrar los detalles de las reuniones que realizan con los supervisados, como fecha, 
+		hora, temas tratados, acuerdos, entre otros.
+
+	--Insertar (INSERT) registros en la tabla de INASISTENCIA:
+		Los Supervisores pueden documentar las inasistencias o ausencias de los supervisados.
+
+	--Insertar (INSERT) registros en la tabla de DET_EXP (Detalles de Expediente):
+		Los Supervisores pueden agregar amonestaciones, bonos o entre otros, a los expedientes individuales de los supervisados. 
+*/
 --SUPERVISOR
 	BEGIN; GRANT INSERT ON REUNION TO SUPERVISOR; COMMIT;
 	BEGIN; GRANT INSERT ON INASISTENCIA TO SUPERVISOR; COMMIT;
 	BEGIN; GRANT INSERT, SELECT ON DET_EXP TO SUPERVISOR; COMMIT;
 
+/*
+	Privilegios del rol SECRETARIA:
+	Las secretarias tienen la función de aprobar pedidos, renovar o cancelar contratos, y también de insertar a los nuevos clientes.
+*/
 --SECRETARIA
 	BEGIN; GRANT INSERT, UPDATE(FECHA_HORA_FIN) ON CONTRATO TO SECRETARIA; COMMIT;
 	BEGIN; GRANT INSERT, UPDATE(FECHA_ENTREGA, ESTADO) ON PEDIDO TO SECRETARIA; COMMIT;
 	BEGIN; GRANT INSERT ON DETALLE_PEDIDO_PIEZA TO SECRETARIA; COMMIT;
 	BEGIN; GRANT INSERT ON FACTURA TO SECRETARIA; COMMIT;
 	BEGIN; GRANT INSERT ON CLIENTE TO SECRETARIA; COMMIT;
+	
 	BEGIN; GRANT SELECT, USAGE ON SEQUENCE cliente_uid_seq TO SECRETARIA; COMMIT;
 	BEGIN; GRANT SELECT, USAGE ON SEQUENCE pedido_uid_seq TO SECRETARIA; COMMIT;
 	BEGIN; GRANT SELECT, USAGE ON SEQUENCE contrato_uid_seq TO SECRETARIA; COMMIT;
-	
+
+/*
+	Privilegios del rol GERENTE_PLANTA:
+	como parte de sus responsabilidades de gerencia , los usuarios con el rol de supervisor tienen los siguientes privilegios:
+
+	--insertar(Insert) registros en la tabla de PIEZA:
+   	  los gerentes de planta podran insertar informacion como nombre de la pieza , molde de la misma ,entre otros.
+
+
+	--insertar(Insert) registros en la tabla de VAJILLA:
+      los gerentes de planta podran insertar informacion como nombre de la Vajilla, molde de la misma ,entre otros.}
+
+	--insertar(Insert) registros en la tabla de DETALLE_PIEZA_VAJILLA:
+      los gerentes de planta podran insertar informacion como juego,coleccion,piezas y la cantidad  las misma ,entre otros.
+
+
+	--insertar(Insert) registros en la tabla de COLECCIONN:
+      los gerentes de planta podran insertar informacion como el nombre de la coleccion , descripcion entre otros.
+
+	--insertar(Insert) registros en la tabla de FACTURA:
+      los gerentes de planta podran insertar informacion como el  codigo de factura, detalles,entre otros.
+
+	--actualizar(Update) registros en la tabla de CONTRATO:
+      los gerentes de planta podran actualizar la fecha en la que termina los contratos con los clientes.
+
+
+	--actualizar(Update) registros en la tabla de FAMILIAR_HISTORICO_PRECIO:
+   	  los gerentes de planta podran actualizar la fecha en la que se cierra el historico de los precios de las piezas y vajillas.
+
+
+	--actualizar(Update) registros en la tabla de GERENTE_PLANTA:
+      los gerentes de planta podran actualizar la fecha de entrega y el estado de los pedidos
+*/
 --GERENTE_PLANTA
 	BEGIN; GRANT INSERT ON PIEZA TO GERENTE_PLANTA; COMMIT;
 	BEGIN; GRANT INSERT ON VAJILLA TO GERENTE_PLANTA; COMMIT;
 	BEGIN; GRANT INSERT ON DETALLE_PIEZA_VAJILLA TO GERENTE_PLANTA; COMMIT;
 	BEGIN; GRANT INSERT ON COLECCION TO GERENTE_PLANTA; COMMIT;
-	BEGIN; GRANT INSERT ON FACTURA TO GERENTE_PLANTA; COMMIT;
+	BEGIN; GRANT INSERT, UPDATE(FECHA_FIN), SELECT ON FAMILIAR_HISTORICO_PRECIO TO GERENTE_PLANTA; COMMIT;
 
 	BEGIN; GRANT INSERT, UPDATE(FECHA_HORA_FIN) ON CONTRATO TO GERENTE_PLANTA; COMMIT;
-	BEGIN; GRANT INSERT, UPDATE(FECHA_FIN), SELECT ON FAMILIAR_HISTORICO_PRECIO TO GERENTE_PLANTA; COMMIT;
 	BEGIN; GRANT INSERT, UPDATE(FECHA_ENTREGA, ESTADO) ON PEDIDO TO GERENTE_PLANTA; COMMIT;
 	BEGIN; GRANT INSERT ON DETALLE_PEDIDO_PIEZA TO GERENTE_PLANTA; COMMIT;
+	BEGIN; GRANT INSERT ON FACTURA TO GERENTE_PLANTA; COMMIT;
 
 	BEGIN; GRANT SELECT, USAGE ON SEQUENCE pieza_uid_seq TO GERENTE_PLANTA; COMMIT;
 	BEGIN; GRANT SELECT, USAGE ON SEQUENCE coleccion_uid_seq TO GERENTE_PLANTA; COMMIT;
@@ -936,13 +1010,17 @@ COMMIT;
 	BEGIN; GRANT SELECT, USAGE ON SEQUENCE factura_uid_seq TO GERENTE_PLANTA; COMMIT;
 	BEGIN; GRANT SELECT, USAGE ON SEQUENCE pedido_uid_seq TO GERENTE_PLANTA; COMMIT;
 	BEGIN; GRANT SELECT, USAGE ON SEQUENCE contrato_uid_seq TO GERENTE_PLANTA; COMMIT;
-	
+
+/*
+	Privilegios el usuario TECNICO:
+	Los Gerentes Técnicos tienen el privilegio de consultar todas las reuniones realizadas por los supervisores, así como de generar los 
+	nuevos turnos de los horneros y de registrar amonestaciones, bonos y otros aspectos relacionados con los empleados de menor rango.
+*/
 --TECNICO
 	BEGIN; GRANT SELECT ON REUNION TO Daniel_Guerrero; COMMIT;
 	BEGIN; GRANT SELECT ON INASISTENCIA TO Daniel_Guerrero; COMMIT;
-	BEGIN; GRANT INSERT, SELECT ON HIST_TURNO TO Daniel_Guerrero; COMMIT;
 	BEGIN; GRANT INSERT ON DET_EXP TO Daniel_Guerrero; COMMIT;
-
+	BEGIN; GRANT INSERT, SELECT ON HIST_TURNO TO Daniel_Guerrero; COMMIT;
 /*
 --------------------------------------------------------------------------------------------------------------------
 -----                                                 Reportes                                              --------

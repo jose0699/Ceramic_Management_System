@@ -54,6 +54,16 @@ BEGIN;
 						--Se busca el pk del cliente (cliente_conflicto)
 						SELECT climodi.pk_cliente into cliente_conflicto FROM CLIENTE_MODIFICAR climodi WHERE climodi.old_entrega = new_fecha;
 
+<<<<<<< Updated upstream
+=======
+						/* Esta linea es erronea: originalmente asignabas como nueva fecha la fecha de emision, y eso hacía que en una primera instancia
+							el primer pedido mandado a esta función entrase en conflicto con sí mismo, para solucionar eso sume 1 día a new_fecha al inicio del todo
+							haciendo que esta línea ya no fuera necesaria. Además el problema que describo arriba desencadenaba en otra serie de problemas con el resto de pedidos en la cola
+						--Se agrega un dia a la fecha del pedido
+						new_fecha := new_fecha + INTERVAL '1 DAY';
+						*/
+
+>>>>>>> Stashed changes
 						--Se elimina tablas para limpiar memoria
 						DROP TABLE IF EXISTS CLIENTE_MODIFICAR;
 						DROP TABLE IF EXISTS CLIENTE_CONTRATO;
@@ -362,7 +372,7 @@ BEGIN;
 		END IF;
 	END;
 	$$ LANGUAGE plpgsql;
-
+COMMIT;
 ---------------------------------------------------------------------------------------------------------
 --													CONTRATOS										   --
 ---------------------------------------------------------------------------------------------------------
@@ -388,6 +398,7 @@ BEGIN;
 				RAISE NOTICE 'Contrato abierto exitosamente para el cliente solicitado';
 			END;
 	$$ LANGUAGE plpgsql;
+COMMIT;
 
 ---------------------------------------------------------------------------------------------------------
 
@@ -474,6 +485,7 @@ CREATE OR REPLACE FUNCTION MOSTRAR_COLA_PEDIDOS(mes numeric(2), ano numeric(4)) 
 								ORDER BY 5;
 	END;
 	$$ LANGUAGE plpgsql;
+<<<<<<< Updated upstream
 COMMIT;			
 ---------------------------------------------------------------------------------------------------------
 --																		Funciones Reportes																					     --
@@ -593,3 +605,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 COMMIT;
+=======
+COMMIT;					
+>>>>>>> Stashed changes

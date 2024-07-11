@@ -16,7 +16,7 @@
         
         <!--Pestaña-->
         <link rel="icon" href="/images/logo_emp.png" type="image/x-icon">
-        <title>Agregar Pieza</title>
+        <title>Agregar Coleccion</title>
     </head>
     <body>
         <header>
@@ -46,33 +46,52 @@
         </header>
 
         <main>
-            <p class = "section-title">Agregar Pieza</p>
+            <p class = "section-title">Agregar Colección</p>
             <div class = "main-grid">
                 <div class = "form-left-side">
                     
-
                     <div class = "form-section">
 
                       <div>
-                        <p class = "input-title">Colección</p>
-                        <select id="coleccion" class = "form-select">
-                            <option value="Amazonia Brasileira"> Amazonia Brasileira</option>
+                        <p class = "input-title">Linea</p>
+                        <select id="linea" class = "form-select">
+                            <option value="NaN" disabled selected>Opciones</option>
+                            <option value="F">Familiar</option>
+                            <option value="I">Institucional</option>
                         </select>
                       </div>
 
                       <div>
-                        <p class = "input-title">Molde</p>
-                        <select id="molde" class = "form-select">
-                            <option value="Tetera">Tetera</option>
+                        <p class = "input-title">Categoría</p>
+                        <select id="categoria" class = "form-select">
+                            <option value="NaN" disabled selected>Opciones</option>
+                            <option value="cla">Clásica/Elegante</option>
+                            <option value="cou">Country</option>
+                            <option value="mod">Moderna</option>
                         </select>
                       </div>
 
                     </div>
 
+
+                    <div class = "form-section">
+
+                        <div>
+                            <p class = "secret-input-title">Nueva Linea (Opcional)</p>
+                            <input id="nueva_linea" class = "secret-form-input" type = "text" placeholder="Linea:">
+                        </div>
+  
+                        <div>
+                          <p class = "secret-input-title">Nueva categoría (Opcional)</p>
+                          <input id="nueva_categoria" class = "secret-form-input" type = "text" placeholder="Categoría:">
+                        </div>
+  
+                      </div>
+
                     <div class = "form-section">
                         <div>
-                            <p class = "input-title">Precio</p>
-                            <input id="precio" class = "form-input" type = "text" placeholder="Precio en $">
+                            <p class = "input-title">Nombre</p>
+                            <input id="nombre" class = "form-input" type = "text" placeholder="Colección:">
                         </div>
                     </div>
 
@@ -86,7 +105,7 @@
                 </div>
 
                 <div class = "form-right-side-pieza">
-                    <img class = "form-image" src="/images/ceramica_res.jpeg">
+                    <img class = "colection-form-image" src="/images/coleccion.jpg">
                     <button id='agregar' class = "fetch-button">Agregar</button>
                 </div>
             </div>
@@ -100,6 +119,6 @@
             </div>
         -->
 
-        <script type="module" src="/controllers/pieza.js"></script>
+        <script type="module" src="/controllers/coleccion.js"></script>
     </body>
 </html>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subrAlergias" pageWidth="567" pageHeight="200" columnWidth="567" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0cae2a7e-020b-4529-9914-bdba2f07f999">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Proyecto_BD"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="id Empleado" class="java.lang.Integer">
+		<parameterDescription><![CDATA[id del Empleado del que se quiere el expediente]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT s.nombre,
+		CASE 
+			WHEN s.tipo = 'A' THEN 'ALERGIAS'
+			WHEN s.tipo = 'P' THEN 'PARTICULARES'
+		END tipo,
+		e.descripcion descripcion_salud_emp
+	FROM ESTADO_SALUD s, E_E e 
+	WHERE s.uid_salud = e.uid_salud AND e.num_exp = $P{id Empleado} 
+	ORDER BY s.tipo ASC;]]>
+	</queryString>
+	<field name="nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="estado_salud"/>
+	</field>
+	<field name="tipo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="tipo"/>
+		<property name="com.jaspersoft.studio.field.label" value="tipo"/>
+	</field>
+	<field name="descripcion_salud_emp" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descripcion_salud_emp"/>
+		<property name="com.jaspersoft.studio.field.label" value="descripcion_salud_emp"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="e_e"/>
+	</field>
+	<group name="grSalud">
+		<groupExpression><![CDATA[$F{tipo}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<textField>
+					<reportElement mode="Opaque" x="0" y="0" width="567" height="30" forecolor="#FFFFFF" backcolor="#7DA44E" uuid="90630975-0460-4e8c-b198-8312b56e6241"/>
+					<box topPadding="5" leftPadding="13" bottomPadding="5" rightPadding="5">
+						<pen lineStyle="Dashed" lineColor="#75FFA5"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font fontName="Poppins Medium" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="180" height="30" uuid="19a859f2-09e6-4f0f-974f-32bcbb6f25d8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="10" bottomPadding="5" rightPadding="5">
+					<pen lineColor="#7DA44E"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="0" width="388" height="30" printWhenGroupChanges="grSalud" uuid="dccea159-9db6-47a5-a700-595850e8dcaa">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="5" leftPadding="10" bottomPadding="5" rightPadding="5">
+					<pen lineColor="#7DA44E"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion_salud_emp}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

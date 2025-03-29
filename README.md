@@ -1,5 +1,5 @@
 # P_BD_2024
-
+Technologies Used
 • Programming Language: JavaScript, HTML5 / CSS3
 • Backend Framework: Node.js, Express.js
 • Database & ORM: PostgreSQL.

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subrVajsFactura" pageWidth="568" pageHeight="792" columnWidth="568" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c8daf00e-f591-4948-a062-ebf379cc7116">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Proyecto_BD"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="id_factura" class="java.lang.Integer"/>
+	<parameter name="Tasa $" class="java.math.BigDecimal">
+		<parameterDescription><![CDATA[Tasa para ejecutar la conversión a Bs]]></parameterDescription>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[WITH precios_vaj AS(
+	SELECT DISTINCT
+	v.uid_juego, 
+	round(calcular_precio_vajilla(v.uid_juego, x.uid_coleccion, p.fecha_entrega),2) AS precio
+	FROM detalle_pedido_pieza d
+		JOIN pedido p ON p.uid_pedido = d.uid_pedido
+		JOIN vajilla v ON v.uid_juego = d.uid_juego
+		JOIN detalle_pieza_vajilla x ON v.uid_juego = x.uid_juego
+		JOIN coleccion c ON c.uid_coleccion = x.uid_coleccion
+	WHERE d.uid_pedido in (SELECT fr.uid_pedido FROM FACTURA fr WHERE fr.numero_factura = $P{id_factura}  )
+)
+
+
+SELECT DISTINCT
+		d.uid_detalle, 
+		v.uid_juego, 
+		CASE
+		  WHEN c.linea = 'F' THEN 0
+		  WHEN c.linea = 'I' THEN 1
+		END linea,
+		CASE 
+		 WHEN position(' ' in c.nombre) != 0 THEN CONCAT(substring(c.nombre,1,1),'. ',substring(c.nombre,strpos(c.nombre, ' ')))
+		 ELSE c.nombre
+		END nombre_col, 
+		v.nombre AS nombre_vaj, 
+		d.cantidad, 
+		prv.precio AS precio,
+		round(prv.precio * (COALESCE(con.porcentaje_descuento,0)/100),2) descuento,
+		d.cantidad*round(prv.precio * (COALESCE(con.porcentaje_descuento,0)/100),2) descuento_total,
+		(d.cantidad*prv.precio)-(d.cantidad*round(prv.precio * (COALESCE(con.porcentaje_descuento,0)/100),2)) total
+	FROM detalle_pedido_pieza d
+		JOIN pedido p ON p.uid_pedido = d.uid_pedido
+		LEFT JOIN contrato con ON con.uid_cliente = p.uid_cliente AND con.fecha_hora_fin IS NULL
+		JOIN vajilla v ON v.uid_juego = d.uid_juego
+		JOIN precios_vaj prv ON prv.uid_juego = v.uid_juego 
+		JOIN detalle_pieza_vajilla x ON v.uid_juego = x.uid_juego
+		JOIN coleccion c ON c.uid_coleccion = x.uid_coleccion
+	WHERE d.uid_pedido in (SELECT fr.uid_pedido FROM FACTURA fr WHERE fr.numero_factura = $P{id_factura}) ORDER BY uid_detalle DESC;]]>
+	</queryString>
+	<field name="uid_detalle" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="uid_detalle"/>
+		<property name="com.jaspersoft.studio.field.label" value="uid_detalle"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_pedido_pieza"/>
+	</field>
+	<field name="uid_juego" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="uid_juego"/>
+		<property name="com.jaspersoft.studio.field.label" value="uid_juego"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vajilla"/>
+	</field>
+	<field name="linea" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="linea"/>
+		<property name="com.jaspersoft.studio.field.label" value="linea"/>
+	</field>
+	<field name="nombre_col" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre_col"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre_col"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="coleccion"/>
+	</field>
+	<field name="nombre_vaj" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre_vaj"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre_vaj"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vajilla"/>
+	</field>
+	<field name="cantidad" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="cantidad"/>
+		<property name="com.jaspersoft.studio.field.label" value="cantidad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_pedido_pieza"/>
+	</field>
+	<field name="precio" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="precio"/>
+		<property name="com.jaspersoft.studio.field.label" value="precio"/>
+	</field>
+	<field name="descuento" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="descuento"/>
+		<property name="com.jaspersoft.studio.field.label" value="descuento"/>
+	</field>
+	<field name="descuento_total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="descuento_total"/>
+		<property name="com.jaspersoft.studio.field.label" value="descuento_total"/>
+	</field>
+	<field name="total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total"/>
+		<property name="com.jaspersoft.studio.field.label" value="total"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
+				<reportElement x="400" y="0" width="80" height="30" uuid="6713aad7-6546-42c9-842a-821d77a3fbc7">
+					<printWhenExpression><![CDATA[$F{linea} == 1]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descuento}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.##¤;(#,##0.##) ¤" isBlankWhenNull="true">
+				<reportElement x="310" y="0" width="90" height="30" uuid="ed97cb3a-3dfd-45d4-a60f-adacc9cac32c">
+					<printWhenExpression><![CDATA[$F{linea} != 1]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{precio}.multiply($P{Tasa $})]]></textFieldExpression>
+			</textField>
+			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
+				<reportElement x="310" y="0" width="90" height="30" uuid="402b53ff-4a27-4208-95e8-7d16dd3d5cea">
+					<printWhenExpression><![CDATA[$F{linea} == 1]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="$#,##0.##;¤-#,##0.##" isBlankWhenNull="true">
+				<reportElement x="480" y="0" width="88" height="30" uuid="b01bea35-c0e2-4734-99c1-bb7bca52aa28">
+					<printWhenExpression><![CDATA[$F{linea} == 1]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="240" y="0" width="70" height="30" uuid="121c08b7-7768-4fc4-8d1e-96e3b5b9b0e6"/>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.##¤;(#,##0.##) ¤" isBlankWhenNull="true">
+				<reportElement x="480" y="0" width="88" height="30" uuid="b50b7225-d918-4250-9e57-b0ccb07e99ee">
+					<printWhenExpression><![CDATA[$F{linea} != 1]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}.multiply($P{Tasa $})]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.##¤;(#,##0.##) ¤" isBlankWhenNull="true">
+				<reportElement x="400" y="0" width="80" height="30" uuid="a470603b-4d52-4077-94ee-1332691457fa">
+					<printWhenExpression><![CDATA[$F{linea} != 1]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descuento}.multiply($P{Tasa $})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="240" height="30" uuid="f777aabe-1302-4372-bff5-a12bb0044bf9"/>
+				<box topPadding="5" leftPadding="12" bottomPadding="5" rightPadding="5">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Poppins" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_col}+' '+$F{nombre_vaj}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
